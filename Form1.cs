@@ -153,21 +153,21 @@ namespace BtcAddress {
 
         private void btnShacode_Click(object sender, EventArgs e) {
 
-            
+            // SHAcode is a 22-character string that starts with S, whose SHA256 hash can be used as private key.
+            // There is a simple 8-bit check: first byte of SHA256(string + '?') must be 00.
             
             string b58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
             SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
             string shacode = "";
             do {
 
-                // Get 'C' + 21 random base58 characters, where sha256(result + '?') starts with the byte 00 (1 in 256 possibilities)
+                // Get 'S' + 21 random base58 characters, where sha256(result + '?') starts with the byte 00 (1 in 256 possibilities)
                 shacode = "S";
                 SecureRandom sr = new SecureRandom();
                 for (int i = 0; i < 21; i++) {
                     long x = sr.NextLong() & long.MaxValue;                    
                     long x58 = x % 58;
-                    shacode += b58.Substring((int)x58, 1);
-                    //if (i == 3 || i == 9 || i == 15) shacode += "-";
+                    shacode += b58.Substring((int)x58, 1);                    
                 }                
                 string shacodeq = shacode + "?";
                 if (sha256.ComputeHash(Encoding.ASCII.GetBytes(shacodeq))[0] == 0) break;
@@ -241,8 +241,9 @@ namespace BtcAddress {
         }
 
         private void whatIsASHAcodeToolStripMenuItem_Click(object sender, EventArgs e) {
-            MessageBox.Show("A SHAcode is a Bitcoin address generated from a short 22-character string of text.  The advantage is that the text representation of the private key is shorter. " +
-                "The private key is simply the SHA256 hash of the string.  SHAcodes start with the letter S and have one check byte to guard against most typos, while remaining secure against brute-force attacks.");
+            MessageBox.Show("A SHAcode is a Bitcoin address generated from a short 22-character string of text.  The advantage is that the text representation of the private key is shorter, and easier to use in " +
+            "QR codes and in other places where space is at a premium. " +
+                "The private key is simply the SHA256 hash of the string.  SHAcodes start with the letter 'S' and include an 8-bit typo check.");
         }
 
     }

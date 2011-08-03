@@ -1,0 +1,3 @@
+This project has one dependency: the BouncyCastle Crypto library.
+
+Get it from http://www.bouncycastle.org/csharp/  (just the compiled assembly is fine).
