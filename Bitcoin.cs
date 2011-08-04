@@ -52,6 +52,10 @@ namespace BtcAddress {
                 return;
             }
             */
+            if (hex==null) {
+                throw new ApplicationException("WIF private key is not valid.");            
+            }
+            
             if (hex.Length != 33) {
                 throw new ApplicationException("WIF private key is not valid (wrong byte count, should be 33, was " + hex.Length + ")");            
             }
