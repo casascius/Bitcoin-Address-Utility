@@ -23,7 +23,6 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Walletgen));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtPassphrase = new System.Windows.Forms.TextBox();
@@ -106,8 +105,8 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(715, 45);
             this.textBox1.TabIndex = 8;
-            this.textBox1.Text = resources.GetString("textBox1.Text");
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.Text = "Recommendation: Use this on a computer with no internet connection.  Use Notepad to print directly to your printer, and don't save the file.  Clear the clipboard when you're done, perhaps by copying something else to it.  If your computer is infected with malware that allows remote control of your computer, the keys you generate may be compromised.";
             // 
             // Walletgen
             // 
