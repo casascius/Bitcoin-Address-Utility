@@ -18,27 +18,16 @@ namespace BtcAddress {
 
         private void button1_Click(object sender, EventArgs e) {
 
+
+
             if (txtPassphrase.Text.Length < 20) {
                 MessageBox.Show("Your passphrase is too short.  It MUST be at least 20 characters.  If you generate a wallet with a passphrase that is too short, your coins are likely to get stolen.","Passphrase too short");
                 return;
             }
 
-            int Lowercase=0, Uppercase=0, Numbers=0, Symbols=0;
-            foreach (char c in txtPassphrase.Text.ToCharArray()) {
-                if (c >= 'a' && c <= 'z') {
-                    Lowercase++;
-                } else if (c >= 'A' && c <= 'Z') {
-                    Uppercase++;
-                } else if (c >= '0' && c >= '9') {
-                    Numbers++;
-                } else if (c == ' ') {
-                    // not counting spaces
-                } else {
-                    Symbols++;
-                }
-            }
 
-            if (txtPassphrase.Text.Length < 30 && (Lowercase < 10 || Uppercase < 3 || Numbers < 2 || Symbols < 2)) {
+            
+            if (Bitcoin.PassphraseTooSimple(txtPassphrase.Text)) {
                 MessageBox.Show("Your passphrase is too simple.  Make it longer, or add more lowercase, uppercase, numbers, and/or symbols.  This is for your protection.  If you generate a wallet with a passphrase that is too simple, your coins are likely to get stolen.","Passphrase too short");
                 return;
             }

@@ -24,10 +24,41 @@ namespace BtcAddress {
         }
 
 
+
+        private void btnPassphrase_Click(object sender, EventArgs e) {
+
+            try {
+                txtPrivHex.Text = Bitcoin.PassphraseToPrivHex(txtPassphrase.Text);
+                if (txtPassphrase.Text.Length < 20 || Bitcoin.PassphraseTooSimple(txtPassphrase.Text)) {
+                    lblWhyNot.Visible = true;
+                    lblNotSafe.Visible = true;
+                } else {
+                    lblWhyNot.Visible = false;
+                    lblNotSafe.Visible = false;
+                }
+
+                btnPrivHexToWIF_Click(null, null);
+                btnPrivToPub_Click(null, null);
+                btnPubHexToHash_Click(null, null);
+                btnPubHashToAddress_Click(null, null);
+              
+
+
+            } catch (ApplicationException ae) {
+                MessageBox.Show(ae.Message);
+            }
+
+
+
+
+        }
+
+
         private void btnPrivHexToWIF_Click(object sender, EventArgs e) {
 
             try {
                 txtPrivWIF.Text = Bitcoin.PrivHexToWIF(txtPrivHex.Text);
+                btnPrivToPub_Click(null, null);
             } catch (ApplicationException ae) {
                 MessageBox.Show(ae.Message);
             }
@@ -39,6 +70,11 @@ namespace BtcAddress {
 
             try {
                 txtPrivHex.Text = Bitcoin.PrivWIFtoPrivHex(txtPrivWIF.Text);
+
+                btnPrivHexToWIF_Click(null, null);
+                
+              
+                
             } catch (ApplicationException ae) {
                 MessageBox.Show(ae.Message);
             }
@@ -49,6 +85,7 @@ namespace BtcAddress {
 
             try {
                 txtPubHex.Text = Bitcoin.PrivHexToPubHex(txtPrivHex.Text);
+                btnPubHexToHash_Click(null, null);
             } catch (ApplicationException ae) {
                 MessageBox.Show(ae.Message);
             }
@@ -59,6 +96,7 @@ namespace BtcAddress {
 
             try {
                 txtPubHash.Text = Bitcoin.PubHexToPubHash(txtPubHex.Text);
+                btnPubHashToAddress_Click(null, null);
             } catch (ApplicationException ae) {
                 MessageBox.Show(ae.Message);
             }
@@ -91,6 +129,9 @@ namespace BtcAddress {
         }
 
         private void btnGenerate_Click(object sender, EventArgs e) {
+            lblNotSafe.Visible = false;
+            lblWhyNot.Visible = false;
+            txtPassphrase.Text = "";
 
             ECKeyPairGenerator gen = new ECKeyPairGenerator();
             var secureRandom = new SecureRandom();
@@ -107,9 +148,6 @@ namespace BtcAddress {
             txtPrivHex.Text = Bitcoin.ByteArrayToString(hexpriv);
 
             btnPrivHexToWIF_Click(null, null);
-            btnPrivToPub_Click(null, null);
-            btnPubHexToHash_Click(null, null);
-            btnPubHashToAddress_Click(null, null);
 
         }
 
@@ -173,8 +211,9 @@ namespace BtcAddress {
                 if (sha256.ComputeHash(Encoding.ASCII.GetBytes(shacodeq))[0] == 0) break;
             } while (true);
 
-            txtPrivWIF.Text = shacode;
+            txtPassphrase.Text = shacode;
 
+            btnPassphrase_Click(null, null);
             btnPrivWIFToHex_Click(null, null);
             btnPrivToPub_Click(null, null);
             btnPubHexToHash_Click(null, null);
@@ -183,53 +222,6 @@ namespace BtcAddress {
 
 
 
-
-
-
-        }
-
-        private void button1_Click(object sender, EventArgs e) {
-            // generate a text file full of shacodes
-            List<string> keys = new List<string>();
-
-            for (int i = 0; i < 11000; i++) {
-                btnShacode_Click(null, null);
-                string key = txtBtcAddr.Text + "," + txtPrivWIF.Text;
-                keys.Add(key);
-                if (i % 100 == 0) Debug.WriteLine(i);
-            }
-
-            List<string> sortedkeys = new List<string>(
-                from c in keys
-                orderby c
-                select c);
-
-            using (StreamWriter f = new StreamWriter("privkeys.txt")) {
-
-                foreach (string s in sortedkeys) {
-                    string[] fields = s.Split(',');
-
-                    f.WriteLine("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\"",
-                        fields[0],
-                        fields[1],
-                        fields[1].Substring(0, 5),
-                        fields[1].Substring(5, 6),
-                        fields[1].Substring(11, 6),
-                        fields[1].Substring(17, 5));
-                }
-                f.Close();
-            }
-
-            using (StreamWriter f = new StreamWriter("pubkeys.txt")) {
-                foreach (string s in sortedkeys) f.WriteLine(s.Substring(0, s.IndexOf(",")));
-                f.Close();
-            }
-
-
-            using (StreamWriter f = new StreamWriter("first8.txt")) {
-                foreach (string s in sortedkeys) f.WriteLine(s.Substring(0,8));
-                f.Close();
-            }
 
 
 
@@ -244,6 +236,11 @@ namespace BtcAddress {
             MessageBox.Show("A SHAcode is a Bitcoin address generated from a short 22-character string of text.  The advantage is that the text representation of the private key is shorter, and easier to use in " +
             "QR codes and in other places where space is at a premium. " +
                 "The private key is simply the SHA256 hash of the string.  SHAcodes start with the letter 'S' and include an 8-bit typo check.");
+        }
+
+        private void lblWhyNot_Click(object sender, EventArgs e) {
+            MessageBox.Show("Bitcoins are vulnerable to theft from hackers when sent to addresses generated from short or non-complex passphrases.  A longer one, or one that uses a good " +
+              "mix of uppercase, lowercase, numbers, and symbols is recommended.", "Security Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
     }

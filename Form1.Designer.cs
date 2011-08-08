@@ -47,12 +47,19 @@
             this.walletGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.whatIsASHAcodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnPassphrase = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtPassphrase = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.lblNotSafe = new System.Windows.Forms.Label();
+            this.lblWhyNot = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtPrivWIF
             // 
-            this.txtPrivWIF.Location = new System.Drawing.Point(103, 28);
+            this.txtPrivWIF.Location = new System.Drawing.Point(101, 93);
             this.txtPrivWIF.Name = "txtPrivWIF";
             this.txtPrivWIF.Size = new System.Drawing.Size(557, 20);
             this.txtPrivWIF.TabIndex = 7;
@@ -60,153 +67,153 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 31);
+            this.label1.Location = new System.Drawing.Point(5, 96);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(90, 13);
-            this.label1.TabIndex = 8;
+            this.label1.TabIndex = 5;
             this.label1.Text = "Private Key (WIF)";
             // 
             // txtPrivHex
             // 
-            this.txtPrivHex.Location = new System.Drawing.Point(103, 86);
+            this.txtPrivHex.Location = new System.Drawing.Point(101, 151);
             this.txtPrivHex.Name = "txtPrivHex";
             this.txtPrivHex.Size = new System.Drawing.Size(557, 20);
-            this.txtPrivHex.TabIndex = 9;
+            this.txtPrivHex.TabIndex = 12;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 89);
+            this.label2.Location = new System.Drawing.Point(5, 154);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 13);
-            this.label2.TabIndex = 10;
+            this.label2.TabIndex = 11;
             this.label2.Text = "Private Key (Hex)";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 147);
+            this.label3.Location = new System.Drawing.Point(5, 212);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(85, 13);
-            this.label3.TabIndex = 12;
+            this.label3.TabIndex = 14;
             this.label3.Text = "Public Key (Hex)";
             // 
             // txtPubHex
             // 
-            this.txtPubHex.Location = new System.Drawing.Point(103, 144);
+            this.txtPubHex.Location = new System.Drawing.Point(101, 209);
             this.txtPubHex.Multiline = true;
             this.txtPubHex.Name = "txtPubHex";
             this.txtPubHex.Size = new System.Drawing.Size(557, 43);
-            this.txtPubHex.TabIndex = 11;
+            this.txtPubHex.TabIndex = 15;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 232);
+            this.label4.Location = new System.Drawing.Point(5, 297);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(91, 13);
-            this.label4.TabIndex = 14;
+            this.label4.TabIndex = 18;
             this.label4.Text = "Public Key (Hash)";
             // 
             // txtPubHash
             // 
-            this.txtPubHash.Location = new System.Drawing.Point(103, 229);
+            this.txtPubHash.Location = new System.Drawing.Point(101, 294);
             this.txtPubHash.Name = "txtPubHash";
             this.txtPubHash.Size = new System.Drawing.Size(557, 20);
-            this.txtPubHash.TabIndex = 13;
+            this.txtPubHash.TabIndex = 19;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 290);
+            this.label5.Location = new System.Drawing.Point(5, 355);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(45, 13);
-            this.label5.TabIndex = 16;
+            this.label5.TabIndex = 17;
             this.label5.Text = "Address";
             // 
             // txtBtcAddr
             // 
-            this.txtBtcAddr.Location = new System.Drawing.Point(103, 287);
+            this.txtBtcAddr.Location = new System.Drawing.Point(101, 352);
             this.txtBtcAddr.Name = "txtBtcAddr";
             this.txtBtcAddr.Size = new System.Drawing.Size(557, 20);
-            this.txtBtcAddr.TabIndex = 15;
+            this.txtBtcAddr.TabIndex = 24;
             // 
             // btnAddressToPubHash
             // 
-            this.btnAddressToPubHash.Location = new System.Drawing.Point(286, 251);
+            this.btnAddressToPubHash.Location = new System.Drawing.Point(284, 316);
             this.btnAddressToPubHash.Name = "btnAddressToPubHash";
             this.btnAddressToPubHash.Size = new System.Drawing.Size(46, 30);
-            this.btnAddressToPubHash.TabIndex = 18;
+            this.btnAddressToPubHash.TabIndex = 20;
             this.btnAddressToPubHash.Text = "▲";
             this.btnAddressToPubHash.UseVisualStyleBackColor = true;
             this.btnAddressToPubHash.Click += new System.EventHandler(this.btnAddressToPubHash_Click);
             // 
             // btnPubHashToAddress
             // 
-            this.btnPubHashToAddress.Location = new System.Drawing.Point(334, 251);
+            this.btnPubHashToAddress.Location = new System.Drawing.Point(332, 316);
             this.btnPubHashToAddress.Name = "btnPubHashToAddress";
             this.btnPubHashToAddress.Size = new System.Drawing.Size(46, 30);
-            this.btnPubHashToAddress.TabIndex = 19;
+            this.btnPubHashToAddress.TabIndex = 21;
             this.btnPubHashToAddress.Text = "▼";
             this.btnPubHashToAddress.UseVisualStyleBackColor = true;
             this.btnPubHashToAddress.Click += new System.EventHandler(this.btnPubHashToAddress_Click);
             // 
             // btnPubHexToHash
             // 
-            this.btnPubHexToHash.Location = new System.Drawing.Point(334, 193);
+            this.btnPubHexToHash.Location = new System.Drawing.Point(332, 258);
             this.btnPubHexToHash.Name = "btnPubHexToHash";
             this.btnPubHexToHash.Size = new System.Drawing.Size(46, 30);
-            this.btnPubHexToHash.TabIndex = 21;
-            this.btnPubHexToHash.Text = "▼";
+            this.btnPubHexToHash.TabIndex = 16;
+            this.btnPubHexToHash.Text = "▼▼";
             this.btnPubHexToHash.UseVisualStyleBackColor = true;
             this.btnPubHexToHash.Click += new System.EventHandler(this.btnPubHexToHash_Click);
             // 
             // btnPrivToPub
             // 
-            this.btnPrivToPub.Location = new System.Drawing.Point(334, 108);
+            this.btnPrivToPub.Location = new System.Drawing.Point(332, 173);
             this.btnPrivToPub.Name = "btnPrivToPub";
             this.btnPrivToPub.Size = new System.Drawing.Size(46, 30);
-            this.btnPrivToPub.TabIndex = 23;
-            this.btnPrivToPub.Text = "▼";
+            this.btnPrivToPub.TabIndex = 13;
+            this.btnPrivToPub.Text = "▼▼";
             this.btnPrivToPub.UseVisualStyleBackColor = true;
             this.btnPrivToPub.Click += new System.EventHandler(this.btnPrivToPub_Click);
             // 
             // btnPrivWIFToHex
             // 
-            this.btnPrivWIFToHex.Location = new System.Drawing.Point(334, 50);
+            this.btnPrivWIFToHex.Location = new System.Drawing.Point(332, 115);
             this.btnPrivWIFToHex.Name = "btnPrivWIFToHex";
             this.btnPrivWIFToHex.Size = new System.Drawing.Size(46, 30);
-            this.btnPrivWIFToHex.TabIndex = 25;
-            this.btnPrivWIFToHex.Text = "▼";
+            this.btnPrivWIFToHex.TabIndex = 9;
+            this.btnPrivWIFToHex.Text = "▼▼";
             this.btnPrivWIFToHex.UseVisualStyleBackColor = true;
             this.btnPrivWIFToHex.Click += new System.EventHandler(this.btnPrivWIFToHex_Click);
             // 
             // btnPrivHexToWIF
             // 
-            this.btnPrivHexToWIF.Location = new System.Drawing.Point(286, 50);
+            this.btnPrivHexToWIF.Location = new System.Drawing.Point(284, 115);
             this.btnPrivHexToWIF.Name = "btnPrivHexToWIF";
             this.btnPrivHexToWIF.Size = new System.Drawing.Size(46, 30);
-            this.btnPrivHexToWIF.TabIndex = 24;
+            this.btnPrivHexToWIF.TabIndex = 8;
             this.btnPrivHexToWIF.Text = "▲";
             this.btnPrivHexToWIF.UseVisualStyleBackColor = true;
             this.btnPrivHexToWIF.Click += new System.EventHandler(this.btnPrivHexToWIF_Click);
             // 
             // btnGenerate
             // 
-            this.btnGenerate.Location = new System.Drawing.Point(420, 50);
+            this.btnGenerate.Location = new System.Drawing.Point(541, 115);
             this.btnGenerate.Name = "btnGenerate";
             this.btnGenerate.Size = new System.Drawing.Size(116, 30);
-            this.btnGenerate.TabIndex = 26;
+            this.btnGenerate.TabIndex = 10;
             this.btnGenerate.Text = "Generate Address";
             this.btnGenerate.UseVisualStyleBackColor = true;
             this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
             // 
             // btnBlockExplorer
             // 
-            this.btnBlockExplorer.Location = new System.Drawing.Point(492, 251);
+            this.btnBlockExplorer.Location = new System.Drawing.Point(490, 316);
             this.btnBlockExplorer.Name = "btnBlockExplorer";
             this.btnBlockExplorer.Size = new System.Drawing.Size(167, 29);
-            this.btnBlockExplorer.TabIndex = 27;
+            this.btnBlockExplorer.TabIndex = 23;
             this.btnBlockExplorer.Text = "Block Explorer";
             this.btnBlockExplorer.UseVisualStyleBackColor = true;
             this.btnBlockExplorer.Click += new System.EventHandler(this.btnBlockExplorer_Click);
@@ -218,18 +225,18 @@
             "Bitcoin",
             "Testnet",
             "Namecoin"});
-            this.cboCoinType.Location = new System.Drawing.Point(382, 255);
+            this.cboCoinType.Location = new System.Drawing.Point(380, 320);
             this.cboCoinType.Name = "cboCoinType";
             this.cboCoinType.Size = new System.Drawing.Size(101, 21);
-            this.cboCoinType.TabIndex = 29;
+            this.cboCoinType.TabIndex = 22;
             this.cboCoinType.Text = "Bitcoin";
             // 
             // btnShacode
             // 
-            this.btnShacode.Location = new System.Drawing.Point(542, 50);
+            this.btnShacode.Location = new System.Drawing.Point(541, 58);
             this.btnShacode.Name = "btnShacode";
             this.btnShacode.Size = new System.Drawing.Size(116, 30);
-            this.btnShacode.TabIndex = 30;
+            this.btnShacode.TabIndex = 4;
             this.btnShacode.Text = "Generate SHAcode";
             this.btnShacode.UseVisualStyleBackColor = true;
             this.btnShacode.Click += new System.EventHandler(this.btnShacode_Click);
@@ -242,7 +249,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(670, 24);
-            this.menuStrip1.TabIndex = 31;
+            this.menuStrip1.TabIndex = 25;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // walletGeneratorToolStripMenuItem
@@ -267,11 +274,86 @@
             this.whatIsASHAcodeToolStripMenuItem.Text = "What is a SHAcode?";
             this.whatIsASHAcodeToolStripMenuItem.Click += new System.EventHandler(this.whatIsASHAcodeToolStripMenuItem_Click);
             // 
+            // btnPassphrase
+            // 
+            this.btnPassphrase.Location = new System.Drawing.Point(332, 58);
+            this.btnPassphrase.Name = "btnPassphrase";
+            this.btnPassphrase.Size = new System.Drawing.Size(46, 30);
+            this.btnPassphrase.TabIndex = 3;
+            this.btnPassphrase.Text = "▼▼";
+            this.btnPassphrase.UseVisualStyleBackColor = true;
+            this.btnPassphrase.Click += new System.EventHandler(this.btnPassphrase_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(5, 39);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(62, 13);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "Passphrase";
+            // 
+            // txtPassphrase
+            // 
+            this.txtPassphrase.Location = new System.Drawing.Point(101, 36);
+            this.txtPassphrase.Name = "txtPassphrase";
+            this.txtPassphrase.Size = new System.Drawing.Size(557, 20);
+            this.txtPassphrase.TabIndex = 2;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(5, 58);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(98, 13);
+            this.label7.TabIndex = 1;
+            this.label7.Text = "(SHA256 algorithm)";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(5, 116);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(110, 13);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "(Wallet Import Format)";
+            // 
+            // lblNotSafe
+            // 
+            this.lblNotSafe.AutoSize = true;
+            this.lblNotSafe.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.lblNotSafe.Location = new System.Drawing.Point(112, 63);
+            this.lblNotSafe.Name = "lblNotSafe";
+            this.lblNotSafe.Size = new System.Drawing.Size(93, 13);
+            this.lblNotSafe.TabIndex = 26;
+            this.lblNotSafe.Text = "Warning: Not safe";
+            this.lblNotSafe.Visible = false;
+            // 
+            // lblWhyNot
+            // 
+            this.lblWhyNot.AutoSize = true;
+            this.lblWhyNot.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWhyNot.ForeColor = System.Drawing.Color.Blue;
+            this.lblWhyNot.Location = new System.Drawing.Point(211, 63);
+            this.lblWhyNot.Name = "lblWhyNot";
+            this.lblWhyNot.Size = new System.Drawing.Size(53, 13);
+            this.lblWhyNot.TabIndex = 27;
+            this.lblWhyNot.Text = "Why not?";
+            this.lblWhyNot.Visible = false;
+            this.lblWhyNot.Click += new System.EventHandler(this.lblWhyNot_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(670, 317);
+            this.ClientSize = new System.Drawing.Size(670, 405);
+            this.Controls.Add(this.lblWhyNot);
+            this.Controls.Add(this.lblNotSafe);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.btnPassphrase);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtPassphrase);
             this.Controls.Add(this.btnShacode);
             this.Controls.Add(this.cboCoinType);
             this.Controls.Add(this.btnBlockExplorer);
@@ -329,6 +411,13 @@
         private System.Windows.Forms.ToolStripMenuItem walletGeneratorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem whatIsASHAcodeToolStripMenuItem;
+        private System.Windows.Forms.Button btnPassphrase;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtPassphrase;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblNotSafe;
+        private System.Windows.Forms.Label lblWhyNot;
 
     }
 }

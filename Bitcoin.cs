@@ -14,27 +14,31 @@ using Org.BouncyCastle.Math.EC;
 namespace BtcAddress {
     public class Bitcoin {
 
+
+
+        public static string PassphraseToPrivHex(string passphrase) {
+
+            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
+            // Perform checksum for SHAcode
+            //System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("^S[1-9A-HJ-NP-Za-km-z]{21}$");
+            //if (reg.IsMatch(passphrase)) {
+            //    if (sha256.ComputeHash(Encoding.ASCII.GetBytes(passphrase + "?"))[0] != 0) {
+            //        throw new ApplicationException("SHAcode is not valid, fails checksum.  Possible typo?");
+            //    }
+            //}
+            
+            UTF8Encoding utf8 = new UTF8Encoding(false);
+            byte[] forsha = utf8.GetBytes(passphrase);
+            byte[] shahash = sha256.ComputeHash(forsha);
+            return ByteArrayToString(shahash);
+        }
+
+     
         public static string PrivWIFtoPrivHex(string PrivWIF) {
 
 
 
-            if (PrivWIF.ToLower().StartsWith("sha256:")) {
-                UTF8Encoding utf8 = new UTF8Encoding(false);
-                byte[] forsha = utf8.GetBytes(PrivWIF.Substring(7));
-                SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-                byte[] shahash = sha256.ComputeHash(forsha);
-                return ByteArrayToString(shahash);                
-            }
 
-            if (PrivWIF.Length == 22 && PrivWIF.StartsWith("S")) {
-                string shacode = PrivWIF;
-                SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-                if (sha256.ComputeHash(Encoding.ASCII.GetBytes(shacode + "?"))[0] == 0) {
-                    byte[] shahash = sha256.ComputeHash(Encoding.ASCII.GetBytes(shacode));
-                    return ByteArrayToString(shahash);                    
-                }
-
-            }
 
             byte[] hex = Base58ToByteArray(PrivWIF);
             /*
@@ -357,6 +361,36 @@ namespace BtcAddress {
             hex2[0] = (byte)(cointype & 0xff);
             return Bitcoin.ByteArrayToBase58Check(hex2);
 
+
+        }
+
+        public static bool PassphraseTooSimple(string passphrase) {
+
+            int Lowercase = 0, Uppercase = 0, Numbers = 0, Symbols = 0, Spaces = 0;
+            foreach (char c in passphrase.ToCharArray()) {
+                if (c >= 'a' && c <= 'z') {
+                    Lowercase++;
+                } else if (c >= 'A' && c <= 'Z') {
+                    Uppercase++;
+                } else if (c >= '0' && c <= '9') {
+                    Numbers++;
+                } else if (c == ' ') {
+                    Spaces++;
+                } else {
+                    Symbols++;
+                }
+            }
+
+            // let SHAcodes through - they won't contain words, they are nonsense characters, so their entropy is a bit better per character
+            if (passphrase.Length == 22 && passphrase.StartsWith("S") && Spaces==0) {
+                return false;
+            }
+
+            if (passphrase.Length < 30 && (Lowercase < 10 || Uppercase < 3 || Numbers < 2 || Symbols < 2)) {
+                return true;
+            }
+
+            return false;
 
         }
 
