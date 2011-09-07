@@ -18,18 +18,37 @@ namespace BtcAddress {
 
         private void button1_Click(object sender, EventArgs e) {
 
+            int n = 0;
+
+            try
+            {
+                n = int.Parse(textBox2.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Please enter a number of addresses between 1 and 999", "Invalid entry");
+                return;
+            }
 
 
             if (txtPassphrase.Text.Length < 20) {
-                MessageBox.Show("Your passphrase is too short.  It MUST be at least 20 characters.  If you generate a wallet with a passphrase that is too short, your coins are likely to get stolen.","Passphrase too short");
-                return;
+
+                if (MessageBox.Show("Your passphrase is too short (< 20 characters). If you generate this wallet it may be easily compromised. Are you sure you'd like to use this passphrase?", "Passphrase too short", MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    return;
+                }
+
             }
 
 
             
             if (Bitcoin.PassphraseTooSimple(txtPassphrase.Text)) {
-                MessageBox.Show("Your passphrase is too simple.  Make it longer, or add more lowercase, uppercase, numbers, and/or symbols.  This is for your protection.  If you generate a wallet with a passphrase that is too simple, your coins are likely to get stolen.","Passphrase too short");
-                return;
+
+                if (MessageBox.Show("Your passphrase is too simple. If you generate this wallet it may be easily compromised. Are you sure you'd like to use this passphrase?", "Passphrase too simple", MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    return;
+                }
+
             }
 
             StringBuilder wallet = new StringBuilder();
@@ -39,7 +58,10 @@ namespace BtcAddress {
             wallet.AppendLine(txtPassphrase.Text);
             wallet.AppendLine("Freely give out the Bitcoin address.  The private key after each address is the key needed to unlock funds sent to the Bitcoin address.\r\n");
 
-            for (int i = 1; i <= 10; i++) {
+            progressBar1.Maximum = n;
+            progressBar1.Minimum = 0;
+
+            for (int i = 1; i <= n; i++) {
 
                 string privatestring = i.ToString() + "/" + txtPassphrase.Text + "/" + i.ToString() + "/BITCOIN";
                 SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
@@ -54,9 +76,13 @@ namespace BtcAddress {
                 wallet.AppendFormat("Bitcoin Address #{0}: {1}\r\n", i, Address);
                 wallet.AppendFormat("Private Key: {0}\r\n\r\n", PrivWIF);
 
+                progressBar1.Value = i;
+
             }
 
             txtWallet.Text = wallet.ToString();
+
+            progressBar1.Value = 0;
 
         }
 
@@ -74,8 +100,7 @@ namespace BtcAddress {
             txtPassphrase.Text = randomphrase;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e) {
 
-        }
+
     }
 }

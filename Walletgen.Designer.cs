@@ -23,6 +23,8 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Walletgen));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtPassphrase = new System.Windows.Forms.TextBox();
@@ -31,6 +33,10 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -41,7 +47,7 @@
             this.label1.Size = new System.Drawing.Size(677, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Deterministic Wallet Generator generates a Paper Bitcoin Wallet from a passphrase" +
-    ".  Entering the same passphrase generates the same wallet.";
+                ".  Entering the same passphrase generates the same wallet.";
             // 
             // label2
             // 
@@ -51,14 +57,14 @@
             this.label2.Size = new System.Drawing.Size(547, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "To use it, either accept the random default passphrase or enter a secure one of y" +
-    "our choice.  Then click Generate.";
+                "our choice.  Then click Generate.";
             // 
             // txtPassphrase
             // 
             this.txtPassphrase.Location = new System.Drawing.Point(8, 72);
             this.txtPassphrase.Name = "txtPassphrase";
             this.txtPassphrase.Size = new System.Drawing.Size(720, 20);
-            this.txtPassphrase.TabIndex = 2;
+            this.txtPassphrase.TabIndex = 0;
             // 
             // label3
             // 
@@ -71,18 +77,19 @@
             // 
             // txtWallet
             // 
-            this.txtWallet.Location = new System.Drawing.Point(12, 129);
+            this.txtWallet.Location = new System.Drawing.Point(12, 145);
             this.txtWallet.Multiline = true;
             this.txtWallet.Name = "txtWallet";
-            this.txtWallet.Size = new System.Drawing.Size(715, 474);
-            this.txtWallet.TabIndex = 4;
+            this.txtWallet.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtWallet.Size = new System.Drawing.Size(715, 458);
+            this.txtWallet.TabIndex = 3;
             // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(606, 95);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(121, 28);
-            this.button1.TabIndex = 5;
+            this.button1.TabIndex = 2;
             this.button1.Text = "Generate";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -95,7 +102,7 @@
             this.label4.Size = new System.Drawing.Size(520, 13);
             this.label4.TabIndex = 6;
             this.label4.Text = "Generation formula: PrivKey = SHA256(n + \"/\" + passphrase + \"/\" + n + \"/BITCOIN) " +
-    "where n = \"1\" thru \"10\"";
+                "where n = \"1\" thru \"10\"";
             // 
             // textBox1
             // 
@@ -105,14 +112,41 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(715, 45);
             this.textBox1.TabIndex = 8;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            this.textBox1.Text = "Recommendation: Use this on a computer with no internet connection.  Use Notepad to print directly to your printer, and don't save the file.  Clear the clipboard when you're done, perhaps by copying something else to it.  If your computer is infected with malware that allows remote control of your computer, the keys you generate may be compromised.";
+            this.textBox1.Text = resources.GetString("textBox1.Text");
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(59, 100);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(108, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Number of Addresses";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(8, 126);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(719, 15);
+            this.progressBar1.TabIndex = 12;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(8, 96);
+            this.textBox2.MaxLength = 3;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(45, 20);
+            this.textBox2.TabIndex = 1;
+            this.textBox2.Text = "10";
             // 
             // Walletgen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(752, 678);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button1);
@@ -139,5 +173,9 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
