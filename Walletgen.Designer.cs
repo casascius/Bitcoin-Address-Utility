@@ -23,7 +23,6 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Walletgen));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -34,9 +33,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -77,11 +76,11 @@
             // 
             // txtWallet
             // 
-            this.txtWallet.Location = new System.Drawing.Point(12, 145);
+            this.txtWallet.Location = new System.Drawing.Point(12, 129);
             this.txtWallet.Multiline = true;
             this.txtWallet.Name = "txtWallet";
             this.txtWallet.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtWallet.Size = new System.Drawing.Size(715, 458);
+            this.txtWallet.Size = new System.Drawing.Size(715, 474);
             this.txtWallet.TabIndex = 3;
             // 
             // button1
@@ -110,7 +109,7 @@
             this.textBox1.Location = new System.Drawing.Point(12, 624);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(715, 45);
+            this.textBox1.Size = new System.Drawing.Size(661, 45);
             this.textBox1.TabIndex = 8;
             this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
@@ -125,10 +124,11 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(8, 126);
+            this.progressBar1.Location = new System.Drawing.Point(9, 72);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(719, 15);
+            this.progressBar1.Size = new System.Drawing.Size(719, 20);
             this.progressBar1.TabIndex = 12;
+            this.progressBar1.Visible = false;
             // 
             // textBox2
             // 
@@ -139,11 +139,23 @@
             this.textBox2.TabIndex = 1;
             this.textBox2.Text = "10";
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(678, 625);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(62, 41);
+            this.button2.TabIndex = 13;
+            this.button2.Text = "Print";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Walletgen
             // 
+            this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(752, 678);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label5);
@@ -174,8 +186,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button button2;
     }
 }
