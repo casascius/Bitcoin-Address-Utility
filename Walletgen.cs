@@ -76,7 +76,15 @@ namespace BtcAddress {
                 {
                     Application.DoEvents();
 
-                    string privatestring = i.ToString() + "/" + txtPassphrase.Text + "/" + i.ToString() + "/BITCOIN";
+                    string privatestring;
+                    switch (GenerationFormula) {
+                        case 1:
+                            privatestring = txtPassphrase.Text + i.ToString();
+                            break;
+                        default:
+                            privatestring = i.ToString() + "/" + txtPassphrase.Text + "/" + i.ToString() + "/BITCOIN";
+                            break;
+                    }
                     SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
                     UTF8Encoding encoding = new UTF8Encoding(false);
                     byte[] privatekey = sha256.ComputeHash(encoding.GetBytes(privatestring));
@@ -139,6 +147,15 @@ namespace BtcAddress {
 
             }
 
+        }
+
+        private int GenerationFormula = 0;
+
+
+        private void lblFormula_DoubleClick(object sender, EventArgs e) {
+            // Change formula upon double click
+            GenerationFormula = 1; // straight passphrase + number
+            lblFormula.Text = "Generation formula: PrivKey = SHA256(passphrase + n)";
         }
 
 
