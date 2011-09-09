@@ -63,6 +63,7 @@
             this.txtPrivWIF.Name = "txtPrivWIF";
             this.txtPrivWIF.Size = new System.Drawing.Size(557, 20);
             this.txtPrivWIF.TabIndex = 7;
+            this.txtPrivWIF.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // label1
             // 
@@ -79,6 +80,7 @@
             this.txtPrivHex.Name = "txtPrivHex";
             this.txtPrivHex.Size = new System.Drawing.Size(557, 20);
             this.txtPrivHex.TabIndex = 12;
+            this.txtPrivHex.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // label2
             // 
@@ -105,6 +107,7 @@
             this.txtPubHex.Name = "txtPubHex";
             this.txtPubHex.Size = new System.Drawing.Size(557, 43);
             this.txtPubHex.TabIndex = 15;
+            this.txtPubHex.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // label4
             // 
@@ -121,6 +124,7 @@
             this.txtPubHash.Name = "txtPubHash";
             this.txtPubHash.Size = new System.Drawing.Size(557, 20);
             this.txtPubHash.TabIndex = 19;
+            this.txtPubHash.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // label5
             // 
@@ -137,6 +141,7 @@
             this.txtBtcAddr.Name = "txtBtcAddr";
             this.txtBtcAddr.Size = new System.Drawing.Size(557, 20);
             this.txtBtcAddr.TabIndex = 24;
+            this.txtBtcAddr.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // btnAddressToPubHash
             // 
@@ -230,14 +235,15 @@
             this.cboCoinType.Size = new System.Drawing.Size(101, 21);
             this.cboCoinType.TabIndex = 22;
             this.cboCoinType.Text = "Bitcoin";
+            this.cboCoinType.SelectionChangeCommitted += new System.EventHandler(this.cboCoinType_SelectionChangeCommitted);
             // 
             // btnShacode
             // 
-            this.btnShacode.Location = new System.Drawing.Point(541, 58);
+            this.btnShacode.Location = new System.Drawing.Point(490, 58);
             this.btnShacode.Name = "btnShacode";
-            this.btnShacode.Size = new System.Drawing.Size(116, 30);
+            this.btnShacode.Size = new System.Drawing.Size(167, 30);
             this.btnShacode.TabIndex = 4;
-            this.btnShacode.Text = "Generate SHAcode";
+            this.btnShacode.Text = "Generate Mini Private Key";
             this.btnShacode.UseVisualStyleBackColor = true;
             this.btnShacode.Click += new System.EventHandler(this.btnShacode_Click);
             // 
@@ -299,6 +305,8 @@
             this.txtPassphrase.Name = "txtPassphrase";
             this.txtPassphrase.Size = new System.Drawing.Size(557, 20);
             this.txtPassphrase.TabIndex = 2;
+            this.txtPassphrase.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.txtPassphrase.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // label7
             // 

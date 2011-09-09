@@ -18,28 +18,36 @@ namespace BtcAddress {
 
         public static string PassphraseToPrivHex(string passphrase) {
 
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-            // Perform checksum for SHAcode
-            //System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("^S[1-9A-HJ-NP-Za-km-z]{21}$");
-            //if (reg.IsMatch(passphrase)) {
-            //    if (sha256.ComputeHash(Encoding.ASCII.GetBytes(passphrase + "?"))[0] != 0) {
-            //        throw new ApplicationException("SHAcode is not valid, fails checksum.  Possible typo?");
-            //    }
-            //}
-            
+            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();            
             UTF8Encoding utf8 = new UTF8Encoding(false);
             byte[] forsha = utf8.GetBytes(passphrase);
             byte[] shahash = sha256.ComputeHash(forsha);
             return ByteArrayToString(shahash);
         }
 
-     
+        /// <summary>
+        /// Returns 1 if candidate is a valid Mini Private Key per rules described in
+        /// Bitcoin Wiki article "Mini private key format".
+        /// Zero or negative indicates not a valid Mini Private Key.
+        /// -1 means well formed but fails typo check.
+        /// </summary>
+        public static int IsValidMiniKey(string candidate) {
+            if (candidate.Length != 22) return 0;
+            if (candidate.StartsWith("S")==false) return 0;
+            System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("^S[1-9A-HJ-NP-Za-km-z]{21}$");
+            if (reg.IsMatch(candidate) == false) return 0;
+            ASCIIEncoding ae = new ASCIIEncoding();
+            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
+            byte[] ahash = sha256.ComputeHash(ae.GetBytes(candidate + "?")); // first round
+            if (ahash[0] == 0) return 1;
+            for (int ct = 0; ct < 716; ct++) ahash = sha256.ComputeHash(ahash); // second thru 717th
+            if (ahash[0] == 0) return 1;
+            return -1;
+        }
+
+
+
         public static string PrivWIFtoPrivHex(string PrivWIF) {
-
-
-
-
-
             byte[] hex = Base58ToByteArray(PrivWIF);
             /*
             if (hex == null) {
@@ -381,10 +389,8 @@ namespace BtcAddress {
                 }
             }
 
-            // let SHAcodes through - they won't contain words, they are nonsense characters, so their entropy is a bit better per character
-            if (passphrase.Length == 22 && passphrase.StartsWith("S") && Spaces==0) {
-                return false;
-            }
+            // let mini private keys through - they won't contain words, they are nonsense characters, so their entropy is a bit better per character
+            if (IsValidMiniKey(passphrase) != 1) return false;
 
             if (passphrase.Length < 30 && (Lowercase < 10 || Uppercase < 3 || Numbers < 2 || Symbols < 2)) {
                 return true;

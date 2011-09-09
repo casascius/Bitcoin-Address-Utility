@@ -22,12 +22,8 @@ namespace BtcAddress {
             {
                 int n = 0;
 
-                try
-                {
-                    n = int.Parse(textBox2.Text);
-                }
-                catch
-                {
+                if (Int32.TryParse(textBox2.Text, out n) == false) n = 0;
+                if (n < 1 || n > 999) {                
                     MessageBox.Show("Please enter a number of addresses between 1 and 999", "Invalid entry");
                     return;
                 }
@@ -56,12 +52,20 @@ namespace BtcAddress {
                 }
 
                 StringBuilder wallet = new StringBuilder();
-                wallet.AppendLine("Paper Bitcoin Wallet.  Keep private, do not lose, do not allow anyone to make a copy.  Anyone with the passphrase or private keys can steal your funds.\r\n");
 
-                wallet.AppendLine("Passphrase was:");
-                wallet.AppendLine(txtPassphrase.Text);
-                wallet.AppendLine("Freely give out the Bitcoin address.  The private key after each address is the key needed to unlock funds sent to the Bitcoin address.\r\n");
+                
+                bool CSVmode = cboOutputType.Text.Contains("CSV");
+                bool ScriptMode = cboOutputType.Text.Contains("Import script");
+                bool ShowHelpText = cboOutputType.Text.Contains("Normal");
 
+                if (ShowHelpText) {
+                    wallet.AppendLine("Paper Bitcoin Wallet.  Keep private, do not lose, do not allow anyone to make a copy.  Anyone with the passphrase or private keys can steal your funds.\r\n");
+
+                    wallet.AppendLine("Passphrase was:");
+                    wallet.AppendLine(txtPassphrase.Text);
+                    wallet.AppendLine("Freely give out the Bitcoin address.  The private key after each address is the key needed to unlock funds sent to the Bitcoin address.\r\n");
+
+                }
                 progressBar1.Maximum = n;
                 progressBar1.Minimum = 0;
                 progressBar1.Visible = true;
@@ -82,8 +86,14 @@ namespace BtcAddress {
                     string PubHex = Bitcoin.PrivHexToPubHex(bytestring);
                     string Address = Bitcoin.PubHashToAddress(Bitcoin.PubHexToPubHash(PubHex), "Bitcoin");
 
-                    wallet.AppendFormat("Bitcoin Address #{0}: {1}\r\n", i, Address);
-                    wallet.AppendFormat("Private Key: {0}\r\n\r\n", PrivWIF);
+                    if (CSVmode) {
+                        wallet.AppendFormat("{0},\"{1}\",\"{2}\"\r\n", i, Address, PrivWIF);
+                    } else if (ScriptMode) {
+                        wallet.AppendFormat("# {0}: {1}\"\r\n./bitcoind importprivkey {2}\r\n", i, Address, PrivWIF);                                            
+                    } else {
+                        wallet.AppendFormat("Bitcoin Address #{0}: {1}\r\n", i, Address);
+                        wallet.AppendFormat("Private Key: {0}\r\n\r\n", PrivWIF);
+                    }
 
                     progressBar1.Value = i;
                 }
@@ -104,7 +114,7 @@ namespace BtcAddress {
             Byte[] byte8 = new byte[phraselength];
             rng.GetBytes(byte8);
             string randomphrase = "";
-            string junk64 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz*-_.+!";
+            string junk64 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz*#_%+!";
             for (int i = 0; i < phraselength; i++) {
                 randomphrase += junk64.Substring(byte8[i] & 63, 1);
             }
@@ -130,6 +140,7 @@ namespace BtcAddress {
             }
 
         }
+
 
 
 

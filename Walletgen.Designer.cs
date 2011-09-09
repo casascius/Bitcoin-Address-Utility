@@ -36,6 +36,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.cboOutputType = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -43,10 +44,10 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(5, 7);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(677, 13);
+            this.label1.Size = new System.Drawing.Size(672, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Deterministic Wallet Generator generates a Paper Bitcoin Wallet from a passphrase" +
-                ".  Entering the same passphrase generates the same wallet.";
+            this.label1.Text = "Paper Wallet Generator generates a deterministic Bitcoin wallet from a passphrase" +
+    ".  Entering the same passphrase generates the same wallet.";
             // 
             // label2
             // 
@@ -56,7 +57,7 @@
             this.label2.Size = new System.Drawing.Size(547, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "To use it, either accept the random default passphrase or enter a secure one of y" +
-                "our choice.  Then click Generate.";
+    "our choice.  Then click Generate.";
             // 
             // txtPassphrase
             // 
@@ -101,7 +102,7 @@
             this.label4.Size = new System.Drawing.Size(520, 13);
             this.label4.TabIndex = 6;
             this.label4.Text = "Generation formula: PrivKey = SHA256(n + \"/\" + passphrase + \"/\" + n + \"/BITCOIN) " +
-                "where n = \"1\" thru \"10\"";
+    "where n = \"1\" thru \"10\"";
             // 
             // textBox1
             // 
@@ -118,9 +119,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(59, 100);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(108, 13);
+            this.label5.Size = new System.Drawing.Size(107, 13);
             this.label5.TabIndex = 10;
-            this.label5.Text = "Number of Addresses";
+            this.label5.Text = "Number of addresses";
             // 
             // progressBar1
             // 
@@ -149,12 +150,26 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // cboOutputType
+            // 
+            this.cboOutputType.FormattingEnabled = true;
+            this.cboOutputType.Items.AddRange(new object[] {
+            "Normal",
+            "CSV",
+            "Import script"});
+            this.cboOutputType.Location = new System.Drawing.Point(192, 96);
+            this.cboOutputType.Name = "cboOutputType";
+            this.cboOutputType.Size = new System.Drawing.Size(121, 21);
+            this.cboOutputType.TabIndex = 14;
+            this.cboOutputType.Text = "Normal";
+            // 
             // Walletgen
             // 
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(752, 678);
+            this.Controls.Add(this.cboOutputType);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.progressBar1);
@@ -168,7 +183,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "Walletgen";
-            this.Text = "Deterministic Wallet Generator";
+            this.Text = "Paper Wallet Generator";
             this.Shown += new System.EventHandler(this.Walletgen_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -189,5 +204,6 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ComboBox cboOutputType;
     }
 }
