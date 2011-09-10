@@ -23,7 +23,7 @@ namespace BtcAddress {
             InitializeComponent();
         }
 
-
+	//test
 
         private void btnPassphrase_Click(object sender, EventArgs e) {
 
