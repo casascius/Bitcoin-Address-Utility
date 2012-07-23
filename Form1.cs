@@ -23,12 +23,6 @@ namespace BtcAddress {
             InitializeComponent();
         }
 
-<<<<<<< HEAD
-		// a different test
-=======
-	//test
->>>>>>> 1f3595704784ba9fd03d9e0f1f425b6f458c62cb
-
         private void btnPassphrase_Click(object sender, EventArgs e) {
 
             ChangeFlag++;
