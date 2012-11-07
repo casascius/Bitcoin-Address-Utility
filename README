@@ -1,3 +1,6 @@
-This project has one dependency: the BouncyCastle Crypto library.
+This project has two dependencies:
 
-Get it from http://www.bouncycastle.org/csharp/  (just the compiled assembly is fine).
+1. the BouncyCastle Crypto library.
+2. ThoughtWorks QRCode DLL
+
+Get BouncyCastle from http://www.bouncycastle.org/csharp/  (just the compiled assembly is fine).

@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>132, 17</value>
-  </metadata>
+  <data name="label6.Text" xml:space="preserve">
+    <value>Key Combiner combines two cryptographic keys into one, to allow two parties to share the effort of generating
+a restricted Bitcoin address.  Funds sent to it can only spent by someone who has access to both private keys.
+
+To do this, two parties each generate a keypair, and then share only the public key with one another.  Both can
+calculate the combined Bitcoin address by combining their private key with the public one received.  Send funds
+to that address.  The person who should be allowed to spend those funds needs to have both private keys.
+
+If you combine one public key with one private key, you can calculate the combined Bitcoin address, but not
+the combined public key.  Combining two private keys yields both the combined address and the private key
+needed to spend the funds sent to the combined address.</value>
+  </data>
 </root>

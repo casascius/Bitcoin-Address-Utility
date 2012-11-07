@@ -99,10 +99,9 @@
             this.lblFormula.AutoSize = true;
             this.lblFormula.Location = new System.Drawing.Point(15, 608);
             this.lblFormula.Name = "lblFormula";
-            this.lblFormula.Size = new System.Drawing.Size(520, 13);
+            this.lblFormula.Size = new System.Drawing.Size(268, 13);
             this.lblFormula.TabIndex = 6;
-            this.lblFormula.Text = "Generation formula: PrivKey = SHA256(n + \"/\" + passphrase + \"/\" + n + \"/BITCOIN) " +
-    "where n = \"1\" thru \"10\"";
+            this.lblFormula.Text = "Generation formula: PrivKey = SHA256(passphrase + n)";
             this.lblFormula.DoubleClick += new System.EventHandler(this.lblFormula_DoubleClick);
             // 
             // textBox1
@@ -135,7 +134,7 @@
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(8, 96);
-            this.textBox2.MaxLength = 3;
+            this.textBox2.MaxLength = 4;
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(45, 20);
             this.textBox2.TabIndex = 1;

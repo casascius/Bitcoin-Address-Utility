@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BtcAddress</RootNamespace>
     <AssemblyName>BtcAddress</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -34,9 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.7.4114.6375, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\bouncy\BouncyCastle.Crypto.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>.\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -47,28 +47,75 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="ThoughtWorks.QRCode">
+      <HintPath>.\ThoughtWorks.QRCode.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KeyCombiner.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeyCombiner.Designer.cs">
+      <DependentUpon>KeyCombiner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyPair.cs" />
+    <Compile Include="Base58Calc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Base58Calc.Designer.cs">
+      <DependentUpon>Base58Calc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Bitcoin.cs" />
+    <Compile Include="Address.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MiniKeyPair.cs" />
+    <Compile Include="MofN.cs" />
+    <Compile Include="MofNcalc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MofNcalc.Designer.cs">
+      <DependentUpon>MofNcalc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PaperWalletPrinter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PaperWalletPrinter.Designer.cs">
+      <DependentUpon>PaperWalletPrinter.cs</DependentUpon>
+    </Compile>
     <Compile Include="PCPrint.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicKey.cs" />
+    <Compile Include="QRPrint.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Walletgen.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Walletgen.Designer.cs">
       <DependentUpon>Walletgen.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Base58Calc.resx">
+      <DependentUpon>Base58Calc.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyCombiner.resx">
+      <DependentUpon>KeyCombiner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MofNcalc.resx">
+      <DependentUpon>MofNcalc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PaperWalletPrinter.resx">
+      <DependentUpon>PaperWalletPrinter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

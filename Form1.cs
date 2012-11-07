@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Threading;
 using System.Security.Cryptography;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto;
@@ -15,7 +16,10 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
+using ThoughtWorks.QRCode.Codec;
+
 using System.IO;
+using System.Drawing.Printing;
 
 namespace BtcAddress {
     public partial class Form1 : Form {
@@ -29,8 +33,8 @@ namespace BtcAddress {
 
             ChangeFlag++;
             try {
-                SetText(txtPrivHex, Bitcoin.PassphraseToPrivHex(txtPassphrase.Text));
-                int isminikey = Bitcoin.IsValidMiniKey(txtPassphrase.Text);
+                SetText(txtPrivHex, RemoveSpacesIf(Bitcoin.PassphraseToPrivHex(txtMinikey.Text)));
+                int isminikey = MiniKeyPair.IsValidMiniKey(txtMinikey.Text);
                 if (isminikey==1) {
                     lblWhyNot.Visible = false;
                     lblNotSafe.Visible = true;
@@ -41,7 +45,7 @@ namespace BtcAddress {
                     lblNotSafe.Visible = true;
                     lblNotSafe.Text = "Invalid mini key";
                     lblNotSafe.ForeColor = Color.Red;
-                } else if (txtPassphrase.Text.Length < 20 || Bitcoin.PassphraseTooSimple(txtPassphrase.Text)) {
+                } else if (txtMinikey.Text.Length < 20 || Bitcoin.PassphraseTooSimple(txtMinikey.Text)) {
                     lblWhyNot.Visible = true;
                     lblNotSafe.Visible = true;
                     lblNotSafe.Text = "Warning - Not Safe";
@@ -57,7 +61,8 @@ namespace BtcAddress {
                 btnPrivToPub_Click(null, null);
                 btnPubHexToHash_Click(null, null);
                 btnPubHashToAddress_Click(null, null);
-            } catch (ApplicationException ae) {
+                SetText(txtMinikey, txtMinikey.Text); // ungreys box
+            } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
                 ChangeFlag--;
@@ -68,9 +73,19 @@ namespace BtcAddress {
         private void btnPrivHexToWIF_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {
-                SetText(txtPrivWIF, Bitcoin.PrivHexToWIF(txtPrivHex.Text));
-                btnPrivToPub_Click(null, null);
-            } catch (ApplicationException ae) {
+                if (txtPrivHex.Text.StartsWith("\"") && txtPrivHex.Text.EndsWith("\"") && txtPrivHex.Text.Length > 2) {
+                    UTF8Encoding utf8 = new UTF8Encoding(false);
+                    byte[] str = Bitcoin.Force32Bytes(utf8.GetBytes(txtPrivHex.Text.Substring(1, txtPrivHex.Text.Length - 2)));
+                    txtPrivHex.Text = RemoveSpacesIf(Bitcoin.ByteArrayToString(str));
+                }
+                KeyPair ba = new KeyPair(txtPrivHex.Text, txtPassphrase.Text, compressed: compressToolStripMenuItem.Checked);
+
+                SetText(txtPrivWIF, ba.PrivateKeyBase58);
+                SetText(txtPrivHex, ba.PrivateKeyHex);
+                SetText(txtPubHex, ba.PublicKeyHex);
+                SetText(txtPubHash, ba.Hash160Hex);
+                SetText(txtBtcAddr, new Address(ba, AddressTypeByte).AddressBase58);              
+            } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
                 ChangeFlag--;
@@ -82,11 +97,12 @@ namespace BtcAddress {
         private void btnPrivWIFToHex_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {
-                SetText(txtPrivHex, Bitcoin.PrivWIFtoPrivHex(txtPrivWIF.Text));
-
-                btnPrivHexToWIF_Click(null, null);
-
-            } catch (ApplicationException ae) {
+                KeyPair kp = new KeyPair(txtPrivWIF.Text, txtPassphrase.Text);
+                SetText(txtPrivHex, kp.PrivateKeyHex);
+                SetText(txtPubHex, kp.PublicKeyHex);
+                SetText(txtPubHash, kp.Hash160Hex);
+                SetText(txtBtcAddr, new Address(kp, AddressTypeByte).AddressBase58);
+            } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
                 ChangeFlag--;
@@ -98,9 +114,11 @@ namespace BtcAddress {
 
             ChangeFlag++;
             try {
-                SetText(txtPubHex, Bitcoin.PrivHexToPubHex(txtPrivHex.Text));
-                btnPubHexToHash_Click(null, null);
-            } catch (ApplicationException ae) {
+                KeyPair kp = new KeyPair(txtPrivHex.Text, compressed: compressToolStripMenuItem.Checked);
+                SetText(txtPubHex, kp.PublicKeyHex);
+                SetText(txtPubHash, kp.Hash160Hex);
+                SetText(txtBtcAddr, new Address(kp, AddressTypeByte).AddressBase58);
+            } catch (ArgumentException ae) {
                 MessageBox.Show(ae.Message);
             } finally {
                 ChangeFlag--;
@@ -111,9 +129,10 @@ namespace BtcAddress {
         private void btnPubHexToHash_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {
-                SetText(txtPubHash, Bitcoin.PubHexToPubHash(txtPubHex.Text));
-                btnPubHashToAddress_Click(null, null);
-            } catch (ApplicationException ae) {
+                PublicKey pub = new PublicKey(txtPubHex.Text);
+                SetText(txtPubHash, pub.Hash160Hex);
+                SetText(txtBtcAddr, new Address(pub, AddressTypeByte).AddressBase58);
+            } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
                 ChangeFlag--;
@@ -122,9 +141,9 @@ namespace BtcAddress {
 
         private void btnPubHashToAddress_Click(object sender, EventArgs e) {
             ChangeFlag++;
-            try {
+            try {                
                 SetText(txtBtcAddr, Bitcoin.PubHashToAddress(txtPubHash.Text, cboCoinType.Text));
-            } catch (ApplicationException ae) {
+            } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
                 ChangeFlag--;
@@ -134,7 +153,7 @@ namespace BtcAddress {
         private void btnAddressToPubHash_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {
-                byte[] hex = Bitcoin.Base58ToByteArray(txtBtcAddr.Text);
+                byte[] hex = Bitcoin.Base58CheckToByteArray(txtBtcAddr.Text);
                 if (hex == null || hex.Length != 21) {
                     int L = txtBtcAddr.Text.Length;
                     if (L >= 33 && L <= 34) {
@@ -147,7 +166,7 @@ namespace BtcAddress {
                     }
                     return;
                 }
-                SetText(txtPubHash, Bitcoin.ByteArrayToString(hex, 1, 20));
+                SetText(txtPubHash, RemoveSpacesIf(Bitcoin.ByteArrayToString(hex, 1, 20)));
             } finally {
                 ChangeFlag--;
             }
@@ -159,23 +178,16 @@ namespace BtcAddress {
             try {
                 lblNotSafe.Visible = false;
                 lblWhyNot.Visible = false;
-                SetText(txtPassphrase, "");
+                SetText(txtMinikey, "");
 
-                ECKeyPairGenerator gen = new ECKeyPairGenerator();
-                var secureRandom = new SecureRandom();
-                var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
-                var ecParams = new ECDomainParameters(ps.Curve, ps.G, ps.N, ps.H);
-                var keyGenParam = new ECKeyGenerationParameters(ecParams, secureRandom);
-                gen.Init(keyGenParam);
+                KeyPair kp = KeyPair.Create(ExtraEntropy, compressToolStripMenuItem.Checked);
 
-                AsymmetricCipherKeyPair kp = gen.GenerateKeyPair();
+                SetText(txtPrivWIF, new KeyPair(kp.PrivateKeyBytes, txtPassphrase.Text, compressed: kp.IsCompressedPoint).PrivateKeyBase58);
+                SetText(txtPrivHex, kp.PrivateKeyHex);
+                SetText(txtPubHex, kp.PublicKeyHex);
+                SetText(txtPubHash, kp.Hash160Hex);
+                SetText(txtBtcAddr, new Address(kp, AddressTypeByte).AddressBase58);              
 
-                ECPrivateKeyParameters priv = (ECPrivateKeyParameters)kp.Private;
-
-                byte[] hexpriv = priv.D.ToByteArrayUnsigned();
-                SetText(txtPrivHex, Bitcoin.ByteArrayToString(hexpriv));
-
-                btnPrivHexToWIF_Click(null, null);
             } finally {
                 ChangeFlag--;
             }
@@ -188,8 +200,10 @@ namespace BtcAddress {
                     Process.Start("http://www.blockexplorer.com/testnet/address/" + txtBtcAddr.Text);
                 } else if (cboCoinType.Text == "Namecoin") {
                     Process.Start("http://explorer.dot-bit.org/a/" + txtBtcAddr.Text);
+                } else if (cboCoinType.Text == "Litecoin") {
+                    Process.Start("http://explorer.litecoin.net/address/" + txtBtcAddr.Text);
                 } else {
-                    Process.Start("http://www.blockexplorer.com/address/" + txtBtcAddr.Text);
+                    Process.Start("http://www.blockchain.info/address/" + txtBtcAddr.Text);
                 }
             } catch { }
             
@@ -212,7 +226,7 @@ namespace BtcAddress {
             for (int i = 0; i < btcaddrlen; i++) {
                 for (int j = 0; j < 58; j++) {
                     string attempt = btcaddr.Substring(0, i) + b58.Substring(j, 1) + btcaddr.Substring(i + 1);
-                    byte[] bytes = Bitcoin.Base58ToByteArray(attempt);
+                    byte[] bytes = Bitcoin.Base58CheckToByteArray(attempt);
                     if (bytes != null) {
                         MessageBox.Show("Correction was successful.  Try your request again.");
                         return attempt;
@@ -234,56 +248,32 @@ namespace BtcAddress {
         private void btnShacode_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {
-                // SHAcode is a 22-character string that starts with S, whose SHA256 hash can be used as private key.
-                // There is a simple 8-bit check: first byte of SHA256(string + '?') must be 00.
+                MiniKeyPair mkp = MiniKeyPair.CreateRandom(ExtraEntropy);
 
-                string b58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-                SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-                Sha256Digest bcsha256a = new Sha256Digest();
-                Sha256Digest bcsha256b = new Sha256Digest();
-
-                string shacode = "";
-                SecureRandom sr = new SecureRandom();          
-
-                do {
-
-                    // Get 'S' + 21 random base58 characters, where sha256(result + '?') starts with the byte 00 (1 in 256 possibilities)
-                    shacode = "S";
-                    for (int i = 0; i < 21; i++) {
-                        long x = sr.NextLong() & long.MaxValue;
-                        long x58 = x % 58;
-                        shacode += b58.Substring((int)x58, 1);
-                    }
-                    string shacodeq = shacode + "?";
-                    byte[] ahash = sha256.ComputeHash(Encoding.ASCII.GetBytes(shacodeq));
-                    // for more secure codes (but poorer performance - or perhaps put in an hourglass) uncomment the following.
-                    // Note that 2 rounds of sha256 are done within each loop, and 358 * 2 = 716.
-                    // The check code looks for a leading 0 byte either on the first or the 717th round of sha256
-                    // per Mini private key format (Wiki).
-                    /*
-                    byte[] bhash = new byte[32];
-                    for (int ct = 0; ct < 358; ct++) {
-                        bcsha256a.BlockUpdate(ahash, 0, 32);
-                        bcsha256a.DoFinal(bhash, 0);
-                        bcsha256a.Reset();
-                        bcsha256a.BlockUpdate(bhash, 0, 32);
-                        bcsha256a.DoFinal(ahash, 0);
-                        bcsha256a.Reset();
-                    }
-                     */ 
-                    if (ahash[0] == 0) break;
-                } while (true);
-
-                txtPassphrase.Text = shacode;
-
-                btnPassphrase_Click(null, null);
-                btnPrivWIFToHex_Click(null, null);
-                btnPrivToPub_Click(null, null);
-                btnPubHexToHash_Click(null, null);
-                btnPubHashToAddress_Click(null, null);
-
+                SetText(txtMinikey, mkp.MiniKey);
+                SetText(txtPrivWIF, new KeyPair(mkp.PrivateKeyBytes, txtPassphrase.Text).PrivateKeyBase58);
+                SetText(txtPrivHex, mkp.PrivateKeyHex);
+                SetText(txtPubHex, mkp.PublicKeyHex);
+                SetText(txtPubHash, mkp.Hash160Hex);
+                SetText(txtBtcAddr, new Address(mkp, AddressTypeByte).AddressBase58);
+                
             } finally {
                 ChangeFlag--;
+            }
+        }
+
+        private byte AddressTypeByte {
+            get {
+                string cointype = cboCoinType.SelectedText.ToLowerInvariant();
+                switch (cointype) {
+                    case "bitcoin": return 0;
+                    case "namecoin": return 52;
+                    case "testnet": return 111;
+                    case "litecoin": return 48;
+                }
+                byte b = 0;
+                if (Byte.TryParse(cointype, out b)) return b;
+                return 0;
             }
         }
 
@@ -293,7 +283,7 @@ namespace BtcAddress {
         }
 
         private void whatIsASHAcodeToolStripMenuItem_Click(object sender, EventArgs e) {
-            MessageBox.Show("A Mini Private Key is a Bitcoin address generated from a short 22-character string of text.  The advantage is that the text representation of the private key is shorter, and easier to use in " +
+            MessageBox.Show("A Mini Private Key is a Bitcoin address generated from a short 30-character string of text.  The advantage is that the text representation of the private key is shorter, and easier to use in " +
             "QR codes and in other places where space is at a premium. " +
                 "The private key is simply the SHA256 hash of the string.  SHAcodes start with the letter 'S' and include a 7-bit typo check.");
         }
@@ -316,12 +306,12 @@ namespace BtcAddress {
         private void TextBox_TextChanged(object sender, EventArgs e) {
             if (ChangeFlag > 0) return;
             TextBox txtSender = (TextBox)sender;
-            TextBox[] textboxes = new TextBox[] { txtPassphrase, txtPrivWIF, txtPrivHex, txtPubHex, txtPubHash, txtBtcAddr };
+            TextBox[] textboxes = new TextBox[] { txtMinikey, txtPrivWIF, txtPrivHex, txtPubHex, txtPubHash, txtBtcAddr };
             foreach (TextBox t in textboxes) {
                 t.ForeColor = (t == txtSender) ? SystemColors.WindowText : SystemColors.GrayText;
             }
             // if passphrase changed, remove notation
-            if (txtSender == txtPassphrase && lblNotSafe.Visible) {
+            if (txtSender == txtMinikey && lblNotSafe.Visible) {
                 lblNotSafe.Visible = false;
                 lblWhyNot.Visible = false;
             }
@@ -334,23 +324,479 @@ namespace BtcAddress {
         /// </summary>
         private void SetText(TextBox thebox, string TheText) {
             thebox.ForeColor = SystemColors.WindowText;
-            thebox.Text = TheText;
+            if (Object.ReferenceEquals(thebox, txtPrivHex) ||
+                Object.ReferenceEquals(thebox, txtPubHex) ||
+                object.ReferenceEquals(thebox, txtPubHash)) {
+                    thebox.Text = RemoveSpacesIf(TheText);
+            } else {
+                thebox.Text = TheText;
+            }
         }
 
         /// <summary>
         /// if coin type is changed, grey out the address until it is rerendered
         /// </summary>
-        private void cboCoinType_SelectionChangeCommitted(object sender, EventArgs e) {
+        private void cboCoinType_SelectionChangeCommitted(object sender, EventArgs e) {            
             txtBtcAddr.ForeColor = SystemColors.GrayText;
+            // convert address when possible
+            ChangeFlag++;
+            try {
+                Address addr = new Address(new Address(txtBtcAddr.Text), AddressTypeByte);
+                txtBtcAddr.Text = addr.AddressBase58;
+            } catch (Exception) {
+                // ignore
+            } finally {
+                ChangeFlag--;
+            }
         }
 
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e) {
             if (e.KeyChar == 13) {
                 e.Handled = true;
                 TextBox txtSender = (TextBox)sender;
-                if (txtSender == txtPassphrase) btnPassphrase_Click(null, null);
+                if (txtSender == txtMinikey) btnPassphrase_Click(null, null);
                 if (txtSender == txtPrivWIF) btnPrivWIFToHex_Click(null, null);
             }
+        }
+
+
+        private object LockObject = new object();
+
+        private List<Thread> Threads = new List<Thread>();
+        
+        
+        private void label5_Click(object sender, EventArgs e) {
+            return;
+            
+            if (txtBtcAddr.Text.Length < 50) {
+                MessageBox.Show("Please fill the Address box with lots of random nonsense characters - this helps ensure the randomness of the addresses.");
+                return;
+
+            }
+
+            salt += txtBtcAddr.Text;
+
+            for (int i = 0; i < 4; i++) {
+
+                ThreadStart ts1 = new ThreadStart(GenerateAddresses);
+                Thread t1 = new Thread(ts1);
+                t1.Start();
+                Threads.Add(t1);
+            }
+
+
+            /*
+            ECKeyPairGenerator gen = new ECKeyPairGenerator();
+            var secureRandom = new SecureRandom();
+            var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
+            var ecParams = new ECDomainParameters(ps.Curve, ps.G, ps.N, ps.H);
+            var keyGenParam = new ECKeyGenerationParameters(ecParams, secureRandom);
+            gen.Init(keyGenParam);
+
+            // Generate private key #1.
+
+            AsymmetricCipherKeyPair kp1 = gen.GenerateKeyPair();
+
+            ECPrivateKeyParameters priv1 = (ECPrivateKeyParameters)kp1.Private;
+
+            byte[] hexpriv1 = priv1.D.ToByteArrayUnsigned();
+
+            Debug.WriteLine("Private key 1 is " + Bitcoin.ByteArrayToString(hexpriv1));
+            
+            // Get the public key for #1 (multiplying it by constant G defined by secp256k1).
+            ECPoint pub1 = ps.G.Multiply(priv1.D);
+
+            // Generate private key #2.
+
+            AsymmetricCipherKeyPair kp2 = gen.GenerateKeyPair();
+
+            ECPrivateKeyParameters priv2 = (ECPrivateKeyParameters)kp2.Private;
+
+            byte[] hexpriv2 = priv2.D.ToByteArrayUnsigned();
+
+            Debug.WriteLine("Private key 2 is " + Bitcoin.ByteArrayToString(hexpriv2));
+
+            // Get the public key for #2.
+            ECPoint pub2 = ps.G.Multiply(priv2.D);
+
+            // Add the two public keys together.
+
+            ECPoint pubsum = pub1.Add(pub2);
+
+            // Turn that into a Bitcoin address.
+            byte[] pubbytes = Bitcoin.PubKeyToByteArray(pubsum);
+            string pubhashsum = Bitcoin.PubHexToPubHash(pubbytes);
+            string pubaddr = Bitcoin.PubHashToAddress(pubhashsum, "Bitcoin");
+            Debug.WriteLine("Bitcoin address of summing public keys: " + pubaddr);
+
+            // Combine the two private keys together.
+            Org.BouncyCastle.Math.BigInteger privsum = priv1.D.Add(priv2.D).Mod(ps.N);
+            
+            // Turn the combined privkey into a pubkey...
+            ECPoint pub12 = ps.G.Multiply(privsum);
+            
+            // ... then a Bitcoin address.
+            pubbytes = Bitcoin.PubKeyToByteArray(pub12);
+            pubhashsum = Bitcoin.PubHexToPubHash(pubbytes);
+            pubaddr = Bitcoin.PubHashToAddress(pubhashsum, "Bitcoin");
+            Debug.WriteLine("Bitcoin address of summing private keys: " + pubaddr);
+
+            Debug.WriteLine("Combined private key: " + Bitcoin.ByteArrayToString(privsum.ToByteArrayUnsigned()));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            return;
+            */
+            // SHAcode is a 22-character string that starts with S, whose SHA256 hash can be used as private key.
+            // There is a simple 8-bit check: first byte of SHA256(string + '?') must be 00.
+
+
+            /*
+
+            return;
+            int linesdone = 0;
+            using (StreamReader sr1 = new StreamReader("d:\\t\\bitaddress2.txt")) {
+                while (sr1.EndOfStream == false) {
+                    Application.DoEvents();
+                    string line = sr1.ReadLine();
+                    string[] fields = line.Split(',');
+                    if (fields.Length == 3) {
+                        try {
+                            string privkey = fields[2];
+                            string privhex = Bitcoin.PrivWIFtoPrivHex(privkey);
+                            string pubhex = Bitcoin.PrivHexToPubHex(privhex);
+                            string pubhash = Bitcoin.PubHexToPubHash(pubhex);
+                            string address = Bitcoin.PubHashToAddress(pubhash, "Bitcoin");
+                            if (fields[1] != address) {
+                                Debug.WriteLine("Failed on " + line);
+                                //   return;
+                            }
+                        } catch (Exception e1) {
+                            Debug.WriteLine("Got an exception on this line: " + line);
+                        }
+                        linesdone++;
+                        if (linesdone % 100 == 0) Debug.WriteLine("Passed " + linesdone);
+                    }
+                }
+            }*/
+        }
+
+
+
+        private string salt = "wefdhwfkhjwefopiwjdfldkdsfjndkljf"; // initial salt replaced at runtime
+
+        private void GenerateAddresses() {
+
+
+
+
+            string b58 = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+            int b58len = b58.Length;
+            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
+            Sha256Digest bcsha256a = new Sha256Digest();
+            Sha256Digest bcsha256b = new Sha256Digest();
+
+            string shacode = "";
+
+
+            SecureRandom sr = new SecureRandom();
+            int dec = 0;
+
+            List<string> myaddresses = new List<string>();
+            Dictionary<string, string> myprivkeys = new Dictionary<string, string>();
+
+            for (int ji = 0; ji < 100000000; ji++) {
+                byte[] poop = sha256.ComputeHash(Encoding.ASCII.GetBytes(salt + ji.ToString()));
+
+                byte[] ahash = null;
+                do {
+
+                    // Get 'S' + 21 random base58 characters, where sha256(result + '?') starts with the byte 00 (1 in 256 possibilities)
+                    shacode = "S";
+                    for (int i = 0; i < 29; i++) {
+                        long x = sr.NextLong() & long.MaxValue;
+                        x += poop[i];
+                        long x58 = x % b58len;
+                        shacode += b58.Substring((int)x58, 1);
+                    }
+                    string shacodeq = shacode + "?";
+                    ahash = sha256.ComputeHash(Encoding.ASCII.GetBytes(shacodeq));
+
+                    if (ahash[0] == 0) break;
+
+                    Application.DoEvents();
+                } while (true);
+
+
+                string pubhex = Bitcoin.PrivHexToPubHex(Bitcoin.ByteArrayToString(sha256.ComputeHash(Encoding.ASCII.GetBytes(shacode))));
+                string pubhash = Bitcoin.PubHexToPubHash(pubhex);
+                string address = Bitcoin.PubHashToAddress(pubhash, "Bitcoin");
+
+
+                pubhex = pubhex.Replace(" ", "");
+
+                lock (LockObject) {
+
+                    using (StreamWriter sw1 = new StreamWriter("privkeys3.txt", true)) {
+                        sw1.WriteLine("\"" + address + "\",\"" + shacode + "\",\"" + pubhex + "\"");
+                        sw1.Close();
+                    }
+
+
+                    using (StreamWriter sw1 = new StreamWriter("addresses3.txt", true)) {
+                        sw1.WriteLine("\"" + address + "\",\"" + pubhex + "\"");
+                        sw1.Close();
+                    }
+                }
+                
+                Debug.WriteLine(shacode + "=" + address);
+                /*
+                myaddresses.Add(address);
+                myprivkeys.Add(address, shacode);
+                dec++;
+                if (dec == 1000) {
+                    dec = 0;
+                    Application.DoEvents();
+                }
+                 * */
+            }
+
+
+        }
+
+        private void label4_Click(object sender, EventArgs e) {
+            return;
+            int Records=0;
+            int LineNumber = 1;
+            using (StreamReader sr1 = new StreamReader("privkeys3.txt")) {
+                while (sr1.EndOfStream == false) {
+                    string line = sr1.ReadLine();
+                    LineNumber++;
+                    line = line.Replace("\"", "");
+                    string[] fields = line.Split(',');
+                    if (fields.Length == 3) {
+                        SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
+                        byte[] privkey = sha256.ComputeHash(Encoding.ASCII.GetBytes(fields[1]));
+
+                        string pubhex = Bitcoin.PrivHexToPubHex(Bitcoin.ByteArrayToString(privkey)).Replace(" ", "");
+                        string pubhash = Bitcoin.PubHexToPubHash(pubhex);
+                        string address = Bitcoin.PubHashToAddress(pubhash, "Bitcoin");
+
+                        if (address != fields[0] || pubhex != fields[2]) {
+                            MessageBox.Show("Validation failure on line " + LineNumber.ToString());
+                        }
+                        Records++;
+                        if (Records % 100 == 0) Debug.WriteLine("Records: " + Records);
+                    }
+                }
+            }
+            MessageBox.Show("Successfully validated " + Records + " records.");
+        }
+
+        private void label3_Click(object sender, EventArgs e) {
+            return;
+            
+
+
+            
+            // * CODE TO BREAK PRIVATE KEYS OUT OF WALLET.DAT
+            using (FileStream sr = new FileStream("wallet.dat",FileMode.Open)) {
+                byte[] b = new byte[4000000];
+                int len = sr.Read(b, 0, b.Length);
+                sr.Close();
+
+                for (int i = 0; i < len - 34; i++) {
+                    if (b[i] == 4 && b[i + 1] == 0x20) {
+                        byte[] privkey = new byte[33];
+                        privkey[0] = 0x80;
+                        for (int j = 0; j < 32; j++) {
+                            privkey[j+1] = b[i + j + 2];
+                        }
+                        Debug.WriteLine("./bitcoind importprivkey " + Bitcoin.ByteArrayToBase58Check(privkey));
+                    }
+                }
+            }
+             
+        }
+
+
+
+        private void base58CalcToolStripMenuItem_Click(object sender, EventArgs e) {
+            new Base58Calc().Show();
+        }
+
+        private void mofNCalcToolStripMenuItem_Click(object sender, EventArgs e) {
+            new MofNcalc().Show();
+        }
+
+        private void paperWalletPrinterToolStripMenuItem_Click(object sender, EventArgs e) {
+            new PaperWalletPrinter().Show();
+        }
+
+        /// <summary>
+        /// User toggled whether spaces should be shown between bytes of hex.
+        /// Update any existing display to match new preference.
+        /// </summary>
+        private void spaceBetweenHexBytesToolStripMenuItem_Click(object sender, EventArgs e) {
+            ChangeFlag++;
+            spaceBetweenHexBytesToolStripMenuItem.Checked = !spaceBetweenHexBytesToolStripMenuItem.Checked;
+            txtPrivHex.Text = RemoveSpacesIf(Bitcoin.ByteArrayToString(Bitcoin.HexStringToBytes(txtPrivHex.Text)));
+            txtPubHex.Text = RemoveSpacesIf(Bitcoin.ByteArrayToString(Bitcoin.HexStringToBytes(txtPubHex.Text)));
+            txtPubHash.Text = RemoveSpacesIf(Bitcoin.ByteArrayToString(Bitcoin.HexStringToBytes(txtPubHash.Text)));
+            ChangeFlag--;
+
+        }
+
+        /// <summary>
+        /// Removes spaces from a string if user has selected no spaces to appear in hex strings.
+        /// </summary>
+        private string RemoveSpacesIf(string what) {
+            if (spaceBetweenHexBytesToolStripMenuItem.Checked) return what;
+            return what.Replace(" ", "");
+        }
+
+        private void compressPublicKeyToolStripMenuItem_Click(object sender, EventArgs e) {
+            ChangeFlag++;
+            try {
+                PublicKey pub = new PublicKey(txtPubHex.Text);
+                pub = new PublicKey(pub.GetCompressed());
+                SetText(txtPubHex, pub.PublicKeyHex);
+                SetText(txtPubHash, pub.Hash160Hex);
+                SetText(txtBtcAddr, new Address(pub, AddressTypeByte).AddressBase58);
+            } catch (Exception ae) {
+                MessageBox.Show(ae.Message);
+            } finally {
+                ChangeFlag--;
+            }
+
+        }
+
+        private void uncompressPublicKeyToolStripMenuItem_Click(object sender, EventArgs e) {
+            ChangeFlag++;
+            try {
+                PublicKey pub = new PublicKey(txtPubHex.Text);
+                pub = new PublicKey(pub.GetUncompressed());
+                SetText(txtPubHex, pub.PublicKeyHex);
+                SetText(txtPubHash, pub.Hash160Hex);
+                SetText(txtBtcAddr, new Address(pub, AddressTypeByte).AddressBase58);
+            } catch (Exception ae) {
+                MessageBox.Show(ae.Message);
+            } finally {
+                ChangeFlag--;
+            }
+        }
+
+        private void compressToolStripMenuItem_Click(object sender, EventArgs e) {
+            compressToolStripMenuItem.Checked = !compressToolStripMenuItem.Checked;
+            
+        }
+
+        private void showFieldsToolStripMenuItem_Click(object sender, EventArgs e) {
+            txtPubHex.Focus();
+            if (txtPubHex.Text.Length == 130 || txtPubHex.Text.Length == 66) {
+                // 33 or 65 bytes, no spaces = 66 or 130 characters
+                txtPubHex.Select(2, 64);
+            } else if (txtPubHex.Text.Length == 194 || txtPubHex.Text.Length == 98) {
+                // 65 bytes + 64 spaces, or 33 bytes = 32 spaces
+                txtPubHex.Select(2, 95);
+            } else {
+                MessageBox.Show("Enter a public key first.");
+            }
+        }
+
+        private void keyCombinerToolStripMenuItem_Click(object sender, EventArgs e) {
+            KeyCombiner k = new KeyCombiner();
+            k.Show();
+
+        }
+
+        private void copyPrivateKeyQRMenuItem_Click(object sender, EventArgs e) {
+            string toencode = txtPrivWIF.Text;
+            Bitmap b = Bitcoin.EncodeQRCode(toencode);
+            if (b == null) {
+                MessageBox.Show("Enter or create a valid private key first.");
+                return;
+            }
+            Clipboard.SetText(toencode);
+            Clipboard.SetImage(b);
+
+        }
+
+        private void copyMinikeyQRMenuItem_Click(object sender, EventArgs e) {
+            string toencode = txtMinikey.Text;
+            Bitmap b = Bitcoin.EncodeQRCode(toencode);
+            if (b == null) {
+                MessageBox.Show("Enter or create a valid minikey first.");
+                return;
+            }
+            Clipboard.SetText(toencode);
+            Clipboard.SetImage(b);
+
+        }
+
+        private void copyAddressQRMenuItem_Click(object sender, EventArgs e) {
+            string toencode = txtBtcAddr.Text;
+            Bitmap b = Bitcoin.EncodeQRCode(toencode);
+            if (b == null) {
+                MessageBox.Show("Enter or create a valid address first.");
+                return;
+            }
+            Clipboard.SetText(toencode);
+            Clipboard.SetImage(b);
+        }
+
+        private void copyPublicHexQRMenuItem_Click(object sender, EventArgs e) {
+            string toencode = txtPubHex.Text.Replace(" ","");
+            Bitmap b = Bitcoin.EncodeQRCode(toencode);
+            if (b == null) {
+                MessageBox.Show("Enter or create a valid public key first.");
+                return;
+            }
+            Clipboard.SetText(toencode);
+            Clipboard.SetImage(b);
+
+        }
+
+
+        private string ExtraEntropy = DateTime.Now.Ticks.ToString();
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e) {
+            AddExtraEntropy(e.KeyCode.ToString() + e.KeyData + DateTime.Now.Ticks.ToString());
+        }
+
+        private void AddExtraEntropy(string what) {
+            ExtraEntropy += what;
+            if (ExtraEntropy.Length > 300) {
+                SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
+                UTF8Encoding utf8 = new UTF8Encoding(false);
+                ExtraEntropy = BitConverter.ToString(sha256.ComputeHash(utf8.GetBytes(ExtraEntropy)));
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e) {
+            AddExtraEntropy(DateTime.Now.Ticks.ToString());
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e) {
+            AddExtraEntropy(DateTime.Now.Ticks.ToString() + e.X + "," + e.Y);
+        }
+    }
+    public class KeyComparer : IComparer<Address> {
+        public int Compare(Address x, Address y) {
+            return string.Compare(x.AddressBase58, y.AddressBase58, true);
         }
 
     }

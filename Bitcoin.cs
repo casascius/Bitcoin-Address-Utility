@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 using System.Security.Cryptography;
+using System.IO;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
@@ -10,6 +12,8 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
+using ThoughtWorks.QRCode.Codec;
+using System.Text.RegularExpressions;
 
 namespace BtcAddress {
     public class Bitcoin {
@@ -25,56 +29,11 @@ namespace BtcAddress {
             return ByteArrayToString(shahash);
         }
 
-        /// <summary>
-        /// Returns 1 if candidate is a valid Mini Private Key per rules described in
-        /// Bitcoin Wiki article "Mini private key format".
-        /// Zero or negative indicates not a valid Mini Private Key.
-        /// -1 means well formed but fails typo check.
-        /// </summary>
-        public static int IsValidMiniKey(string candidate) {
-            if (candidate.Length != 22) return 0;
-            if (candidate.StartsWith("S")==false) return 0;
-            System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("^S[1-9A-HJ-NP-Za-km-z]{21}$");
-            if (reg.IsMatch(candidate) == false) return 0;
-            ASCIIEncoding ae = new ASCIIEncoding();
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-            byte[] ahash = sha256.ComputeHash(ae.GetBytes(candidate + "?")); // first round
-            if (ahash[0] == 0) return 1;
-            for (int ct = 0; ct < 716; ct++) ahash = sha256.ComputeHash(ahash); // second thru 717th
-            if (ahash[0] == 0) return 1;
-            return -1;
-        }
 
 
 
-        public static string PrivWIFtoPrivHex(string PrivWIF) {
-            byte[] hex = Base58ToByteArray(PrivWIF);
-            /*
-            if (hex == null) {
-                
-                int L = PrivWIF.Length;
-                if (L >= 50 && L <= 52) {
-                    if (MessageBox.Show("Private key is not valid.  Attempt to correct?", "Invalid address", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-                        CorrectWIF();
-                        return;
-                    }
-                } else {
-                    throw new ApplicationException("WIF private key is not valid.");
-                }
-                return;
-            }
-            */
-            if (hex==null) {
-                throw new ApplicationException("WIF private key is not valid.");            
-            }
-            
-            if (hex.Length != 33) {
-                throw new ApplicationException("WIF private key is not valid (wrong byte count, should be 33, was " + hex.Length + ")");            
-            }
 
-            return ByteArrayToString(hex, 1, 32);
 
-        }
 
 
         public static string ByteArrayToBase58Check(byte[] ba) {
@@ -94,7 +53,6 @@ namespace BtcAddress {
 
             if (hex == null || hex.Length < 64 || hex.Length > 65) {
                 throw new ApplicationException("Hex is not 64 or 65 bytes.");
-                return null;
             }
 
             // if leading 00, change it to 0x80
@@ -103,7 +61,6 @@ namespace BtcAddress {
                     hex[0] = 4;
                 } else {
                     throw new ApplicationException("Not a valid public key");
-                    return null;
                 }
             }
 
@@ -122,18 +79,18 @@ namespace BtcAddress {
 
             if (hex == null || hex.Length != 20) {
                 throw new ApplicationException("Hex is not 20 bytes.");
-                return null;
             }
             return hex;
         }
 
 
-        public static byte[] ValidateAndGetHexPrivateKey(byte leadingbyte, string PrivHex) {
+        public static byte[] ValidateAndGetHexPrivateKey(byte leadingbyte, string PrivHex, int desiredByteCount) {
+            if (desiredByteCount != 32 && desiredByteCount != 33) throw new ApplicationException("desiredByteCount must be 32 or 33");
+
             byte[] hex = GetHexBytes(PrivHex, 32);
 
             if (hex == null || hex.Length < 32 || hex.Length > 33) {
                 throw new ApplicationException("Hex is not 32 or 33 bytes.");
-                return null;
             }
 
             // if leading 00, change it to 0x80
@@ -142,26 +99,34 @@ namespace BtcAddress {
                     hex[0] = 0x80;
                 } else {
                     throw new ApplicationException("Not a valid private key");
-                    return null;
                 }
             }
 
             // add 0x80 byte if not present
-            if (hex.Length == 32) {
+            if (hex.Length == 32 && desiredByteCount==33) {
                 byte[] hex2 = new byte[33];
                 Array.Copy(hex, 0, hex2, 1, 32);
                 hex2[0] = 0x80;
                 hex = hex2;
             }
 
-            hex[0] = leadingbyte;
+            if (desiredByteCount==33) hex[0] = leadingbyte;
+
+            if (desiredByteCount == 32 && hex.Length == 33) {
+                byte[] hex2 = new byte[33];
+                Array.Copy(hex, 1, hex2, 0, 32);
+                hex = hex2;
+            }
+
             return hex;
 
         }
 
 
-
-        public static byte[] Base58ToByteArray(string base58) {
+        /// <summary>
+        /// Converts a base-58 string to a byte array, returning null if it wasn't valid.
+        /// </summary>
+        public static byte[] Base58CheckToByteArray(string base58) {
 
             Org.BouncyCastle.Math.BigInteger bi2 = new Org.BouncyCastle.Math.BigInteger("0");
             string b58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
@@ -246,7 +211,7 @@ namespace BtcAddress {
 
 
         public static byte[] GetHexBytes(string source, int minimum) {
-            byte[] hex = GetHexBytes(source);
+            byte[] hex = HexStringToBytes(source);
             if (hex == null) return null;
             // assume leading zeroes if we're short a few bytes
             if (hex.Length > (minimum - 6) && hex.Length < minimum) {
@@ -266,86 +231,104 @@ namespace BtcAddress {
         }
 
 
-        public static byte[] GetHexBytes(string source) {
-
-
+        /// <summary>
+        /// Converts a hex string to bytes.  Hex chars can optionally be space-delimited, otherwise,
+        /// any two contiguous hex chars are considered to be a byte.  If testingForValidHex==true,
+        /// then if any invalid characters are found, the function returns null instead of bytes.
+        /// </summary>
+        public static byte[] HexStringToBytes(string source, bool testingForValidHex=false) {
             List<byte> bytes = new List<byte>();
-            // copy s into ss, adding spaces between each byte
-            string s = source;
-            string ss = "";
-            int currentbytelength = 0;
-            foreach (char c in s.ToCharArray()) {
+            bool gotFirstChar = false;
+            byte accum = 0;
+
+            foreach (char c in source.ToCharArray()) {                
                 if (c == ' ') {
-                    currentbytelength = 0;
+                    // if we got a space, then accept it as the end if we have 1 character.
+                    if (gotFirstChar) {
+                        bytes.Add(accum);
+                        accum = 0;
+                        gotFirstChar = false;
+                    }
+                } else if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f')) {
+                    // get the character's value
+                    byte v = (byte)(c - 0x30);
+                    if (c >= 'A' && c <= 'F') v = (byte)(c + 0x0a - 'A');
+                    if (c >= 'a' && c <= 'f') v = (byte)(c + 0x0a - 'a');
+
+                    if (gotFirstChar == false) {
+                        gotFirstChar = true;
+                        accum = v;
+                    } else {
+                        accum <<= 4;
+                        accum += v;
+                        bytes.Add(accum);
+                        accum = 0;
+                        gotFirstChar = false;
+                    }
                 } else {
-                    currentbytelength++;
-                    if (currentbytelength == 3) {
-                        currentbytelength = 1;
-                        ss += ' ';
-                    }
+                    if (testingForValidHex) return null;
                 }
-                ss += c;
             }
-
-            foreach (string b in ss.Split(' ')) {
-                int v = 0;
-                if (b.Trim() == "") continue;
-                foreach (char c in b.ToCharArray()) {
-                    if (c >= '0' && c <= '9') {
-                        v *= 16;
-                        v += (c - '0');
-
-                    } else if (c >= 'a' && c <= 'f') {
-                        v *= 16;
-                        v += (c - 'a' + 10);
-                    } else if (c >= 'A' && c <= 'F') {
-                        v *= 16;
-                        v += (c - 'A' + 10);
-                    }
-
-                }
-                v &= 0xff;
-                bytes.Add((byte)v);
-            }
-            return bytes.ToArray();
+            if (gotFirstChar) bytes.Add(accum);
+            return bytes.ToArray();    
         }
 
 
-        public static string PrivHexToWIF(string PrivHex) {
-
-            byte[] hex = Bitcoin.ValidateAndGetHexPrivateKey(0x80,PrivHex);
-            if (hex == null) throw new ApplicationException("Invalid private hex key");
-            return Bitcoin.ByteArrayToBase58Check(hex);
-
-        }
 
         public static string PrivHexToPubHex(string PrivHex) {
-            byte[] hex = Bitcoin.ValidateAndGetHexPrivateKey(0x00, PrivHex);
-            if (hex == null) throw new ApplicationException("Invalid private hex key");
             var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
+            return PrivHexToPubHex(PrivHex, ps.G);
+        }
+
+        public static string PrivHexToPubHex(string PrivHex, ECPoint point) {
+
+            byte[] hex = Bitcoin.ValidateAndGetHexPrivateKey(0x00, PrivHex, 33);
+            if (hex == null) throw new ApplicationException("Invalid private hex key");
             Org.BouncyCastle.Math.BigInteger Db = new Org.BouncyCastle.Math.BigInteger(hex);
-            ECPoint dd = ps.G.Multiply(Db);
+            ECPoint dd = point.Multiply(Db);
 
-            byte[] pubaddr = new byte[65];
-            byte[] Y = dd.Y.ToBigInteger().ToByteArray();
-            Array.Copy(Y, 0, pubaddr, 64 - Y.Length + 1, Y.Length);
-            byte[] X = dd.X.ToBigInteger().ToByteArray();
-            Array.Copy(X, 0, pubaddr, 32 - X.Length + 1, X.Length);
-            pubaddr[0] = 4;
-
+            byte[] pubaddr = PubKeyToByteArray(dd);
+                
             return Bitcoin.ByteArrayToString(pubaddr);
-
-
 
         }
 
+        public static ECPoint PrivHexToPubKey(string PrivHex) {
+            byte[] hex = Bitcoin.ValidateAndGetHexPrivateKey(0x00, PrivHex, 33);
+            if (hex == null) throw new ApplicationException("Invalid private hex key");
+            Org.BouncyCastle.Math.BigInteger Db = new Org.BouncyCastle.Math.BigInteger(1, hex);
+            var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
+            return ps.G.Multiply(Db);
+        }
+
+        public static ECPoint PrivKeyToPubKey(byte[] PrivKey) {
+            if (PrivKey == null || PrivKey.Length > 32) throw new ApplicationException("Invalid private hex key");            
+            Org.BouncyCastle.Math.BigInteger Db = new Org.BouncyCastle.Math.BigInteger(1, PrivKey);
+            var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
+            return ps.G.Multiply(Db);
+        }
+
+
+        public static byte[] PubKeyToByteArray(ECPoint point) {
+            byte[] pubaddr = new byte[65];
+            byte[] Y = point.Y.ToBigInteger().ToByteArray();
+            Array.Copy(Y, 0, pubaddr, 64 - Y.Length + 1, Y.Length);
+            byte[] X = point.X.ToBigInteger().ToByteArray();
+            Array.Copy(X, 0, pubaddr, 32 - X.Length + 1, X.Length);
+            pubaddr[0] = 4;
+            return pubaddr;
+        }
 
         public static string PubHexToPubHash(string PubHex) {
             byte[] hex = Bitcoin.ValidateAndGetHexPublicKey(PubHex);
             if (hex == null) throw new ApplicationException("Invalid public hex key");
+            return PubHexToPubHash(hex);
+        }
+
+        public static string PubHexToPubHash(byte[] PubHex) {
 
             SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-            byte[] shaofpubkey = sha256.ComputeHash(hex);
+            byte[] shaofpubkey = sha256.ComputeHash(PubHex);
 
             RIPEMD160 rip = System.Security.Cryptography.RIPEMD160.Create();
             byte[] ripofpubkey = rip.ComputeHash(shaofpubkey);
@@ -366,6 +349,7 @@ namespace BtcAddress {
 
             if (AddressType == "Testnet") cointype = 111;
             if (AddressType == "Namecoin") cointype = 52;
+            if (AddressType == "Litecoin") cointype = 48;
             hex2[0] = (byte)(cointype & 0xff);
             return Bitcoin.ByteArrayToBase58Check(hex2);
 
@@ -390,7 +374,7 @@ namespace BtcAddress {
             }
 
             // let mini private keys through - they won't contain words, they are nonsense characters, so their entropy is a bit better per character
-            if (IsValidMiniKey(passphrase) != 1) return false;
+            if (MiniKeyPair.IsValidMiniKey(passphrase) != 1) return false;
 
             if (passphrase.Length < 30 && (Lowercase < 10 || Uppercase < 3 || Numbers < 2 || Symbols < 2)) {
                 return true;
@@ -401,6 +385,68 @@ namespace BtcAddress {
         }
 
 
+        public static Int64 nonce = 0;
+
+        public static byte[] Force32Bytes(byte[] inbytes) {
+            if (inbytes.Length == 32) return inbytes;
+            byte[] rv = new byte[32];
+            if (inbytes.Length > 32) {
+                Array.Copy(inbytes, inbytes.Length - 32, rv, 0, 32);
+            } else {
+                Array.Copy(inbytes, 0, rv, 32 - inbytes.Length, inbytes.Length);
+            }
+            return rv;
+        }
+
+        /// <summary>
+        /// Encodes a QR code, making the best choice based on string length
+        /// (apparently not provided by QR lib?)
+        /// </summary>
+        public static Bitmap EncodeQRCode(string what) {
+            if (what==null || what=="") return null;
+
+            // Determine if we can use alphanumeric encoding (e.g. public key hex)
+            Regex r = new Regex("^[0-9A-F]{63,154}$");
+            bool IsAlphanumeric  = r.IsMatch(what);
+
+            QRCodeEncoder qr = new QRCodeEncoder();
+            if (IsAlphanumeric) {
+                qr.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.ALPHA_NUMERIC;
+                if (what.Length > 154) {
+                    return null;
+                } else if (what.Length > 67) {
+                    // 5L is good to 154 alphanumeric characters
+                    qr.QRCodeVersion = 5;
+                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.L;
+                } else {
+                    // 4Q is good to 67 alphanumeric characters
+                    qr.QRCodeVersion = 4;
+                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.Q;
+                }
+            } else {
+                if (what.Length > 62) {
+                    // We don't intend to encode any alphanumeric strings longer than private keys
+                    return null;
+                } else if (what.Length > 34) {
+                    // 4M is good to 62 characters
+                    qr.QRCodeVersion = 4;
+                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
+                } else if (what.Length > 32) {
+                    // 4H is good to 34 characters
+                    qr.QRCodeVersion = 4;
+                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.H;
+                } else {
+                    // 3Q is good to 32 characters
+                    qr.QRCodeVersion = 3;
+                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.Q;
+                }
+            }
+
+            return qr.Encode(what);
+        }
 
     }
+
+
+
 }

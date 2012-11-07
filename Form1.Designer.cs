@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.txtPrivWIF = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtPrivHex = new System.Windows.Forms.TextBox();
@@ -44,16 +45,31 @@
             this.cboCoinType = new System.Windows.Forms.ComboBox();
             this.btnShacode = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.walletGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.whatIsASHAcodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyMinikeyQRMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyPrivateKeyQRMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyPublicHexQRMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyAddressQRMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.base58CalcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mofNCalcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.paperWalletPrinterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keyCombinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.spaceBetweenHexBytesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.publicKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compressPublicKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uncompressPublicKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showFieldsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnPassphrase = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
-            this.txtPassphrase = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.txtMinikey = new System.Windows.Forms.TextBox();
             this.lblNotSafe = new System.Windows.Forms.Label();
             this.lblWhyNot = new System.Windows.Forms.Label();
+            this.txtPassphrase = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -99,6 +115,7 @@
             this.label3.Size = new System.Drawing.Size(85, 13);
             this.label3.TabIndex = 14;
             this.label3.Text = "Public Key (Hex)";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // txtPubHex
             // 
@@ -117,6 +134,7 @@
             this.label4.Size = new System.Drawing.Size(91, 13);
             this.label4.TabIndex = 18;
             this.label4.Text = "Public Key (Hash)";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // txtPubHash
             // 
@@ -134,6 +152,7 @@
             this.label5.Size = new System.Drawing.Size(45, 13);
             this.label5.TabIndex = 17;
             this.label5.Text = "Address";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // txtBtcAddr
             // 
@@ -145,7 +164,7 @@
             // 
             // btnAddressToPubHash
             // 
-            this.btnAddressToPubHash.Location = new System.Drawing.Point(284, 316);
+            this.btnAddressToPubHash.Location = new System.Drawing.Point(443, 316);
             this.btnAddressToPubHash.Name = "btnAddressToPubHash";
             this.btnAddressToPubHash.Size = new System.Drawing.Size(46, 30);
             this.btnAddressToPubHash.TabIndex = 20;
@@ -155,7 +174,7 @@
             // 
             // btnPubHashToAddress
             // 
-            this.btnPubHashToAddress.Location = new System.Drawing.Point(332, 316);
+            this.btnPubHashToAddress.Location = new System.Drawing.Point(491, 316);
             this.btnPubHashToAddress.Name = "btnPubHashToAddress";
             this.btnPubHashToAddress.Size = new System.Drawing.Size(46, 30);
             this.btnPubHashToAddress.TabIndex = 21;
@@ -165,7 +184,7 @@
             // 
             // btnPubHexToHash
             // 
-            this.btnPubHexToHash.Location = new System.Drawing.Point(332, 258);
+            this.btnPubHexToHash.Location = new System.Drawing.Point(491, 258);
             this.btnPubHexToHash.Name = "btnPubHexToHash";
             this.btnPubHexToHash.Size = new System.Drawing.Size(46, 30);
             this.btnPubHexToHash.TabIndex = 16;
@@ -175,7 +194,7 @@
             // 
             // btnPrivToPub
             // 
-            this.btnPrivToPub.Location = new System.Drawing.Point(332, 173);
+            this.btnPrivToPub.Location = new System.Drawing.Point(491, 173);
             this.btnPrivToPub.Name = "btnPrivToPub";
             this.btnPrivToPub.Size = new System.Drawing.Size(46, 30);
             this.btnPrivToPub.TabIndex = 13;
@@ -185,7 +204,7 @@
             // 
             // btnPrivWIFToHex
             // 
-            this.btnPrivWIFToHex.Location = new System.Drawing.Point(332, 115);
+            this.btnPrivWIFToHex.Location = new System.Drawing.Point(491, 115);
             this.btnPrivWIFToHex.Name = "btnPrivWIFToHex";
             this.btnPrivWIFToHex.Size = new System.Drawing.Size(46, 30);
             this.btnPrivWIFToHex.TabIndex = 9;
@@ -195,7 +214,7 @@
             // 
             // btnPrivHexToWIF
             // 
-            this.btnPrivHexToWIF.Location = new System.Drawing.Point(284, 115);
+            this.btnPrivHexToWIF.Location = new System.Drawing.Point(443, 115);
             this.btnPrivHexToWIF.Name = "btnPrivHexToWIF";
             this.btnPrivHexToWIF.Size = new System.Drawing.Size(46, 30);
             this.btnPrivHexToWIF.TabIndex = 8;
@@ -205,9 +224,9 @@
             // 
             // btnGenerate
             // 
-            this.btnGenerate.Location = new System.Drawing.Point(541, 115);
+            this.btnGenerate.Location = new System.Drawing.Point(543, 115);
             this.btnGenerate.Name = "btnGenerate";
-            this.btnGenerate.Size = new System.Drawing.Size(116, 30);
+            this.btnGenerate.Size = new System.Drawing.Size(114, 30);
             this.btnGenerate.TabIndex = 10;
             this.btnGenerate.Text = "Generate Address";
             this.btnGenerate.UseVisualStyleBackColor = true;
@@ -215,9 +234,9 @@
             // 
             // btnBlockExplorer
             // 
-            this.btnBlockExplorer.Location = new System.Drawing.Point(490, 316);
+            this.btnBlockExplorer.Location = new System.Drawing.Point(543, 316);
             this.btnBlockExplorer.Name = "btnBlockExplorer";
-            this.btnBlockExplorer.Size = new System.Drawing.Size(167, 29);
+            this.btnBlockExplorer.Size = new System.Drawing.Size(114, 29);
             this.btnBlockExplorer.TabIndex = 23;
             this.btnBlockExplorer.Text = "Block Explorer";
             this.btnBlockExplorer.UseVisualStyleBackColor = true;
@@ -229,60 +248,174 @@
             this.cboCoinType.Items.AddRange(new object[] {
             "Bitcoin",
             "Testnet",
-            "Namecoin"});
-            this.cboCoinType.Location = new System.Drawing.Point(380, 320);
+            "Namecoin",
+            "Litecoin"});
+            this.cboCoinType.Location = new System.Drawing.Point(336, 320);
             this.cboCoinType.Name = "cboCoinType";
             this.cboCoinType.Size = new System.Drawing.Size(101, 21);
             this.cboCoinType.TabIndex = 22;
             this.cboCoinType.Text = "Bitcoin";
             this.cboCoinType.SelectionChangeCommitted += new System.EventHandler(this.cboCoinType_SelectionChangeCommitted);
+            this.cboCoinType.SelectedValueChanged += new System.EventHandler(this.cboCoinType_SelectionChangeCommitted);
             // 
             // btnShacode
             // 
-            this.btnShacode.Location = new System.Drawing.Point(490, 58);
+            this.btnShacode.Location = new System.Drawing.Point(543, 58);
             this.btnShacode.Name = "btnShacode";
-            this.btnShacode.Size = new System.Drawing.Size(167, 30);
+            this.btnShacode.Size = new System.Drawing.Size(114, 30);
             this.btnShacode.TabIndex = 4;
-            this.btnShacode.Text = "Generate Mini Private Key";
+            this.btnShacode.Text = "Generate Minikey";
             this.btnShacode.UseVisualStyleBackColor = true;
             this.btnShacode.Click += new System.EventHandler(this.btnShacode_Click);
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.walletGeneratorToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.editToolStripMenuItem,
+            this.toolsToolStripMenuItem,
+            this.optionsToolStripMenuItem,
+            this.publicKeyToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(670, 24);
             this.menuStrip1.TabIndex = 25;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // walletGeneratorToolStripMenuItem
+            // editToolStripMenuItem
             // 
-            this.walletGeneratorToolStripMenuItem.Name = "walletGeneratorToolStripMenuItem";
-            this.walletGeneratorToolStripMenuItem.Size = new System.Drawing.Size(107, 20);
-            this.walletGeneratorToolStripMenuItem.Text = "&Wallet Generator";
-            this.walletGeneratorToolStripMenuItem.Click += new System.EventHandler(this.walletGeneratorToolStripMenuItem_Click);
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyMinikeyQRMenuItem,
+            this.copyPrivateKeyQRMenuItem,
+            this.copyPublicHexQRMenuItem,
+            this.copyAddressQRMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
             // 
-            // helpToolStripMenuItem
+            // copyMinikeyQRMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.whatIsASHAcodeToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
+            this.copyMinikeyQRMenuItem.Name = "copyMinikeyQRMenuItem";
+            this.copyMinikeyQRMenuItem.Size = new System.Drawing.Size(327, 22);
+            this.copyMinikeyQRMenuItem.Text = "Copy minikey to clipboard as QR code image";
+            this.copyMinikeyQRMenuItem.Click += new System.EventHandler(this.copyMinikeyQRMenuItem_Click);
             // 
-            // whatIsASHAcodeToolStripMenuItem
+            // copyPrivateKeyQRMenuItem
             // 
-            this.whatIsASHAcodeToolStripMenuItem.Name = "whatIsASHAcodeToolStripMenuItem";
-            this.whatIsASHAcodeToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.whatIsASHAcodeToolStripMenuItem.Text = "What is a SHAcode?";
-            this.whatIsASHAcodeToolStripMenuItem.Click += new System.EventHandler(this.whatIsASHAcodeToolStripMenuItem_Click);
+            this.copyPrivateKeyQRMenuItem.Name = "copyPrivateKeyQRMenuItem";
+            this.copyPrivateKeyQRMenuItem.Size = new System.Drawing.Size(327, 22);
+            this.copyPrivateKeyQRMenuItem.Text = "Copy private key to clipboard as QR code image";
+            this.copyPrivateKeyQRMenuItem.Click += new System.EventHandler(this.copyPrivateKeyQRMenuItem_Click);
+            // 
+            // copyPublicHexQRMenuItem
+            // 
+            this.copyPublicHexQRMenuItem.Name = "copyPublicHexQRMenuItem";
+            this.copyPublicHexQRMenuItem.Size = new System.Drawing.Size(327, 22);
+            this.copyPublicHexQRMenuItem.Text = "Copy public hex to clipboard as QR code image";
+            this.copyPublicHexQRMenuItem.Click += new System.EventHandler(this.copyPublicHexQRMenuItem_Click);
+            // 
+            // copyAddressQRMenuItem
+            // 
+            this.copyAddressQRMenuItem.Name = "copyAddressQRMenuItem";
+            this.copyAddressQRMenuItem.Size = new System.Drawing.Size(327, 22);
+            this.copyAddressQRMenuItem.Text = "Copy address to clipboard as QR code image";
+            this.copyAddressQRMenuItem.Click += new System.EventHandler(this.copyAddressQRMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.base58CalcToolStripMenuItem,
+            this.mofNCalcToolStripMenuItem,
+            this.paperWalletPrinterToolStripMenuItem,
+            this.keyCombinerToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // base58CalcToolStripMenuItem
+            // 
+            this.base58CalcToolStripMenuItem.Name = "base58CalcToolStripMenuItem";
+            this.base58CalcToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.base58CalcToolStripMenuItem.Text = "Base58 Calc";
+            this.base58CalcToolStripMenuItem.Click += new System.EventHandler(this.base58CalcToolStripMenuItem_Click);
+            // 
+            // mofNCalcToolStripMenuItem
+            // 
+            this.mofNCalcToolStripMenuItem.Name = "mofNCalcToolStripMenuItem";
+            this.mofNCalcToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.mofNCalcToolStripMenuItem.Text = "M-of-N calc";
+            this.mofNCalcToolStripMenuItem.Click += new System.EventHandler(this.mofNCalcToolStripMenuItem_Click);
+            // 
+            // paperWalletPrinterToolStripMenuItem
+            // 
+            this.paperWalletPrinterToolStripMenuItem.Name = "paperWalletPrinterToolStripMenuItem";
+            this.paperWalletPrinterToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.paperWalletPrinterToolStripMenuItem.Text = "Paper Wallet Printer";
+            this.paperWalletPrinterToolStripMenuItem.Click += new System.EventHandler(this.paperWalletPrinterToolStripMenuItem_Click);
+            // 
+            // keyCombinerToolStripMenuItem
+            // 
+            this.keyCombinerToolStripMenuItem.Name = "keyCombinerToolStripMenuItem";
+            this.keyCombinerToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.keyCombinerToolStripMenuItem.Text = "Key Combiner";
+            this.keyCombinerToolStripMenuItem.Click += new System.EventHandler(this.keyCombinerToolStripMenuItem_Click);
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.spaceBetweenHexBytesToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.optionsToolStripMenuItem.Text = "Options";
+            // 
+            // spaceBetweenHexBytesToolStripMenuItem
+            // 
+            this.spaceBetweenHexBytesToolStripMenuItem.Name = "spaceBetweenHexBytesToolStripMenuItem";
+            this.spaceBetweenHexBytesToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.spaceBetweenHexBytesToolStripMenuItem.Text = "Space between hex bytes";
+            this.spaceBetweenHexBytesToolStripMenuItem.Click += new System.EventHandler(this.spaceBetweenHexBytesToolStripMenuItem_Click);
+            // 
+            // publicKeyToolStripMenuItem
+            // 
+            this.publicKeyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.compressToolStripMenuItem,
+            this.compressPublicKeyToolStripMenuItem,
+            this.uncompressPublicKeyToolStripMenuItem,
+            this.showFieldsToolStripMenuItem});
+            this.publicKeyToolStripMenuItem.Name = "publicKeyToolStripMenuItem";
+            this.publicKeyToolStripMenuItem.Size = new System.Drawing.Size(74, 20);
+            this.publicKeyToolStripMenuItem.Text = "Public Key";
+            // 
+            // compressToolStripMenuItem
+            // 
+            this.compressToolStripMenuItem.Name = "compressToolStripMenuItem";
+            this.compressToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.compressToolStripMenuItem.Text = "Generate compressed public keys";
+            this.compressToolStripMenuItem.Click += new System.EventHandler(this.compressToolStripMenuItem_Click);
+            // 
+            // compressPublicKeyToolStripMenuItem
+            // 
+            this.compressPublicKeyToolStripMenuItem.Name = "compressPublicKeyToolStripMenuItem";
+            this.compressPublicKeyToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.compressPublicKeyToolStripMenuItem.Text = "Compress public key";
+            this.compressPublicKeyToolStripMenuItem.Click += new System.EventHandler(this.compressPublicKeyToolStripMenuItem_Click);
+            // 
+            // uncompressPublicKeyToolStripMenuItem
+            // 
+            this.uncompressPublicKeyToolStripMenuItem.Name = "uncompressPublicKeyToolStripMenuItem";
+            this.uncompressPublicKeyToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.uncompressPublicKeyToolStripMenuItem.Text = "Uncompress public key";
+            this.uncompressPublicKeyToolStripMenuItem.Click += new System.EventHandler(this.uncompressPublicKeyToolStripMenuItem_Click);
+            // 
+            // showFieldsToolStripMenuItem
+            // 
+            this.showFieldsToolStripMenuItem.Name = "showFieldsToolStripMenuItem";
+            this.showFieldsToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.showFieldsToolStripMenuItem.Text = "Highlight X-coordinate";
+            this.showFieldsToolStripMenuItem.Click += new System.EventHandler(this.showFieldsToolStripMenuItem_Click);
             // 
             // btnPassphrase
             // 
-            this.btnPassphrase.Location = new System.Drawing.Point(332, 58);
+            this.btnPassphrase.Location = new System.Drawing.Point(491, 58);
             this.btnPassphrase.Name = "btnPassphrase";
             this.btnPassphrase.Size = new System.Drawing.Size(46, 30);
             this.btnPassphrase.TabIndex = 3;
@@ -293,38 +426,20 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(5, 39);
+            this.label6.Location = new System.Drawing.Point(5, 32);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(62, 13);
+            this.label6.Size = new System.Drawing.Size(96, 39);
             this.label6.TabIndex = 0;
-            this.label6.Text = "Passphrase";
+            this.label6.Text = "Minikey / key\r\nfrom SHA256 hash\r\nof a string";
             // 
-            // txtPassphrase
+            // txtMinikey
             // 
-            this.txtPassphrase.Location = new System.Drawing.Point(101, 36);
-            this.txtPassphrase.Name = "txtPassphrase";
-            this.txtPassphrase.Size = new System.Drawing.Size(557, 20);
-            this.txtPassphrase.TabIndex = 2;
-            this.txtPassphrase.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
-            this.txtPassphrase.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(5, 58);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(98, 13);
-            this.label7.TabIndex = 1;
-            this.label7.Text = "(SHA256 algorithm)";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(5, 116);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(110, 13);
-            this.label8.TabIndex = 6;
-            this.label8.Text = "(Wallet Import Format)";
+            this.txtMinikey.Location = new System.Drawing.Point(101, 36);
+            this.txtMinikey.Name = "txtMinikey";
+            this.txtMinikey.Size = new System.Drawing.Size(557, 20);
+            this.txtMinikey.TabIndex = 2;
+            this.txtMinikey.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.txtMinikey.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // lblNotSafe
             // 
@@ -350,18 +465,39 @@
             this.lblWhyNot.Visible = false;
             this.lblWhyNot.Click += new System.EventHandler(this.lblWhyNot_Click);
             // 
+            // txtPassphrase
+            // 
+            this.txtPassphrase.Location = new System.Drawing.Point(101, 115);
+            this.txtPassphrase.Name = "txtPassphrase";
+            this.txtPassphrase.Size = new System.Drawing.Size(336, 20);
+            this.txtPassphrase.TabIndex = 28;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(5, 112);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(92, 26);
+            this.label7.TabIndex = 29;
+            this.label7.Text = "Encryption phrase\r\nfor private key";
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(670, 405);
+            this.ClientSize = new System.Drawing.Size(670, 391);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtPassphrase);
             this.Controls.Add(this.lblWhyNot);
             this.Controls.Add(this.lblNotSafe);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.btnPassphrase);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.txtPassphrase);
+            this.Controls.Add(this.txtMinikey);
             this.Controls.Add(this.btnShacode);
             this.Controls.Add(this.cboCoinType);
             this.Controls.Add(this.btnBlockExplorer);
@@ -386,6 +522,8 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Bitcoin Address Utility by Casascius (Beta, No Warranty)";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -416,16 +554,31 @@
         private System.Windows.Forms.ComboBox cboCoinType;
         private System.Windows.Forms.Button btnShacode;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem walletGeneratorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem whatIsASHAcodeToolStripMenuItem;
         private System.Windows.Forms.Button btnPassphrase;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtPassphrase;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtMinikey;
         private System.Windows.Forms.Label lblNotSafe;
         private System.Windows.Forms.Label lblWhyNot;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem base58CalcToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mofNCalcToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem paperWalletPrinterToolStripMenuItem;
+        private System.Windows.Forms.TextBox txtPassphrase;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem spaceBetweenHexBytesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem publicKeyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compressToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compressPublicKeyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uncompressPublicKeyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showFieldsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem keyCombinerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyPrivateKeyQRMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyAddressQRMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyMinikeyQRMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyPublicHexQRMenuItem;
+        private System.Windows.Forms.Timer timer1;
 
     }
 }

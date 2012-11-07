@@ -23,8 +23,8 @@ namespace BtcAddress {
                 int n = 0;
 
                 if (Int32.TryParse(textBox2.Text, out n) == false) n = 0;
-                if (n < 1 || n > 999) {                
-                    MessageBox.Show("Please enter a number of addresses between 1 and 999", "Invalid entry");
+                if (n < 1 || n > 9999) {                
+                    MessageBox.Show("Please enter a number of addresses between 1 and 9999", "Invalid entry");
                     return;
                 }
 
@@ -89,10 +89,12 @@ namespace BtcAddress {
                     UTF8Encoding encoding = new UTF8Encoding(false);
                     byte[] privatekey = sha256.ComputeHash(encoding.GetBytes(privatestring));
 
-                    string bytestring = Bitcoin.ByteArrayToString(privatekey);
-                    string PrivWIF = Bitcoin.PrivHexToWIF(bytestring);
-                    string PubHex = Bitcoin.PrivHexToPubHex(bytestring);
-                    string Address = Bitcoin.PubHashToAddress(Bitcoin.PubHexToPubHash(PubHex), "Bitcoin");
+                    KeyPair kp = new KeyPair(privatekey);
+
+                    string bytestring = kp.PrivateKeyHex;
+                    string PrivWIF = kp.PrivateKeyBase58;
+                    string PubHex = kp.PublicKeyHex;
+                    string Address = kp.AddressBase58;
 
                     if (CSVmode) {
                         wallet.AppendFormat("{0},\"{1}\",\"{2}\"\r\n", i, Address, PrivWIF);
@@ -149,13 +151,14 @@ namespace BtcAddress {
 
         }
 
-        private int GenerationFormula = 0;
+        private int GenerationFormula = 1;
 
 
         private void lblFormula_DoubleClick(object sender, EventArgs e) {
             // Change formula upon double click
-            GenerationFormula = 1; // straight passphrase + number
-            lblFormula.Text = "Generation formula: PrivKey = SHA256(passphrase + n)";
+            GenerationFormula = 0; 
+            lblFormula.Text = "Generation formula: PrivKey = SHA256(n + \"/\" + passphrase + \"/\" + n + \"/BITCOIN) where n = \"1\" thru \"10\"";
+
         }
 
 
