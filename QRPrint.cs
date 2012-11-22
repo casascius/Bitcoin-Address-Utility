@@ -193,7 +193,7 @@ namespace BtcAddress {
                         whattoprint = "\r\n" + privkey;
                     }
                     float xpos =  444;
-                    if (privkey.StartsWith("6p")) {
+                    if (privkey.StartsWith("6")) {
                         whattoprint = "Password Required\r\n" + whattoprint;
                         xpos -=  10;
                     }
@@ -215,8 +215,15 @@ namespace BtcAddress {
                             );
                     }
 
+                    if (k is MiniKeyPair) {
+                        Bitmap barcode1d = Barcode128b.GetBarcode(k.PrivateKey);
+                        float aspect1d = (float)barcode1d.Width / (float)barcode1d.Height;
+                        e.Graphics.DrawImage(barcode1d, leftOffset + scalefactor * (float)(thiscodeX + 231F),
+                            scalefactor * (float)(thiscodeY + 293),
+                            scalefactor * 420F,
+                            scalefactor * 50F);
 
-
+                    }
 
                 } else if (PrintMode == PrintModes.PrivQR) {
 
@@ -233,7 +240,7 @@ namespace BtcAddress {
                     } else {
                         whattowrite = "\r\n" + privkey;
                     }
-                    if (privkey.StartsWith("6p")) {
+                    if (privkey.StartsWith("6")) {
                         whattowrite = whattowrite + "\r\nPassword Required";
                     }
 
@@ -263,7 +270,7 @@ namespace BtcAddress {
                     StringFormat sf = new StringFormat();
                     sf.Alignment = StringAlignment.Far; // right justify
                     string whattoprint = privkey;
-                    if (privkey.StartsWith("6p")) {
+                    if (privkey.StartsWith("6")) {
                         whattoprint = whattoprint + "\r\nPassword Required";
                     }
 

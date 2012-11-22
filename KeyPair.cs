@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
+using System.Diagnostics;
 using System.IO;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto;
@@ -12,6 +13,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Math;
+using CryptSharp.Utility;
 
 namespace BtcAddress {
 
@@ -78,6 +80,9 @@ namespace BtcAddress {
             }
         }
 
+        /// <summary>
+        /// Create a Bitcoin address from a key represented in a string.
+        /// </summary>
         public KeyPair(string key, string passphrase=null, bool compressed=false) {
             string result = constructWithKey(key, passphrase, compressed);
             if (result != null) throw new ArgumentException(result);
@@ -117,7 +122,7 @@ namespace BtcAddress {
                 Array.Copy(hex, 1, _privKey, 0, 32);
                 _compressedPoint = true;
             } else if (hex.Length == 36 && hex[0] == 0x02 && hex[1] == 0x05) {
-                // Encrypted private key.
+                // Encrypted private key from earlier Casascius utility not using scrypt.
                 _compressedPoint = false;
                 if (_passphrase == null || _passphrase == "") {
                     return "This is an encrypted private key and no passphrase has been provided";
@@ -145,21 +150,160 @@ namespace BtcAddress {
 
                 byte[] encryptionKey = sha256.ComputeHash(utf8.GetBytes(_passphrase));
                 aes.Key = encryptionKey;
-                ICryptoTransform encryptor = aes.CreateDecryptor();
+                ICryptoTransform decryptor = aes.CreateDecryptor();
 
                 byte[] decrypted = new byte[33];
                 decrypted[0] = 0x80;
 
-                encryptor.TransformBlock(hex, 4, 16, decrypted, 1);
-                encryptor.TransformBlock(hex, 4, 16, decrypted, 1);
-                encryptor.TransformBlock(hex, 20, 16, decrypted, 17);
-                encryptor.TransformBlock(hex, 20, 16, decrypted, 17);
+                decryptor.TransformBlock(hex, 4, 16, decrypted, 1);
+                decryptor.TransformBlock(hex, 4, 16, decrypted, 1);
+                decryptor.TransformBlock(hex, 20, 16, decrypted, 17);
+                decryptor.TransformBlock(hex, 20, 16, decrypted, 17);
                 for (int x = 0; x < 16; x++) decrypted[17 + x] ^= hex[4 + x];
 
                 _privKey = new byte[32];
                 Array.Copy(decrypted, 1, _privKey, 0, 32);
 
-            }  else {
+            } else if (hex.Length==39 && hex[0]==1 && hex[1]==0x42) {
+                if (_passphrase == null || _passphrase == "") {
+                    return "This is an encrypted private key and no passphrase has been provided";
+                }
+
+
+                // Casascius BIP passphrase-encrypted key using scrypt
+                if (hex[2] == 0xe0) {
+                    this._compressedPoint = true;
+                } else if (hex[2] != 0xc0) {
+                    return "Private key is not valid or is a newer format unsupported by this version of the software.";
+                }
+                UTF8Encoding utf8 = new UTF8Encoding(false);
+                byte[] addresshash = new byte[] { hex[3], hex[4], hex[5], hex[6] };
+
+                byte[] derivedBytes = new byte[64];                
+                SCrypt.ComputeKey(utf8.GetBytes(_passphrase), addresshash, 16384, 8, 8, 8, derivedBytes);
+
+                AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+                aes.KeySize = 256;
+                aes.Mode = CipherMode.ECB;
+                byte[] aeskey = new byte[32];
+                Array.Copy(derivedBytes, 32, aeskey, 0, 32);
+                aes.Key = aeskey;
+                ICryptoTransform decryptor = aes.CreateDecryptor();
+
+                byte[] decrypted = new byte[32];
+                decryptor.TransformBlock(hex, 7, 16, decrypted, 0);
+                decryptor.TransformBlock(hex, 7, 16, decrypted, 0);
+                decryptor.TransformBlock(hex, 23, 16, decrypted, 16);
+                decryptor.TransformBlock(hex, 23, 16, decrypted, 16);
+                for (int x = 0; x < 32; x++) decrypted[x] ^= derivedBytes[x];
+
+                _privKey = decrypted; // necessary so AddressBase58 works
+
+                Sha256Digest sha256 = new Sha256Digest();
+                byte[] addrhash = new byte[32];
+                byte[] addrtext = utf8.GetBytes(this.AddressBase58);
+                sha256.BlockUpdate(addrtext, 0, addrtext.Length);
+                sha256.DoFinal(addrhash, 0);
+                sha256.BlockUpdate(addrhash, 0, 32);
+                sha256.DoFinal(addrhash, 0);
+                if (addrhash[0] != hex[3] || addrhash[1] != hex[4] || addrhash[2] != hex[5] || addrhash[3] != hex[6]) {
+                    return "Passphrase is incorrect";
+                }
+            } else if (hex.Length == 39 && hex[0] == 1 && hex[1] == 0x43) {
+                if (_passphrase == null || _passphrase == "") {
+                    return "This is an encrypted private key and no passphrase has been provided";
+                }
+
+                if (hex[2] == 0x20) {
+                    _compressedPoint = true;
+                } else if (hex[2] != 0x00) {
+                    return "Private key is not valid or is a newer format unsupported by this version of the software.";
+                }
+
+                // get ownersalt and encryptedpart2 since they are in the record
+                byte[] ownersalt = new byte[8];
+                Array.Copy(hex, 7, ownersalt, 0, 8);
+                byte[] encryptedpart2 = new byte[16];
+                Array.Copy(hex, 23, encryptedpart2, 0, 16);
+
+                // get the first part of encryptedpart1 (the rest is encrypted within encryptedpart2)
+                byte[] encryptedpart1 = new byte[16];
+                Array.Copy(hex, 15, encryptedpart1, 0, 8);
+
+                // recover passfactor and passpoint via ownersalt and passphrase
+                UTF8Encoding utf8 = new UTF8Encoding(false);
+                byte[] passfactor = new byte[32];
+                SCrypt.ComputeKey(utf8.GetBytes(_passphrase), ownersalt, 16384, 8, 8, 8, passfactor);
+                KeyPair kp = new KeyPair(passfactor, compressed: true);
+                byte[] passpoint = kp.PublicKeyBytes;
+
+                // derive decryption key
+                byte[] addresshashplusownersalt = new byte[12];
+                Array.Copy(hex, 3, addresshashplusownersalt, 0, 4);
+                Array.Copy(ownersalt, 0, addresshashplusownersalt, 4, 8);
+                byte[] derived = new byte[64];
+                SCrypt.ComputeKey(passpoint, addresshashplusownersalt, 16384, 8, 8, 8, derived);
+                byte[] derivedhalf2 = new byte[32];
+                Array.Copy(derived, 32, derivedhalf2, 0, 32);
+
+                // decrypt encrypted payload
+                AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+                aes.KeySize = 256;
+                aes.Mode = CipherMode.ECB;
+                aes.Key = derivedhalf2;
+                ICryptoTransform decryptor = aes.CreateDecryptor();
+
+                byte[] unencryptedpart2 = new byte[16];
+                decryptor.TransformBlock(encryptedpart2, 0, 16, unencryptedpart2, 0);
+                decryptor.TransformBlock(encryptedpart2, 0, 16, unencryptedpart2, 0);
+                for (int i = 0; i < 16; i++) {
+                    unencryptedpart2[i] ^= derived[i + 16];
+                }
+
+                // take the decrypted part and recover encrypted part 1
+                Array.Copy(unencryptedpart2, 0, encryptedpart1, 8, 8);
+
+                // decrypt part 1
+                byte[] unencryptedpart1 = new byte[16];
+                decryptor.TransformBlock(encryptedpart1, 0, 16, unencryptedpart1, 0);
+                decryptor.TransformBlock(encryptedpart1, 0, 16, unencryptedpart1, 0);
+                for (int i = 0; i < 16; i++) {
+                    unencryptedpart1[i] ^= derived[i];
+                }
+
+                // recover seedb
+                byte[] seedb = new byte[24];
+                Array.Copy(unencryptedpart1, 0, seedb, 0, 16);
+                Array.Copy(unencryptedpart2, 8, seedb, 16, 8);
+
+                // turn seedb into factorb
+                Sha256Digest sha256 = new Sha256Digest();
+                sha256.BlockUpdate(seedb, 0, 24);
+                byte[] factorb = new byte[32];
+                sha256.DoFinal(factorb, 0);
+                sha256.BlockUpdate(factorb, 0, 32);
+                sha256.DoFinal(factorb, 0);
+
+                // get private key
+                var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
+                BigInteger privatekey = new BigInteger(1, passfactor).Multiply(new BigInteger(1, factorb)).Mod(ps.N);
+
+                // use private key
+                _privKey = Bitcoin.Force32Bytes(privatekey.ToByteArrayUnsigned());
+
+                // check address hash
+
+                byte[] addrhash = new byte[32];
+                byte[] addrtext = utf8.GetBytes(this.AddressBase58);
+                sha256.BlockUpdate(addrtext, 0, addrtext.Length);
+                sha256.DoFinal(addrhash, 0);
+                sha256.BlockUpdate(addrhash, 0, 32);
+                sha256.DoFinal(addrhash, 0);
+                if (addrhash[0] != hex[3] || addrhash[1] != hex[4] || addrhash[2] != hex[5] || addrhash[3] != hex[6]) {
+                    return "Passphrase is incorrect";
+                }
+                
+            } else {
                 return "Not a recognized private key format";
             }
             return validateRange();
@@ -269,6 +413,8 @@ namespace BtcAddress {
             }
         }
 
+        private string cachedPrivateKeyBase58 = null;
+
         /// <summary>
         /// Getter: Returns the private key, either unencrypted if no password was set, or encrypted
         /// with the password.
@@ -281,37 +427,49 @@ namespace BtcAddress {
                 if (_privKey.Length != 32) throw new ApplicationException("Not a valid private key");
 
                 if (_passphrase != null && _passphrase != "") {
+                    if (cachedPrivateKeyBase58 != null) return cachedPrivateKeyBase58;
+
+                    UTF8Encoding utf8 = new UTF8Encoding(false);
+                    SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
+                    byte[] addrhashfull = sha256.ComputeHash(sha256.ComputeHash(utf8.GetBytes(this.AddressBase58)));
+                    byte[] addresshash = new byte[] { addrhashfull[0], addrhashfull[1], addrhashfull[2], addrhashfull[3] };
+
+                    byte[] derivedBytes = new byte[64];
+                    SCrypt.ComputeKey(utf8.GetBytes(_passphrase), addresshash, 16384, 8, 8, 8, derivedBytes);
+
                     AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
                     aes.KeySize = 256;
                     aes.Mode = CipherMode.ECB;
-
-                    SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-                    UTF8Encoding utf8 = new UTF8Encoding(false);
-                    byte[] encryptionKey = sha256.ComputeHash(utf8.GetBytes(_passphrase));
-                    aes.Key = encryptionKey;
+                    byte[] aeskey = new byte[32];
+                    Array.Copy(derivedBytes, 32, aeskey, 0, 32);
+                    aes.Key = aeskey;
                     ICryptoTransform encryptor = aes.CreateEncryptor();
 
-                    byte[] rv = new byte[36];
+                    byte[] unencrypted = new byte[32];
+                    byte[] rv = new byte[39];
+                    Array.Copy(this.PrivateKeyBytes, unencrypted, 32);
+                    for (int x = 0; x < 32; x++) unencrypted[x] ^= derivedBytes[x];
 
-                    encryptor.TransformBlock(_privKey, 0, 16, rv, 4);
-                    encryptor.TransformBlock(_privKey, 0, 16, rv, 4);
-                    byte[] interblock = new byte[16];
-                    Array.Copy(rv, 4, interblock, 0, 16);
-                    for (int x = 0; x < 16; x++) interblock[x] ^= _privKey[16 + x];
-                    encryptor.TransformBlock(interblock, 0, 16, rv, 20);
-                    encryptor.TransformBlock(interblock, 0, 16, rv, 20);
+                    encryptor.TransformBlock(unencrypted, 0, 16, rv, 7);
+                    encryptor.TransformBlock(unencrypted, 0, 16, rv, 7);
+                    encryptor.TransformBlock(unencrypted, 16, 16, rv, 23);
+                    encryptor.TransformBlock(unencrypted, 16, 16, rv, 23);
+
+
 
                     // put header
-                    rv[0] = 0x02;
-                    rv[1] = 0x05;
+                    rv[0] = 0x01;
+                    rv[1] = 0x42;
+                    rv[2] = IsCompressedPoint ? (byte)0xe0 : (byte)0xc0;
 
-                    byte[] checksum = sha256.ComputeHash(utf8.GetBytes(_passphrase + "?"));
+                    byte[] checksum = sha256.ComputeHash(sha256.ComputeHash(utf8.GetBytes(AddressBase58)));
+                    rv[3] = checksum[0];
+                    rv[4] = checksum[1];
+                    rv[5] = checksum[2];
+                    rv[6] = checksum[3];
 
-                    rv[2] = (byte)(checksum[0] & 0x7F);
-                    rv[3] = (byte)(checksum[1] & 0xFE);
-                    if (_compressedPoint) rv[3]++;
-
-                    return Bitcoin.ByteArrayToBase58Check(rv);
+                    cachedPrivateKeyBase58 = Bitcoin.ByteArrayToBase58Check(rv);
+                    return cachedPrivateKeyBase58;
                 } else if (_compressedPoint) {
                     byte[] rv = new byte[34];
                     Array.Copy(_privKey, 0, rv, 1, 32);

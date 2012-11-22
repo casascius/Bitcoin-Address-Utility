@@ -40,9 +40,12 @@ namespace BtcAddress {
 
             byte[] bb = new byte[ba.Length + 4];
             Array.Copy(ba, bb, ba.Length);
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-            byte[] thehash = sha256.ComputeHash(ba);
-            thehash = sha256.ComputeHash(thehash);
+            Sha256Digest bcsha256a = new Sha256Digest();
+            bcsha256a.BlockUpdate(ba, 0, ba.Length);
+            byte[] thehash = new byte[32];
+            bcsha256a.DoFinal(thehash, 0);
+            bcsha256a.BlockUpdate(thehash, 0, 32);
+            bcsha256a.DoFinal(thehash, 0);
             for (int i = 0; i < 4; i++) bb[ba.Length + i] = thehash[i];
             return ByteArrayToBase58(bb);
         }
@@ -157,9 +160,14 @@ namespace BtcAddress {
             if (bb.Length < 4) return null;
 
             if (IgnoreChecksum == false) {
-                SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-                byte[] checksum = sha256.ComputeHash(bb, 0, bb.Length - 4);
-                checksum = sha256.ComputeHash(checksum);
+                Sha256Digest bcsha256a = new Sha256Digest();
+                bcsha256a.BlockUpdate(bb, 0, bb.Length - 4);
+
+                byte[] checksum = new byte[32];  //sha256.ComputeHash(bb, 0, bb.Length - 4);
+                bcsha256a.DoFinal(checksum, 0);
+                bcsha256a.BlockUpdate(checksum, 0, 32);
+                bcsha256a.DoFinal(checksum, 0);
+
                 for (int i = 0; i < 4; i++) {
                     if (checksum[i] != bb[bb.Length - 4 + i]) return null;
                 }

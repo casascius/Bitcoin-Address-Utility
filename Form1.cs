@@ -366,132 +366,6 @@ namespace BtcAddress {
         
         
         private void label5_Click(object sender, EventArgs e) {
-            return;
-            
-            if (txtBtcAddr.Text.Length < 50) {
-                MessageBox.Show("Please fill the Address box with lots of random nonsense characters - this helps ensure the randomness of the addresses.");
-                return;
-
-            }
-
-            salt += txtBtcAddr.Text;
-
-            for (int i = 0; i < 4; i++) {
-
-                ThreadStart ts1 = new ThreadStart(GenerateAddresses);
-                Thread t1 = new Thread(ts1);
-                t1.Start();
-                Threads.Add(t1);
-            }
-
-
-            /*
-            ECKeyPairGenerator gen = new ECKeyPairGenerator();
-            var secureRandom = new SecureRandom();
-            var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
-            var ecParams = new ECDomainParameters(ps.Curve, ps.G, ps.N, ps.H);
-            var keyGenParam = new ECKeyGenerationParameters(ecParams, secureRandom);
-            gen.Init(keyGenParam);
-
-            // Generate private key #1.
-
-            AsymmetricCipherKeyPair kp1 = gen.GenerateKeyPair();
-
-            ECPrivateKeyParameters priv1 = (ECPrivateKeyParameters)kp1.Private;
-
-            byte[] hexpriv1 = priv1.D.ToByteArrayUnsigned();
-
-            Debug.WriteLine("Private key 1 is " + Bitcoin.ByteArrayToString(hexpriv1));
-            
-            // Get the public key for #1 (multiplying it by constant G defined by secp256k1).
-            ECPoint pub1 = ps.G.Multiply(priv1.D);
-
-            // Generate private key #2.
-
-            AsymmetricCipherKeyPair kp2 = gen.GenerateKeyPair();
-
-            ECPrivateKeyParameters priv2 = (ECPrivateKeyParameters)kp2.Private;
-
-            byte[] hexpriv2 = priv2.D.ToByteArrayUnsigned();
-
-            Debug.WriteLine("Private key 2 is " + Bitcoin.ByteArrayToString(hexpriv2));
-
-            // Get the public key for #2.
-            ECPoint pub2 = ps.G.Multiply(priv2.D);
-
-            // Add the two public keys together.
-
-            ECPoint pubsum = pub1.Add(pub2);
-
-            // Turn that into a Bitcoin address.
-            byte[] pubbytes = Bitcoin.PubKeyToByteArray(pubsum);
-            string pubhashsum = Bitcoin.PubHexToPubHash(pubbytes);
-            string pubaddr = Bitcoin.PubHashToAddress(pubhashsum, "Bitcoin");
-            Debug.WriteLine("Bitcoin address of summing public keys: " + pubaddr);
-
-            // Combine the two private keys together.
-            Org.BouncyCastle.Math.BigInteger privsum = priv1.D.Add(priv2.D).Mod(ps.N);
-            
-            // Turn the combined privkey into a pubkey...
-            ECPoint pub12 = ps.G.Multiply(privsum);
-            
-            // ... then a Bitcoin address.
-            pubbytes = Bitcoin.PubKeyToByteArray(pub12);
-            pubhashsum = Bitcoin.PubHexToPubHash(pubbytes);
-            pubaddr = Bitcoin.PubHashToAddress(pubhashsum, "Bitcoin");
-            Debug.WriteLine("Bitcoin address of summing private keys: " + pubaddr);
-
-            Debug.WriteLine("Combined private key: " + Bitcoin.ByteArrayToString(privsum.ToByteArrayUnsigned()));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            return;
-            */
-            // SHAcode is a 22-character string that starts with S, whose SHA256 hash can be used as private key.
-            // There is a simple 8-bit check: first byte of SHA256(string + '?') must be 00.
-
-
-            /*
-
-            return;
-            int linesdone = 0;
-            using (StreamReader sr1 = new StreamReader("d:\\t\\bitaddress2.txt")) {
-                while (sr1.EndOfStream == false) {
-                    Application.DoEvents();
-                    string line = sr1.ReadLine();
-                    string[] fields = line.Split(',');
-                    if (fields.Length == 3) {
-                        try {
-                            string privkey = fields[2];
-                            string privhex = Bitcoin.PrivWIFtoPrivHex(privkey);
-                            string pubhex = Bitcoin.PrivHexToPubHex(privhex);
-                            string pubhash = Bitcoin.PubHexToPubHash(pubhex);
-                            string address = Bitcoin.PubHashToAddress(pubhash, "Bitcoin");
-                            if (fields[1] != address) {
-                                Debug.WriteLine("Failed on " + line);
-                                //   return;
-                            }
-                        } catch (Exception e1) {
-                            Debug.WriteLine("Got an exception on this line: " + line);
-                        }
-                        linesdone++;
-                        if (linesdone % 100 == 0) Debug.WriteLine("Passed " + linesdone);
-                    }
-                }
-            }*/
         }
 
 
@@ -499,9 +373,6 @@ namespace BtcAddress {
         private string salt = "wefdhwfkhjwefopiwjdfldkdsfjndkljf"; // initial salt replaced at runtime
 
         private void GenerateAddresses() {
-
-
-
 
             string b58 = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
             int b58len = b58.Length;
@@ -792,6 +663,10 @@ namespace BtcAddress {
 
         private void Form1_MouseMove(object sender, MouseEventArgs e) {
             AddExtraEntropy(DateTime.Now.Ticks.ToString() + e.X + "," + e.Y);
+        }
+
+        private void pPECKeygenToolStripMenuItem_Click(object sender, EventArgs e) {
+            new PpecKeygen().Show();
         }
     }
     public class KeyComparer : IComparer<Address> {

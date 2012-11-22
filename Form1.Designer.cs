@@ -70,6 +70,7 @@
             this.txtPassphrase = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.pPECKeygenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -326,7 +327,8 @@
             this.base58CalcToolStripMenuItem,
             this.mofNCalcToolStripMenuItem,
             this.paperWalletPrinterToolStripMenuItem,
-            this.keyCombinerToolStripMenuItem});
+            this.keyCombinerToolStripMenuItem,
+            this.pPECKeygenToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -486,6 +488,13 @@
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // pPECKeygenToolStripMenuItem
+            // 
+            this.pPECKeygenToolStripMenuItem.Name = "pPECKeygenToolStripMenuItem";
+            this.pPECKeygenToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.pPECKeygenToolStripMenuItem.Text = "PPEC Keygen";
+            this.pPECKeygenToolStripMenuItem.Click += new System.EventHandler(this.pPECKeygenToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -579,6 +588,7 @@
         private System.Windows.Forms.ToolStripMenuItem copyMinikeyQRMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyPublicHexQRMenuItem;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ToolStripMenuItem pPECKeygenToolStripMenuItem;
 
     }
 }

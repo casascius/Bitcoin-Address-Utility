@@ -29,7 +29,7 @@ namespace BtcAddress {
         }
 
         /// <summary>
-        /// Constructor that takes a byte array of 65 bytes representing a public key.
+        /// Constructor that takes a byte array of 33 or 65 bytes representing a public key.
         /// </summary>
         public PublicKey(byte[] pubKeyBytes) {
             string result = constructFromBytes(pubKeyBytes);
@@ -101,6 +101,10 @@ namespace BtcAddress {
         /// </summary>
         protected virtual byte[] ComputePublicKey() { return null;  }
 
+        /// <summary>
+        /// Returns the public key bytes.  This will return 65 bytes for an uncompressed public key
+        /// or 33 bytes for a compressed public key.
+        /// </summary>
         public byte[] PublicKeyBytes {
             get {
                 if (_publicKey == null) _publicKey = ComputePublicKey();
