@@ -127,7 +127,7 @@ namespace BtcAddress {
 
             // derive encryption key material
             byte[] derived = new byte[64];
-            SCrypt.ComputeKey(passpoint, addresshashplusownersalt, 16384, 8, 8, 8, derived);
+            SCrypt.ComputeKey(passpoint, addresshashplusownersalt, 1024, 1, 1, 1, derived);
 
             byte[] derivedhalf2 = new byte[32];
             Array.Copy(derived, 32, derivedhalf2, 0, 32);
