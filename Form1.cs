@@ -27,8 +27,6 @@ namespace BtcAddress {
             InitializeComponent();
         }
 
-
-
         private void btnPassphrase_Click(object sender, EventArgs e) {
 
             ChangeFlag++;
