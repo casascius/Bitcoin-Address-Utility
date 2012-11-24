@@ -250,7 +250,7 @@ namespace BtcAddress {
             byte accum = 0;
 
             foreach (char c in source.ToCharArray()) {                
-                if (c == ' ') {
+                if (c == ' ' || c == '-' || c == ':') {
                     // if we got a space, then accept it as the end if we have 1 character.
                     if (gotFirstChar) {
                         bytes.Add(accum);

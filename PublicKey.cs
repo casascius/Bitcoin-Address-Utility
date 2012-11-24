@@ -58,7 +58,7 @@ namespace BtcAddress {
                 if (pubKeyBytes[0] != 2 && pubKeyBytes[0] != 3) {
                     return "Invalid public key, for 3-byte keys the first byte must be 0x02 or 0x03";
                 }
-                _compressedPoint = true;
+                IsCompressedPoint = true;
             } else {
                 return "Invalid public key, must be 33 or 65 bytes";
             }
@@ -84,13 +84,7 @@ namespace BtcAddress {
 
         private byte[] _publicKey = null;
 
-        public bool IsCompressedPoint {
-            get {
-                return _compressedPoint;
-            }
-        }
-
-        protected bool _compressedPoint = false;
+        public bool IsCompressedPoint { get; protected set; }
 
 
         /// <summary>

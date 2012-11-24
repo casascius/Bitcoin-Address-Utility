@@ -78,9 +78,14 @@ namespace BtcAddress {
                     byte[] str = Bitcoin.Force32Bytes(utf8.GetBytes(txtPrivHex.Text.Substring(1, txtPrivHex.Text.Length - 2)));
                     txtPrivHex.Text = RemoveSpacesIf(Bitcoin.ByteArrayToString(str));
                 }
-                KeyPair ba = new KeyPair(txtPrivHex.Text, txtPassphrase.Text, compressed: compressToolStripMenuItem.Checked);
+                KeyPair ba = new KeyPair(txtPrivHex.Text, compressed: compressToolStripMenuItem.Checked);
 
-                SetText(txtPrivWIF, ba.PrivateKeyBase58);
+                if (txtPassphrase.Text != "") {
+                    SetText(txtPrivWIF, new Bip38KeyPair(ba, txtPassphrase.Text).EncryptedPrivateKey);
+                } else {
+                    SetText(txtPrivWIF, ba.PrivateKeyBase58);
+
+                }
                 SetText(txtPrivHex, ba.PrivateKeyHex);
                 SetText(txtPubHex, ba.PublicKeyHex);
                 SetText(txtPubHash, ba.Hash160Hex);
@@ -97,7 +102,29 @@ namespace BtcAddress {
         private void btnPrivWIFToHex_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {
-                KeyPair kp = new KeyPair(txtPrivWIF.Text, txtPassphrase.Text);
+                object interpretation = StringInterpreter.Interpret(txtPrivWIF.Text, compressed: compressToolStripMenuItem.Checked, addressType: this.AddressTypeByte);
+                KeyPair kp = null;
+                if (interpretation is PassphraseKeyPair) {
+                    if (txtPassphrase.Text == "") {
+                        MessageBox.Show("This is an encrypted key. A passphrase is required.");
+                        return;
+                    }
+                    PassphraseKeyPair ppkp = (PassphraseKeyPair) interpretation;
+                    if (ppkp.DecryptWithPassphrase(txtPassphrase.Text)==false) {
+                        MessageBox.Show("The passphrase is incorrect.");
+                        return;
+                    }
+                    kp = ppkp.GetUnencryptedPrivateKey();
+                } else if (interpretation is KeyPair) {
+                    kp = (KeyPair)interpretation;
+                }
+
+
+                if (kp == null) {
+                    MessageBox.Show("Not a valid private key.");
+                    return;
+                }
+
                 SetText(txtPrivHex, kp.PrivateKeyHex);
                 SetText(txtPubHex, kp.PublicKeyHex);
                 SetText(txtPubHash, kp.Hash160Hex);
@@ -182,7 +209,11 @@ namespace BtcAddress {
 
                 KeyPair kp = KeyPair.Create(ExtraEntropy, compressToolStripMenuItem.Checked);
 
-                SetText(txtPrivWIF, new KeyPair(kp.PrivateKeyBytes, txtPassphrase.Text, compressed: kp.IsCompressedPoint).PrivateKeyBase58);
+                if (txtPassphrase.Text != "") {
+                    SetText(txtPrivWIF, new Bip38KeyPair(kp, txtPassphrase.Text).EncryptedPrivateKey);
+                } else {
+                    SetText(txtPrivWIF, kp.PrivateKeyBase58);
+                }
                 SetText(txtPrivHex, kp.PrivateKeyHex);
                 SetText(txtPubHex, kp.PublicKeyHex);
                 SetText(txtPubHash, kp.Hash160Hex);
@@ -251,7 +282,11 @@ namespace BtcAddress {
                 MiniKeyPair mkp = MiniKeyPair.CreateRandom(ExtraEntropy);
 
                 SetText(txtMinikey, mkp.MiniKey);
-                SetText(txtPrivWIF, new KeyPair(mkp.PrivateKeyBytes, txtPassphrase.Text).PrivateKeyBase58);
+                if (txtPassphrase.Text != "") {
+                    SetText(txtPrivWIF, new Bip38KeyPair(new KeyPair(mkp.PrivateKeyBytes), txtPassphrase.Text).EncryptedPrivateKey);
+                } else {
+                    SetText(txtPrivWIF, new KeyPair(mkp.PrivateKeyBytes).PrivateKeyBase58);
+                }
                 SetText(txtPrivHex, mkp.PrivateKeyHex);
                 SetText(txtPubHex, mkp.PublicKeyHex);
                 SetText(txtPubHash, mkp.Hash160Hex);

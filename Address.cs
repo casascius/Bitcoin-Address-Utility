@@ -88,7 +88,7 @@ namespace BtcAddress {
         protected virtual byte[] ComputeHash160() { return null; }
 
         /// <summary>
-        /// Returns the 20-byte Hash160 of the Bitcoin address
+        /// Returns a copy of the 20-byte Hash160 of the Bitcoin address
         /// </summary>
         public byte[] Hash160 {
             get {

@@ -154,7 +154,7 @@ namespace BtcAddress {
             } else {
                 UTF8Encoding utf8 = new UTF8Encoding(false);
                 byte[] mykey = sha256.ComputeHash(utf8.GetBytes(myhash));
-                k = new KeyPair(mykey,txtEncryptionPassword.Text);
+                k = new KeyPair(mykey);
             }
             Addresses.Add(k);
             lblGenCount.Text = Addresses.Count.ToString() + (txtEncryptionPassword.Text != "" ? " encrypted" : "") + " addresses have been generated.";

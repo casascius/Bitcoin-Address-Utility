@@ -53,8 +53,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Barcode128b.cs" />
+    <Compile Include="Bip38Intermediate.cs" />
+    <Compile Include="Bip38KeyPair.cs" />
     <Compile Include="CryptSharp\Helper.cs" />
     <Compile Include="CryptSharp\Pbkdf2.cs" />
+    <Compile Include="EncryptedKeyPair.cs" />
     <Compile Include="KeyCombiner.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +93,7 @@
     <Compile Include="PaperWalletPrinter.Designer.cs">
       <DependentUpon>PaperWalletPrinter.cs</DependentUpon>
     </Compile>
+    <Compile Include="PassphraseKeyPair.cs" />
     <Compile Include="PCPrint.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -107,6 +111,8 @@
     </Compile>
     <Compile Include="CryptSharp\Salsa20Core.cs" />
     <Compile Include="CryptSharp\SCrypt.cs" />
+    <Compile Include="ShaPassphraseKeyPair.cs" />
+    <Compile Include="StringInterpreter.cs" />
     <Compile Include="Walletgen.cs">
       <SubType>Form</SubType>
     </Compile>
