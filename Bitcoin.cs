@@ -125,23 +125,17 @@ namespace BtcAddress {
 
         }
 
-
         /// <summary>
         /// Converts a base-58 string to a byte array, returning null if it wasn't valid.
         /// </summary>
-        public static byte[] Base58CheckToByteArray(string base58) {
-
+        public static byte[] Base58ToByteArray(string base58) {
             Org.BouncyCastle.Math.BigInteger bi2 = new Org.BouncyCastle.Math.BigInteger("0");
             string b58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
-            bool IgnoreChecksum = false;
 
             foreach (char c in base58) {
                 if (b58.IndexOf(c) != -1) {
                     bi2 = bi2.Multiply(new Org.BouncyCastle.Math.BigInteger("58"));
                     bi2 = bi2.Add(new Org.BouncyCastle.Math.BigInteger(b58.IndexOf(c).ToString()));
-                } else if (c == '?') {
-                    IgnoreChecksum = true;
                 } else {
                     return null;
                 }
@@ -157,7 +151,25 @@ namespace BtcAddress {
                 bb = bbb;
             }
 
-            if (bb.Length < 4) return null;
+            return bb;
+        }
+
+        /// <summary>
+        /// Converts a base-58 string to a byte array, checking the checksum, and
+        /// returning null if it wasn't valid.  Appending "?" to the end of the string skips
+        /// the checksum calculation, but still strips the four checksum bytes from the
+        /// result.
+        /// </summary>
+        public static byte[] Base58CheckToByteArray(string base58) {
+
+            bool IgnoreChecksum = false;
+            if (base58.EndsWith("?")) {
+                IgnoreChecksum = true;
+                base58 = base58.Substring(0, base58.Length - 1);
+            }
+
+            byte[] bb = Base58ToByteArray(base58);
+            if (bb == null || bb.Length < 4) return null;
 
             if (IgnoreChecksum == false) {
                 Sha256Digest bcsha256a = new Sha256Digest();

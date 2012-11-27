@@ -36,9 +36,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rdoMul = new System.Windows.Forms.RadioButton();
             this.rdoAdd = new System.Windows.Forms.RadioButton();
+            this.rdoMul = new System.Windows.Forms.RadioButton();
             this.label6 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -137,6 +138,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.linkLabel1);
             this.groupBox1.Controls.Add(this.rdoAdd);
             this.groupBox1.Controls.Add(this.rdoMul);
             this.groupBox1.Location = new System.Drawing.Point(230, 247);
@@ -145,6 +147,16 @@
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Combining Method";
+            // 
+            // rdoAdd
+            // 
+            this.rdoAdd.AutoSize = true;
+            this.rdoAdd.Location = new System.Drawing.Point(15, 43);
+            this.rdoAdd.Name = "rdoAdd";
+            this.rdoAdd.Size = new System.Drawing.Size(262, 17);
+            this.rdoAdd.TabIndex = 1;
+            this.rdoAdd.Text = "EC Addition (for use only with Vanity Address Pool)";
+            this.rdoAdd.UseVisualStyleBackColor = true;
             // 
             // rdoMul
             // 
@@ -158,16 +170,6 @@
             this.rdoMul.Text = "EC Multiplication (two-factor physical Bitcoins) (most secure)";
             this.rdoMul.UseVisualStyleBackColor = true;
             // 
-            // rdoAdd
-            // 
-            this.rdoAdd.AutoSize = true;
-            this.rdoAdd.Location = new System.Drawing.Point(15, 43);
-            this.rdoAdd.Name = "rdoAdd";
-            this.rdoAdd.Size = new System.Drawing.Size(309, 17);
-            this.rdoAdd.TabIndex = 1;
-            this.rdoAdd.Text = "EC Addition (for use with Vanity Address Pool) (least secure!)";
-            this.rdoAdd.UseVisualStyleBackColor = true;
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -176,6 +178,17 @@
             this.label6.Size = new System.Drawing.Size(534, 130);
             this.label6.TabIndex = 12;
             this.label6.Text = resources.GetString("label6.Text");
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(274, 45);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(38, 13);
+            this.linkLabel1.TabIndex = 2;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "(why?)";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // KeyCombiner
             // 
@@ -221,5 +234,6 @@
         private System.Windows.Forms.RadioButton rdoAdd;
         private System.Windows.Forms.RadioButton rdoMul;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

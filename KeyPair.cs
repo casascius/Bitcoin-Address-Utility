@@ -28,11 +28,14 @@ namespace BtcAddress {
         /// <summary>
         /// Creates a new key pair using the SHA256 hash of a given string as the private key.
         /// </summary>
-        public static KeyPair CreateFromString(string tohash) {
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
+        public static KeyPair CreateFromString(string tohash) {            
             UTF8Encoding utf8 = new UTF8Encoding(false);
             byte[] forsha = utf8.GetBytes(tohash);
-            return new KeyPair(forsha);
+            Sha256Digest sha256 = new Sha256Digest();
+            sha256.BlockUpdate(forsha, 0, forsha.Length);
+            byte[] thehash = new byte[32];
+            sha256.DoFinal(thehash, 0);
+            return new KeyPair(thehash);
         }
 
         /// <summary>

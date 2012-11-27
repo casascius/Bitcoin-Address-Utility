@@ -24,6 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.txtPrivWIF = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtPrivHex = new System.Windows.Forms.TextBox();
@@ -53,8 +54,8 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.base58CalcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mofNCalcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.paperWalletPrinterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyCombinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pPECKeygenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.spaceBetweenHexBytesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.publicKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,7 +71,6 @@
             this.txtPassphrase = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.pPECKeygenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -272,8 +272,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editToolStripMenuItem,
             this.toolsToolStripMenuItem,
+            this.editToolStripMenuItem,
             this.optionsToolStripMenuItem,
             this.publicKeyToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -325,9 +325,8 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.base58CalcToolStripMenuItem,
-            this.mofNCalcToolStripMenuItem,
-            this.paperWalletPrinterToolStripMenuItem,
             this.keyCombinerToolStripMenuItem,
+            this.mofNCalcToolStripMenuItem,
             this.pPECKeygenToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
@@ -336,30 +335,30 @@
             // base58CalcToolStripMenuItem
             // 
             this.base58CalcToolStripMenuItem.Name = "base58CalcToolStripMenuItem";
-            this.base58CalcToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.base58CalcToolStripMenuItem.Text = "Base58 Calc";
+            this.base58CalcToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.base58CalcToolStripMenuItem.Text = "Base58 Calculator";
             this.base58CalcToolStripMenuItem.Click += new System.EventHandler(this.base58CalcToolStripMenuItem_Click);
             // 
             // mofNCalcToolStripMenuItem
             // 
             this.mofNCalcToolStripMenuItem.Name = "mofNCalcToolStripMenuItem";
-            this.mofNCalcToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.mofNCalcToolStripMenuItem.Text = "M-of-N calc";
+            this.mofNCalcToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.mofNCalcToolStripMenuItem.Text = "M-of-N Calculator";
             this.mofNCalcToolStripMenuItem.Click += new System.EventHandler(this.mofNCalcToolStripMenuItem_Click);
-            // 
-            // paperWalletPrinterToolStripMenuItem
-            // 
-            this.paperWalletPrinterToolStripMenuItem.Name = "paperWalletPrinterToolStripMenuItem";
-            this.paperWalletPrinterToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.paperWalletPrinterToolStripMenuItem.Text = "Paper Wallet Printer";
-            this.paperWalletPrinterToolStripMenuItem.Click += new System.EventHandler(this.paperWalletPrinterToolStripMenuItem_Click);
             // 
             // keyCombinerToolStripMenuItem
             // 
             this.keyCombinerToolStripMenuItem.Name = "keyCombinerToolStripMenuItem";
-            this.keyCombinerToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.keyCombinerToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.keyCombinerToolStripMenuItem.Text = "Key Combiner";
             this.keyCombinerToolStripMenuItem.Click += new System.EventHandler(this.keyCombinerToolStripMenuItem_Click);
+            // 
+            // pPECKeygenToolStripMenuItem
+            // 
+            this.pPECKeygenToolStripMenuItem.Name = "pPECKeygenToolStripMenuItem";
+            this.pPECKeygenToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.pPECKeygenToolStripMenuItem.Text = "Intermediate Generator";
+            this.pPECKeygenToolStripMenuItem.Click += new System.EventHandler(this.pPECKeygenToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -488,13 +487,6 @@
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // pPECKeygenToolStripMenuItem
-            // 
-            this.pPECKeygenToolStripMenuItem.Name = "pPECKeygenToolStripMenuItem";
-            this.pPECKeygenToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.pPECKeygenToolStripMenuItem.Text = "PPEC Keygen";
-            this.pPECKeygenToolStripMenuItem.Click += new System.EventHandler(this.pPECKeygenToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -528,6 +520,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtPrivWIF);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Bitcoin Address Utility by Casascius (Beta, No Warranty)";
@@ -571,7 +564,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem base58CalcToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mofNCalcToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem paperWalletPrinterToolStripMenuItem;
         private System.Windows.Forms.TextBox txtPassphrase;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;

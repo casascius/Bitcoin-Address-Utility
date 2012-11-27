@@ -28,6 +28,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtBase58 = new System.Windows.Forms.TextBox();
             this.lblByteCounts = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.modeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.useChecksumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtHex
@@ -73,6 +77,33 @@
             this.lblByteCounts.TabIndex = 4;
             this.lblByteCounts.Text = "Byte count: 0  Base58 length: 0";
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.modeToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(685, 24);
+            this.menuStrip1.TabIndex = 5;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // modeToolStripMenuItem
+            // 
+            this.modeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.useChecksumToolStripMenuItem});
+            this.modeToolStripMenuItem.Name = "modeToolStripMenuItem";
+            this.modeToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.modeToolStripMenuItem.Text = "Mode";
+            // 
+            // useChecksumToolStripMenuItem
+            // 
+            this.useChecksumToolStripMenuItem.Checked = true;
+            this.useChecksumToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.useChecksumToolStripMenuItem.Name = "useChecksumToolStripMenuItem";
+            this.useChecksumToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.useChecksumToolStripMenuItem.Text = "Use Checksum";
+            this.useChecksumToolStripMenuItem.Click += new System.EventHandler(this.useChecksumToolStripMenuItem_Click);
+            // 
             // Base58Calc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -83,8 +114,12 @@
             this.Controls.Add(this.txtBase58);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtHex);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Base58Calc";
-            this.Text = "Base58Calc";
+            this.Text = "Base 58 Calculator";
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -97,5 +132,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtBase58;
         private System.Windows.Forms.Label lblByteCounts;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem modeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem useChecksumToolStripMenuItem;
     }
 }

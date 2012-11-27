@@ -126,7 +126,7 @@ calculate the combined Bitcoin address by combining their private key with the p
 to that address.  The person who should be allowed to spend those funds needs to have both private keys.
 
 If you combine one public key with one private key, you can calculate the combined Bitcoin address, but not
-the combined public key.  Combining two private keys yields both the combined address and the private key
+the combined private key.  Combining two private keys yields both the combined address and the private key
 needed to spend the funds sent to the combined address.</value>
   </data>
 </root>

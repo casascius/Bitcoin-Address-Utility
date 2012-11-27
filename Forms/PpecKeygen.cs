@@ -51,6 +51,10 @@ namespace BtcAddress {
             }
        }
 
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            Process.Start("https://en.bitcoin.it/wiki/BIP_0038");
+        }
+
 
 
     }

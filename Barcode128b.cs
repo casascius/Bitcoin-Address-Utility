@@ -50,7 +50,7 @@ namespace BtcAddress {
 
         public static Bitmap GetBarcode(string message) {
 
-            int pixelspermodule = 16;
+            int pixelspermodule = 1;
             int margininmodules = 12;
             int heightinmodules = 30;
 
@@ -62,20 +62,22 @@ namespace BtcAddress {
 
             int neededWidth = pixelspermodule * (margininmodules + margininmodules + modulecount);
             int neededHeight = pixelspermodule * heightinmodules;
-            Bitmap b = new Bitmap(neededWidth, neededHeight, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            SolidBrush black = new SolidBrush(Color.Black);
-            SolidBrush white = new SolidBrush(Color.White);
+            Bitmap b = new Bitmap(neededWidth + 1, neededHeight + 1);
+            SolidBrush brush = new SolidBrush(Color.White);
+
             Graphics gr = Graphics.FromImage(b);
             
             // start with a white background
-            gr.FillRectangle(white, 0, 0, neededWidth, neededHeight);
+            gr.FillRectangle(brush, new Rectangle(0, 0, neededWidth, neededHeight));
+
+            brush.Color = Color.Black;
 
             int currentmodule = margininmodules;
             bool nowBlack = true;
             foreach (char c in pattern.ToCharArray()) {
                 int modulewidth = (c - '0');
                 if (nowBlack) {
-                    gr.FillRectangle(black, currentmodule * pixelspermodule, 0, modulewidth * pixelspermodule, neededHeight);
+                    gr.FillRectangle(brush, currentmodule * pixelspermodule, 0, modulewidth * pixelspermodule, neededHeight);
                 }
                 nowBlack = !nowBlack;
                 currentmodule += modulewidth;

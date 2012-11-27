@@ -58,49 +58,69 @@
     <Compile Include="CryptSharp\Helper.cs" />
     <Compile Include="CryptSharp\Pbkdf2.cs" />
     <Compile Include="EncryptedKeyPair.cs" />
-    <Compile Include="KeyCombiner.cs">
+    <Compile Include="Forms\AddressGen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeyCombiner.Designer.cs">
+    <Compile Include="Forms\AddressGen.Designer.cs">
+      <DependentUpon>AddressGen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\KeyCollectionView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\KeyCollectionView.Designer.cs">
+      <DependentUpon>KeyCollectionView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\KeyCombiner.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\KeyCombiner.Designer.cs">
       <DependentUpon>KeyCombiner.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeyPair.cs" />
-    <Compile Include="Base58Calc.cs">
+    <Compile Include="Forms\PrintVouchers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Base58Calc.Designer.cs">
+    <Compile Include="Forms\PrintVouchers.Designer.cs">
+      <DependentUpon>PrintVouchers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyCollection.cs" />
+    <Compile Include="KeyCollectionItem.cs" />
+    <Compile Include="KeyPair.cs" />
+    <Compile Include="Forms\Base58Calc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Base58Calc.Designer.cs">
       <DependentUpon>Base58Calc.cs</DependentUpon>
     </Compile>
     <Compile Include="Bitcoin.cs" />
     <Compile Include="Address.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="MiniKeyPair.cs" />
     <Compile Include="MofN.cs" />
-    <Compile Include="MofNcalc.cs">
+    <Compile Include="Forms\MofNcalc.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MofNcalc.Designer.cs">
+    <Compile Include="Forms\MofNcalc.Designer.cs">
       <DependentUpon>MofNcalc.cs</DependentUpon>
     </Compile>
-    <Compile Include="PaperWalletPrinter.cs">
+    <Compile Include="Forms\PaperWalletPrinter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PaperWalletPrinter.Designer.cs">
+    <Compile Include="Forms\PaperWalletPrinter.Designer.cs">
       <DependentUpon>PaperWalletPrinter.cs</DependentUpon>
     </Compile>
     <Compile Include="PassphraseKeyPair.cs" />
     <Compile Include="PCPrint.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PpecKeygen.cs">
+    <Compile Include="Forms\PpecKeygen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PpecKeygen.Designer.cs">
+    <Compile Include="Forms\PpecKeygen.Designer.cs">
       <DependentUpon>PpecKeygen.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -113,29 +133,38 @@
     <Compile Include="CryptSharp\SCrypt.cs" />
     <Compile Include="ShaPassphraseKeyPair.cs" />
     <Compile Include="StringInterpreter.cs" />
-    <Compile Include="Walletgen.cs">
+    <Compile Include="Forms\Walletgen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Walletgen.Designer.cs">
+    <Compile Include="Forms\Walletgen.Designer.cs">
       <DependentUpon>Walletgen.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Base58Calc.resx">
+    <EmbeddedResource Include="Forms\AddressGen.resx">
+      <DependentUpon>AddressGen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Base58Calc.resx">
       <DependentUpon>Base58Calc.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
+    <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeyCombiner.resx">
+    <EmbeddedResource Include="Forms\KeyCollectionView.resx">
+      <DependentUpon>KeyCollectionView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\KeyCombiner.resx">
       <DependentUpon>KeyCombiner.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MofNcalc.resx">
+    <EmbeddedResource Include="Forms\MofNcalc.resx">
       <DependentUpon>MofNcalc.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PaperWalletPrinter.resx">
+    <EmbeddedResource Include="Forms\PaperWalletPrinter.resx">
       <DependentUpon>PaperWalletPrinter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PpecKeygen.resx">
+    <EmbeddedResource Include="Forms\PpecKeygen.resx">
       <DependentUpon>PpecKeygen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PrintVouchers.resx">
+      <DependentUpon>PrintVouchers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -147,7 +176,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Walletgen.resx">
+    <EmbeddedResource Include="Forms\Walletgen.resx">
       <DependentUpon>Walletgen.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
@@ -160,6 +189,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bitcoinlogo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

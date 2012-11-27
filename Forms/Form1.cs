@@ -27,7 +27,65 @@ namespace BtcAddress {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Takes a KeyCollectionItem from elsewhere in the program for display.
+        /// </summary>
+        public void DisplayKeyCollectionItem(KeyCollectionItem item) {
+            try {
+                ChangeFlag++;
+                if (item.EncryptedKeyPair != null) {
+                    SetText(txtPrivWIF, item.EncryptedKeyPair.EncryptedPrivateKey);
+                    SetText(txtPassphrase, "");
+                    if (item.EncryptedKeyPair.IsUnencryptedPrivateKeyAvailable()) {
+                        SetText(txtPrivHex, item.EncryptedKeyPair.GetUnencryptedPrivateKey().PublicKeyHex);
+                    } else {
+                        SetText(txtPrivHex, "");
+                    }
+                    if (item.EncryptedKeyPair.IsPublicKeyAvailable()) {
+                        SetText(txtPubHex, item.EncryptedKeyPair.GetPublicKey().PublicKeyHex);
+                    } else {
+                        SetText(txtPubHex, "");
+                    }
+                    if (item.EncryptedKeyPair.IsAddressAvailable()) {
+                        Address addr = item.EncryptedKeyPair.GetAddress();
+                        SetText(txtPubHash, addr.Hash160Hex);
+                        SetText(txtBtcAddr, addr.AddressBase58);
+                    } else {
+                        SetText(txtPubHash, "");
+                        SetText(txtBtcAddr, "");
+                    }
+                    return;
+                }
 
+
+
+                if (item.Address != null && item.Address is MiniKeyPair) {
+                    SetText(txtMinikey, ((MiniKeyPair)item.Address).MiniKey);
+                } else {
+                    SetText(txtMinikey, "");
+                }
+
+                if (item.Address != null && item.Address is KeyPair) {
+                    KeyPair kp = (KeyPair)item.Address;
+                    SetText(txtPrivWIF, kp.PrivateKeyBase58);
+                    SetText(txtPrivHex, kp.PrivateKeyHex);
+                } else if (item.Address != null) {
+                    SetText(txtPrivWIF, "");
+                    SetText(txtPrivHex, "");
+                }
+
+                if (item.Address != null && item.Address is PublicKey) {
+                    PublicKey pub = ((PublicKey)item.Address);
+                    SetText(txtPubHex, pub.PublicKeyHex);
+                    SetText(txtPubHash, pub.Hash160Hex);
+                    SetText(txtBtcAddr, pub.AddressBase58);
+                }
+
+            } finally {
+                ChangeFlag--;
+            }
+
+        }
 
         private void btnPassphrase_Click(object sender, EventArgs e) {
 

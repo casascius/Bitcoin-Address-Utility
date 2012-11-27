@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PpecKeygen));
             this.txtPassphrase = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -35,11 +36,15 @@
             this.btnEncode = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // txtPassphrase
             // 
-            this.txtPassphrase.Location = new System.Drawing.Point(110, 9);
+            this.txtPassphrase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPassphrase.Location = new System.Drawing.Point(110, 121);
             this.txtPassphrase.Name = "txtPassphrase";
             this.txtPassphrase.Size = new System.Drawing.Size(710, 20);
             this.txtPassphrase.TabIndex = 0;
@@ -47,7 +52,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 13);
+            this.label1.Location = new System.Drawing.Point(6, 125);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 13);
             this.label1.TabIndex = 1;
@@ -56,22 +61,24 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 74);
+            this.label2.Location = new System.Drawing.Point(6, 177);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(90, 13);
+            this.label2.Size = new System.Drawing.Size(90, 26);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Passphrase Code";
+            this.label2.Text = "Intermediate\r\nPassphrase Code";
             // 
             // txtPassphraseCode
             // 
-            this.txtPassphraseCode.Location = new System.Drawing.Point(110, 70);
+            this.txtPassphraseCode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPassphraseCode.Location = new System.Drawing.Point(110, 182);
             this.txtPassphraseCode.Name = "txtPassphraseCode";
             this.txtPassphraseCode.Size = new System.Drawing.Size(710, 20);
             this.txtPassphraseCode.TabIndex = 2;
             // 
             // btnGenerateKey
             // 
-            this.btnGenerateKey.Location = new System.Drawing.Point(112, 99);
+            this.btnGenerateKey.Location = new System.Drawing.Point(112, 251);
             this.btnGenerateKey.Name = "btnGenerateKey";
             this.btnGenerateKey.Size = new System.Drawing.Size(128, 29);
             this.btnGenerateKey.TabIndex = 4;
@@ -82,7 +89,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 164);
+            this.label3.Location = new System.Drawing.Point(6, 316);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(76, 13);
             this.label3.TabIndex = 8;
@@ -90,7 +97,9 @@
             // 
             // txtEncryptedKey
             // 
-            this.txtEncryptedKey.Location = new System.Drawing.Point(110, 160);
+            this.txtEncryptedKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtEncryptedKey.Location = new System.Drawing.Point(110, 312);
             this.txtEncryptedKey.Name = "txtEncryptedKey";
             this.txtEncryptedKey.Size = new System.Drawing.Size(710, 20);
             this.txtEncryptedKey.TabIndex = 7;
@@ -98,7 +107,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 138);
+            this.label4.Location = new System.Drawing.Point(6, 290);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(79, 13);
             this.label4.TabIndex = 6;
@@ -106,14 +115,16 @@
             // 
             // txtBitcoinAddress
             // 
-            this.txtBitcoinAddress.Location = new System.Drawing.Point(110, 134);
+            this.txtBitcoinAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtBitcoinAddress.Location = new System.Drawing.Point(110, 286);
             this.txtBitcoinAddress.Name = "txtBitcoinAddress";
             this.txtBitcoinAddress.Size = new System.Drawing.Size(710, 20);
             this.txtBitcoinAddress.TabIndex = 5;
             // 
             // btnEncode
             // 
-            this.btnEncode.Location = new System.Drawing.Point(112, 35);
+            this.btnEncode.Location = new System.Drawing.Point(112, 147);
             this.btnEncode.Name = "btnEncode";
             this.btnEncode.Size = new System.Drawing.Size(128, 29);
             this.btnEncode.TabIndex = 9;
@@ -124,7 +135,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(107, 183);
+            this.label5.Location = new System.Drawing.Point(107, 335);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(387, 13);
             this.label5.TabIndex = 10;
@@ -134,18 +145,41 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(265, 45);
+            this.label6.Location = new System.Drawing.Point(265, 157);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(524, 13);
             this.label6.TabIndex = 11;
             this.label6.Text = "Generating passphrases and encrypting and decrypting keys is slow by design. Expe" +
     "ct several seconds delay.";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(643, 104);
+            this.label7.TabIndex = 13;
+            this.label7.Text = resources.GetString("label7.Text");
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(707, 9);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(113, 13);
+            this.linkLabel1.TabIndex = 14;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Bitcoin Wiki: BIP 0038";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // PpecKeygen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 211);
+            this.ClientSize = new System.Drawing.Size(832, 432);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.btnEncode);
@@ -158,8 +192,9 @@
             this.Controls.Add(this.txtPassphraseCode);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtPassphrase);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PpecKeygen";
-            this.Text = "PpecKeygen";
+            this.Text = "Intermediate Passphrase Generator";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -179,5 +214,7 @@
         private System.Windows.Forms.Button btnEncode;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

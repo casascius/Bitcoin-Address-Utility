@@ -106,5 +106,14 @@ namespace BtcAddress {
                 txtOutputPriv.Text = "Only available when combining two private keys";
             }
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            MessageBox.Show("EC Addition should not be used for two-factor storage.  " +
+                "Use multiplication instead. " +
+                "Addition is safe when employing a vanity pool to generate vanity addresses, " +
+                "and is required for vanity address generators to achieve GPU-accelerated performance.  " +
+                "For some other uses, addition is unsafe due to its reversibility, " +
+                "so always use multiplication instead wherever possible.");
+        }
     }
 }

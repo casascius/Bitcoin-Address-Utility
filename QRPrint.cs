@@ -21,7 +21,7 @@ namespace BtcAddress {
         private Font ubuntumid = null;
         private Font ubuntubig = null;
 
-        public List<Address> keys;
+        public List<KeyCollectionItem> keys;
 
         public PrintModes PrintMode = PrintModes.PubPrivQR;
 
@@ -30,6 +30,8 @@ namespace BtcAddress {
         public string ImageFilename = "note-yellow.png";
 
         public int NotesPerPage = 3;
+
+        public bool PrintMiniKeysWith1DBarcode = false;
 
         private Image BitcoinNote = null;
 
@@ -136,7 +138,7 @@ namespace BtcAddress {
                 ubuntubig = new Font("Ubuntu", 17);
 
 
-                KeyPair k = (KeyPair)keys[0];
+                KeyCollectionItem k = (KeyCollectionItem)keys[0];
                 keys.RemoveAt(0);
 
                 string privkey = k.PrivateKey;
@@ -169,7 +171,7 @@ namespace BtcAddress {
                         scalefactor * 147F);
                     
                     // draw the public QR
-                    Bitmap b2 = Bitcoin.EncodeQRCode(k.AddressBase58);
+                    Bitmap b2 = Bitcoin.EncodeQRCode(k.GetAddressBase58());
                     e.Graphics.DrawImage(b2,
                         leftOffset + scalefactor * (float)(thiscodeX + 39),
                         scalefactor * (float)(thiscodeY + 90), scalefactor * 128F, scalefactor * 128F);
@@ -179,7 +181,7 @@ namespace BtcAddress {
                     //sf.FormatFlags |= StringFormatFlags.DirectionVertical | StringFormatFlags.DirectionRightToLeft;
 
                     e.Graphics.RotateTransform(-90F);
-                    e.Graphics.DrawString("Bitcoin Address\r\n" + k.AddressBase58, ubuntumid, Brushes.Black,
+                    e.Graphics.DrawString("Bitcoin Address\r\n" + k.GetAddressBase58(), ubuntumid, Brushes.Black,
                         -scalefactor * (float)(thiscodeY + 338),
                         leftOffset + scalefactor * (float)(thiscodeX + 170), 
 
@@ -208,14 +210,14 @@ namespace BtcAddress {
 
                     // write denomination, if any
                     if ((Denomination ?? "") != "") {
-                        e.Graphics.DrawString(Denomination + " bitcoin" + (Denomination=="1" ? "" : "s"), ubuntubig, Brushes.Black,
+                        e.Graphics.DrawString(Denomination, ubuntubig, Brushes.Black,
                             leftOffset + scalefactor * (float)(thiscodeX + 330),
                             scalefactor * (float)(thiscodeY + 310)
                             
                             );
                     }
 
-                    if (k is MiniKeyPair) {
+                    if (PrintMiniKeysWith1DBarcode && k.Address is MiniKeyPair) {
                         Bitmap barcode1d = Barcode128b.GetBarcode(k.PrivateKey);
                         float aspect1d = (float)barcode1d.Width / (float)barcode1d.Height;
                         e.Graphics.DrawImage(barcode1d, leftOffset + scalefactor * (float)(thiscodeX + 231F),
@@ -232,7 +234,7 @@ namespace BtcAddress {
                     // ----------------------------------------------------------------
                     e.Graphics.DrawImage(b, thiscodeX, thiscodeY, 100, 100);
 
-                    e.Graphics.DrawString("Bitcoin address: " + k.AddressBase58, fontsmall, Brushes.Black, thiscodeX + 110, thiscodeY);
+                    e.Graphics.DrawString("Bitcoin address: " + k.GetAddressBase58(), fontsmall, Brushes.Black, thiscodeX + 110, thiscodeY);
 
                     string whattowrite;
                     if (privkey.Length > 30) {
@@ -261,11 +263,11 @@ namespace BtcAddress {
                     e.Graphics.DrawImage(b, thiscodeX + 600, thiscodeY, 100, 100);
                     QRCodeEncoder qr2 = new QRCodeEncoder();
                     qr2.QRCodeVersion = 3;
-                   
-                    Bitmap b2 = qr2.Encode(k.AddressBase58);
+
+                    Bitmap b2 = qr2.Encode(k.GetAddressBase58());
                     e.Graphics.DrawImage(b2, thiscodeX, thiscodeY, 100, 100);
 
-                    e.Graphics.DrawString("Bitcoin address:\r\n" + k.AddressBase58, font, Brushes.Black, thiscodeX + 110, thiscodeY);
+                    e.Graphics.DrawString("Bitcoin address:\r\n" + k.GetAddressBase58(), font, Brushes.Black, thiscodeX + 110, thiscodeY);
 
                     StringFormat sf = new StringFormat();
                     sf.Alignment = StringAlignment.Far; // right justify

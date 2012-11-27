@@ -18,7 +18,7 @@ namespace BtcAddress {
         protected string CurrentPassphrase;
         protected bool CurrentlyGenerating = false;
         protected int TotalToGenerate = 0;
-        protected List<KeyPair> Addresses = new List<KeyPair>();
+        protected List<KeyCollectionItem> Addresses = new List<KeyCollectionItem>();
 
 
         protected bool CurrentSelectionPrinted = false;
@@ -55,9 +55,6 @@ namespace BtcAddress {
         private void LockButtons(bool locked) {
             btnSortKeys.Enabled = !locked;
             btnPrintWallet.Enabled = !locked;
-            btnSaveAddresses.Enabled = !locked;
-            txtEncryptionPassword.Enabled = !locked;
-            chkEncrypt.Enabled = !locked;
         }
 
 
@@ -75,10 +72,6 @@ namespace BtcAddress {
                     return;
                 }
 
-                if (chkEncrypt.Checked && txtEncryptionPassword.Text == "") {
-                    MessageBox.Show("You must enter an encryption passphrase if you are generating encrypted private keys.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
 
 
                 if (Addresses.Count > 0 && CurrentSelectionSaved==false && rdoDeterministicWallet.Checked==false) {
@@ -99,14 +92,10 @@ namespace BtcAddress {
                     CurrentSelectionPrinted = false;
                 }
 
-                if (txtEncryptionPassword.Text != txtEncryptionPassword.Text.Trim()) {
-                    MessageBox.Show("The encryption passphrase you entered starts or ends with whitespace.  The whitespace will be part of the passphrase needed to decrypt.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
-                Addresses = new List<KeyPair>();
+                Addresses = new List<KeyCollectionItem>();
                 
 
-                lblGenCount.Text = Addresses.Count.ToString() + (txtEncryptionPassword.Text != "" ? " encrypted" : "") + " addresses have been generated.";
+                lblGenCount.Text = Addresses.Count.ToString() + " addresses have been generated.";
 
                 TotalToGenerate = (int)numGenCount.Value;
                 CurrentSequence = 1;
@@ -154,10 +143,10 @@ namespace BtcAddress {
             } else {
                 UTF8Encoding utf8 = new UTF8Encoding(false);
                 byte[] mykey = sha256.ComputeHash(utf8.GetBytes(myhash));
-                k = new KeyPair(mykey);
+                //k = new KeyPair(mykey,);
             }
-            Addresses.Add(k);
-            lblGenCount.Text = Addresses.Count.ToString() + (txtEncryptionPassword.Text != "" ? " encrypted" : "") + " addresses have been generated.";
+            //Addresses.Add(k);
+            lblGenCount.Text = Addresses.Count.ToString() + " addresses have been generated.";
             CurrentSequence++;
 
         }
@@ -183,12 +172,8 @@ namespace BtcAddress {
                 QRPrint printer = new QRPrint();
                 if (this.rdoWalletPrivQR.Checked) printer.PrintMode = QRPrint.PrintModes.PrivQR;
                 if (this.rdoWalletPubPrivQR.Checked) printer.PrintMode = QRPrint.PrintModes.PubPrivQR;
-                if (this.rdoBitcoinBanknote.Checked) printer.PrintMode = QRPrint.PrintModes.PsyBanknote;
-                printer.NotesPerPage = Convert.ToInt32(cboNumPerPage.SelectedItem.ToString());
-                printer.ImageFilename = "note-" + cboColor.SelectedItem.ToString() + ".png";
-                printer.Denomination = txtDenomination.Text;
-                printer.keys = new List<Address>(Addresses.Count);
-                foreach (Address a in Addresses) printer.keys.Add(a);
+                printer.keys = new List<KeyCollectionItem>(Addresses.Count);
+                foreach (KeyCollectionItem a in Addresses) printer.keys.Add(a);
                 printer.PrinterSettings = pd.PrinterSettings;
                 CurrentSelectionPrinted = true;
                 printer.Print();
@@ -199,100 +184,6 @@ namespace BtcAddress {
 
         }
 
-        private void btnSaveAddresses_Click(object sender, EventArgs e) {
-            if (Addresses.Count == 0) {
-                MessageBox.Show("First generate some addresses.");
-                return;
-            }
-
-            if (rdoSavePrivKeys.Checked) {
-                if (MessageBox.Show("Saving the private keys is a security risk.  Only do this if you know what " +
-                    "you're doing.  Continue?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.Cancel) return;
-            }
-
-            if (rdoSendmany.Checked && txtDenomination.Text == "") {
-                MessageBox.Show("Sendmany requires a denomination.  Enter the denomination in BTC in the box above, and try again.");
-                lblDenomination.Visible = true;
-                txtDenomination.Visible = true;
-                return;
-            }
-
-
-            SaveFileDialog fd = new SaveFileDialog();
-            fd.Filter = "Text file|*.txt";
-            fd.Title = "Save Text File";
-            fd.ShowDialog();
-
-            bool wroteFirst=false;
-            if (fd.FileName != "") {
-                try {
-                    using (StreamWriter sw = new StreamWriter(fd.FileName)) {
-                        foreach (KeyPair k in Addresses) {
-                            if (rdoSaveAddressesOnly.Checked) {
-                                sw.WriteLine(k.AddressBase58);
-                            } else if (rdoSavePrivKeys.Checked) {
-
-                                sw.WriteLine(k.AddressBase58 + "," + k.PrivateKeyBase58);
-                            } else if (rdoSendmany.Checked) {
-                                if (wroteFirst) {
-                                    sw.Write(", ");
-                                } else {
-                                    sw.Write("bitcoind sendmany \"\" \"{");
-                                    wroteFirst = true;
-                                }
-                                sw.Write(string.Format("\\\"{0}\\\": {1}", k.AddressBase58, txtDenomination.Text));
-                            }
-                        
-                        }
-                        if (rdoSendmany.Checked) {
-                            sw.Write("}\""); // no CR on purpose, so paste doesn't execute command
-                        }
-                        CurrentSelectionSaved = true;
-                        sw.Close();
-                    }
-                } catch (Exception ex) {
-                    MessageBox.Show("Could not save file. " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-            }
-        }
-
-        private void btnSortKeys_Click(object sender, EventArgs e) {
-            if (Addresses.Count == 0) {
-                MessageBox.Show("Generate some addresses first.");
-                return;
-            }
-
-            Addresses.Sort(new KeyComparer());
-
-            MessageBox.Show("The addresses in memory have been sorted into alphabetical (case-insensitive) order by Bitcoin address, and will save and print in this order.");
-
-        }
-
-        private void chkEncrypt_CheckedChanged(object sender, EventArgs e) {
-            chkMiniKeys.Enabled = !chkEncrypt.Checked;
-            if (chkEncrypt.Checked) {
-                lblPassword.Visible = true;
-                txtEncryptionPassword.Visible = true;
-            } else {
-                txtEncryptionPassword.Text = "";
-                txtEncryptionPassword.Visible = false;
-                lblPassword.Visible = false;
-            }
-        }
-
-        private void PaperWalletPrinter_Load(object sender, EventArgs e) {
-            cboColor.SelectedIndex = 0;
-            cboNumPerPage.SelectedIndex = 0;
-        }
-
-        private void rdoBitcoinBanknote_CheckedChanged(object sender, EventArgs e) {
-
-        }
-
-        private void chkMiniKeys_CheckedChanged(object sender, EventArgs e) {
-            chkEncrypt.Enabled = !chkMiniKeys.Checked;
-        }
 
 
     }
