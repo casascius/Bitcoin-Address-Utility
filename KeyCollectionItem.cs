@@ -7,7 +7,7 @@ namespace BtcAddress {
     public class KeyCollectionItem {
         public KeyCollectionItem() { }
 
-        public KeyCollectionItem(Address address) {
+        public KeyCollectionItem(AddressBase address) {
             this.Address = address;
         }
 
@@ -22,7 +22,7 @@ namespace BtcAddress {
         /// <summary>
         /// The plain item, if it is not encrypted.  This could be a PublicKey, KeyPair, etc.
         /// </summary>
-        public Address Address;
+        public AddressBase Address;
 
         /// <summary>
         /// Gets the address in Base58, calculating it if necessary.

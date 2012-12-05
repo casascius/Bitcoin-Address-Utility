@@ -33,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto">
@@ -63,6 +64,12 @@
     </Compile>
     <Compile Include="Forms\AddressGen.Designer.cs">
       <DependentUpon>AddressGen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AddSingleAddress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddSingleAddress.Designer.cs">
+      <DependentUpon>AddSingleAddress.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\KeyCollectionView.cs">
       <SubType>Form</SubType>
@@ -141,6 +148,9 @@
     </Compile>
     <EmbeddedResource Include="Forms\AddressGen.resx">
       <DependentUpon>AddressGen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddSingleAddress.resx">
+      <DependentUpon>AddSingleAddress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Base58Calc.resx">
       <DependentUpon>Base58Calc.cs</DependentUpon>

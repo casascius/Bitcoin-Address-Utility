@@ -33,6 +33,8 @@ namespace BtcAddress {
 
         public bool PrintMiniKeysWith1DBarcode = false;
 
+        public bool PreferUnencryptedPrivateKeys = false;
+
         private Image BitcoinNote = null;
 
         public enum PrintModes {
@@ -142,6 +144,11 @@ namespace BtcAddress {
                 keys.RemoveAt(0);
 
                 string privkey = k.PrivateKey;
+                if (PreferUnencryptedPrivateKeys) {
+                    if (k.EncryptedKeyPair != null && k.EncryptedKeyPair.IsUnencryptedPrivateKeyAvailable()) {
+                        privkey = k.EncryptedKeyPair.GetUnencryptedPrivateKey().PrivateKey;
+                    }
+                }
 
                 Bitmap b = Bitcoin.EncodeQRCode(privkey);
 

@@ -282,7 +282,7 @@ namespace BtcAddress {
         /// <summary>
         /// Encryption constructor to create a new random key from an intermediate
         /// </summary>
-        public Bip38KeyPair(Bip38Intermediate intermediate) {
+        public Bip38KeyPair(Bip38Intermediate intermediate, bool retainPrivateKeyWhenPossible=false) {
 
             // generate seedb
             byte[] seedb = new byte[24];
@@ -364,6 +364,13 @@ namespace BtcAddress {
             _encryptedKey = Bitcoin.ByteArrayToBase58Check(result);
             _pubKey = generatedaddress.PublicKeyBytes;
             _hash160 = generatedaddress.Hash160;
+
+            if (retainPrivateKeyWhenPossible && intermediate.passfactor != null) {
+                var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
+                BigInteger privatekey = new BigInteger(1, intermediate.passfactor).Multiply(new BigInteger(1, factorb)).Mod(ps.N);
+                _privKey = new KeyPair(privatekey).PrivateKeyBytes;
+
+            }
 
         }
 

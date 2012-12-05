@@ -27,6 +27,8 @@ namespace BtcAddress.Forms {
 
         private bool PermissionToCloseWindow = false;
 
+        private bool RetainPrivateKeys = false;
+
         private string UserText;
 
         private int RemainingToGenerate = 0;
@@ -44,6 +46,7 @@ namespace BtcAddress.Forms {
                 lblTextInput.Text = "Encryption passphrase or Intermediate Code";                
             }
             lblTextInput.Visible = txtTextInput.Visible;
+            chkRetainPrivKey.Visible = (rdoEncrypted.Checked);
         }
 
         private void AddressGen_FormClosing(object sender, FormClosingEventArgs e) {
@@ -87,6 +90,8 @@ namespace BtcAddress.Forms {
             GenerationThread = new Thread(new ThreadStart(GenerationThreadProcess));
             RemainingToGenerate = (int)numGenCount.Value;
             UserText = txtTextInput.Text;
+            RetainPrivateKeys = chkRetainPrivKey.Checked;
+
             if (rdoDeterministicWallet.Checked) GenChoice = GenChoices.Deterministic;
             if (rdoEncrypted.Checked) {
                 GenChoice = GenChoices.Encrypted;

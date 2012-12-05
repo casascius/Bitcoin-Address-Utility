@@ -39,6 +39,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.chkRetainPrivKey = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numGenCount)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -191,11 +192,23 @@
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
             this.toolStripProgressBar1.Visible = false;
             // 
+            // chkRetainPrivKey
+            // 
+            this.chkRetainPrivKey.AutoSize = true;
+            this.chkRetainPrivKey.Location = new System.Drawing.Point(8, 88);
+            this.chkRetainPrivKey.Name = "chkRetainPrivKey";
+            this.chkRetainPrivKey.Size = new System.Drawing.Size(174, 17);
+            this.chkRetainPrivKey.TabIndex = 14;
+            this.chkRetainPrivKey.Text = "Retain unencrypted private key";
+            this.chkRetainPrivKey.UseVisualStyleBackColor = true;
+            this.chkRetainPrivKey.Visible = false;
+            // 
             // AddressGen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 223);
+            this.Controls.Add(this.chkRetainPrivKey);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblTextInput);
@@ -233,5 +246,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.CheckBox chkRetainPrivKey;
     }
 }

@@ -19,15 +19,15 @@ namespace BtcAddress {
     /// <summary>
     /// Represents a single Bitcoin address, assumes knowledge only of a Hash160.
     /// </summary>
-    public class Address {
+    public class AddressBase {
 
-        protected Address() { }
+        protected AddressBase() { }
 
         /// <summary>
         /// Constructs a Bitcoin address from a 20 byte array representing a Hash160.
         /// If 21 bytes are provided, the extra byte denotes address type.
         /// </summary>
-        public Address(byte[] addressBytes) {
+        public AddressBase(byte[] addressBytes) {
             // Hash160 setter validates length and throws exception if needed
             Hash160 = addressBytes;
         }
@@ -36,7 +36,7 @@ namespace BtcAddress {
         /// Constructs a Bitcoin address from a 20 byte array representing a Hash160,
         /// and also denoting a specific address type.
         /// </summary>
-        public Address(byte[] addressBytes, byte addressType) {
+        public AddressBase(byte[] addressBytes, byte addressType) {
             // Hash160 setter validates length and throws exception if needed
             Hash160 = addressBytes;
             this.AddressType = addressType;
@@ -45,7 +45,7 @@ namespace BtcAddress {
         /// <summary>
         /// Allows calculation of address with a different AddressType
         /// </summary>
-        public Address(Address otheraddress, byte addressType) {
+        public AddressBase(AddressBase otheraddress, byte addressType) {
             // Hash160 setter validates length and throws exception if needed
             Hash160 = otheraddress.Hash160;
             this.AddressType = addressType;
@@ -54,7 +54,7 @@ namespace BtcAddress {
         /// <summary>
         /// Constructs an Address from an address string
         /// </summary>
-        public Address(string address) {
+        public AddressBase(string address) {
             byte[] hex = Bitcoin.Base58CheckToByteArray(address);            
             if (hex.Length != 21) throw new ArgumentException("Not a valid or recognized address");
             // Hash160 setter validates length and throws exception if needed

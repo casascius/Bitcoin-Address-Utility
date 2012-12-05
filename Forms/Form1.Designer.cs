@@ -46,16 +46,16 @@
             this.cboCoinType = new System.Windows.Forms.ComboBox();
             this.btnShacode = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.base58CalcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keyCombinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mofNCalcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pPECKeygenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyMinikeyQRMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyPrivateKeyQRMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyPublicHexQRMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyAddressQRMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.base58CalcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mofNCalcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.keyCombinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pPECKeygenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.spaceBetweenHexBytesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.publicKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +63,7 @@
             this.compressPublicKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uncompressPublicKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showFieldsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnPassphrase = new System.Windows.Forms.Button();
+            this.btnSha256ToPrivate = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.txtMinikey = new System.Windows.Forms.TextBox();
             this.lblNotSafe = new System.Windows.Forms.Label();
@@ -282,6 +282,45 @@
             this.menuStrip1.TabIndex = 25;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.base58CalcToolStripMenuItem,
+            this.keyCombinerToolStripMenuItem,
+            this.mofNCalcToolStripMenuItem,
+            this.pPECKeygenToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // base58CalcToolStripMenuItem
+            // 
+            this.base58CalcToolStripMenuItem.Name = "base58CalcToolStripMenuItem";
+            this.base58CalcToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.base58CalcToolStripMenuItem.Text = "Base58 Calculator";
+            this.base58CalcToolStripMenuItem.Click += new System.EventHandler(this.base58CalcToolStripMenuItem_Click);
+            // 
+            // keyCombinerToolStripMenuItem
+            // 
+            this.keyCombinerToolStripMenuItem.Name = "keyCombinerToolStripMenuItem";
+            this.keyCombinerToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.keyCombinerToolStripMenuItem.Text = "Key Combiner";
+            this.keyCombinerToolStripMenuItem.Click += new System.EventHandler(this.keyCombinerToolStripMenuItem_Click);
+            // 
+            // mofNCalcToolStripMenuItem
+            // 
+            this.mofNCalcToolStripMenuItem.Name = "mofNCalcToolStripMenuItem";
+            this.mofNCalcToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.mofNCalcToolStripMenuItem.Text = "M-of-N Calculator";
+            this.mofNCalcToolStripMenuItem.Click += new System.EventHandler(this.mofNCalcToolStripMenuItem_Click);
+            // 
+            // pPECKeygenToolStripMenuItem
+            // 
+            this.pPECKeygenToolStripMenuItem.Name = "pPECKeygenToolStripMenuItem";
+            this.pPECKeygenToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.pPECKeygenToolStripMenuItem.Text = "Intermediate Generator";
+            this.pPECKeygenToolStripMenuItem.Click += new System.EventHandler(this.pPECKeygenToolStripMenuItem_Click);
+            // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -320,45 +359,6 @@
             this.copyAddressQRMenuItem.Size = new System.Drawing.Size(327, 22);
             this.copyAddressQRMenuItem.Text = "Copy address to clipboard as QR code image";
             this.copyAddressQRMenuItem.Click += new System.EventHandler(this.copyAddressQRMenuItem_Click);
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.base58CalcToolStripMenuItem,
-            this.keyCombinerToolStripMenuItem,
-            this.mofNCalcToolStripMenuItem,
-            this.pPECKeygenToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // base58CalcToolStripMenuItem
-            // 
-            this.base58CalcToolStripMenuItem.Name = "base58CalcToolStripMenuItem";
-            this.base58CalcToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.base58CalcToolStripMenuItem.Text = "Base58 Calculator";
-            this.base58CalcToolStripMenuItem.Click += new System.EventHandler(this.base58CalcToolStripMenuItem_Click);
-            // 
-            // mofNCalcToolStripMenuItem
-            // 
-            this.mofNCalcToolStripMenuItem.Name = "mofNCalcToolStripMenuItem";
-            this.mofNCalcToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.mofNCalcToolStripMenuItem.Text = "M-of-N Calculator";
-            this.mofNCalcToolStripMenuItem.Click += new System.EventHandler(this.mofNCalcToolStripMenuItem_Click);
-            // 
-            // keyCombinerToolStripMenuItem
-            // 
-            this.keyCombinerToolStripMenuItem.Name = "keyCombinerToolStripMenuItem";
-            this.keyCombinerToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.keyCombinerToolStripMenuItem.Text = "Key Combiner";
-            this.keyCombinerToolStripMenuItem.Click += new System.EventHandler(this.keyCombinerToolStripMenuItem_Click);
-            // 
-            // pPECKeygenToolStripMenuItem
-            // 
-            this.pPECKeygenToolStripMenuItem.Name = "pPECKeygenToolStripMenuItem";
-            this.pPECKeygenToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.pPECKeygenToolStripMenuItem.Text = "Intermediate Generator";
-            this.pPECKeygenToolStripMenuItem.Click += new System.EventHandler(this.pPECKeygenToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -414,15 +414,15 @@
             this.showFieldsToolStripMenuItem.Text = "Highlight X-coordinate";
             this.showFieldsToolStripMenuItem.Click += new System.EventHandler(this.showFieldsToolStripMenuItem_Click);
             // 
-            // btnPassphrase
+            // btnSha256ToPrivate
             // 
-            this.btnPassphrase.Location = new System.Drawing.Point(491, 58);
-            this.btnPassphrase.Name = "btnPassphrase";
-            this.btnPassphrase.Size = new System.Drawing.Size(46, 30);
-            this.btnPassphrase.TabIndex = 3;
-            this.btnPassphrase.Text = "▼▼";
-            this.btnPassphrase.UseVisualStyleBackColor = true;
-            this.btnPassphrase.Click += new System.EventHandler(this.btnPassphrase_Click);
+            this.btnSha256ToPrivate.Location = new System.Drawing.Point(491, 58);
+            this.btnSha256ToPrivate.Name = "btnSha256ToPrivate";
+            this.btnSha256ToPrivate.Size = new System.Drawing.Size(46, 30);
+            this.btnSha256ToPrivate.TabIndex = 3;
+            this.btnSha256ToPrivate.Text = "▼▼";
+            this.btnSha256ToPrivate.UseVisualStyleBackColor = true;
+            this.btnSha256ToPrivate.Click += new System.EventHandler(this.btnSha256ToPrivate_Click);
             // 
             // label6
             // 
@@ -496,7 +496,7 @@
             this.Controls.Add(this.txtPassphrase);
             this.Controls.Add(this.lblWhyNot);
             this.Controls.Add(this.lblNotSafe);
-            this.Controls.Add(this.btnPassphrase);
+            this.Controls.Add(this.btnSha256ToPrivate);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.txtMinikey);
             this.Controls.Add(this.btnShacode);
@@ -556,7 +556,7 @@
         private System.Windows.Forms.ComboBox cboCoinType;
         private System.Windows.Forms.Button btnShacode;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.Button btnPassphrase;
+        private System.Windows.Forms.Button btnSha256ToPrivate;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtMinikey;
         private System.Windows.Forms.Label lblNotSafe;

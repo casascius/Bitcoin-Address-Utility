@@ -26,7 +26,7 @@ namespace BtcAddress.Forms {
         }
 
         private void KeyCollectionView_Load(object sender, EventArgs e) {
-            listView1.Columns[0].Width = 480;
+            listView1.Columns[0].Width = 400;
             listView1.Columns[1].Width = 100;
             toolStripStatusLabel1.Text = "Click Address to generate some addresses.";
 
@@ -216,6 +216,46 @@ namespace BtcAddress.Forms {
             } catch (Exception ex) {
                 MessageBox.Show(ex.Message, "Failed to save file", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+        }
+
+        private void enterAnAddressToolStripMenuItem_Click(object sender, EventArgs e) {
+            var asa = new BtcAddress.Forms.AddSingleAddress();
+            asa.ShowDialog();
+            if (asa.Result != null) {
+                if (asa.Result is EncryptedKeyPair) {
+                    this.KeyCollection.AddItem(new KeyCollectionItem(asa.Result as EncryptedKeyPair));
+                } else {
+                    this.KeyCollection.AddItem(new KeyCollectionItem(asa.Result as AddressBase));
+                }
+            }
+        }
+
+        private void deleteSelectedItemsToolStripMenuItem_Click(object sender, EventArgs e) {
+
+            DialogResult result = MessageBox.Show(
+                "Do you want to clear (delete) the selected keys?  This cannot be undone.",
+                "Clear keys?",
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+
+            if (result != DialogResult.OK) return;
+
+
+            List<KeyCollectionItem> itemsToDelete = new List<KeyCollectionItem>();
+            foreach (ListViewItem lvi in listView1.Items) {
+                if (lvi.Checked) itemsToDelete.Add((KeyCollectionItem)lvi.Tag);
+            }
+            if (itemsToDelete.Count == 0) {
+                MessageBox.Show("No items selected.",
+                    "Nothing to delete",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            KeyCollection.DeleteItemRange(itemsToDelete);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
+            this.Close();
         }
 
 

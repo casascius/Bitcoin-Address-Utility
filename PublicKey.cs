@@ -18,7 +18,7 @@ namespace BtcAddress {
     /// <summary>
     /// Bitcoin address extended to include knowledge of public key.
     /// </summary>
-    public class PublicKey : Address {
+    public class PublicKey : AddressBase {
 
         protected PublicKey() { }
 

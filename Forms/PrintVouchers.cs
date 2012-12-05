@@ -10,6 +10,11 @@ using System.Drawing.Printing;
 
 
 namespace BtcAddress.Forms {
+
+    /// <summary>
+    /// This is a form for printing vouchers from a selection of KeyCollectionItems which should be prepopulated
+    /// before the form is shown.
+    /// </summary>
     public partial class PrintVouchers : Form {
 
 
@@ -41,25 +46,29 @@ namespace BtcAddress.Forms {
                     case "blue":
                     case "purple":
                     case "greyscale":
-                        printer.ImageFilename = "note-" + cboArtworkStyle.SelectedItem.ToString() + ".png";
+                        printer.ImageFilename = "note-" + cboArtworkStyle.SelectedItem.ToString().ToLowerInvariant() + ".png";
                         break;
                 }
                 printer.Denomination = txtDenomination.Text;
                 printer.keys = new List<KeyCollectionItem>(Items.Count);
+                printer.PreferUnencryptedPrivateKeys = chkPrintUnencrypted.Checked;
                 foreach (KeyCollectionItem a in Items) printer.keys.Add(a);
                 printer.PrinterSettings = pd.PrinterSettings;
                 printer.Print();
                 PrintAttempted = true;
             }
-
-
-
-
         }
 
         private void PrintVouchers_Load(object sender, EventArgs e) {
             this.Text = "Print " + Items.Count + " Vouchers";
             cboArtworkStyle.Text = "Yellow";
+
+            foreach (var i in Items) {
+                if (i.EncryptedKeyPair != null && i.EncryptedKeyPair.IsUnencryptedPrivateKeyAvailable()) {
+                    chkPrintUnencrypted.Visible = true;
+                    break;
+                }
+            }
         }
 
     }

@@ -29,12 +29,16 @@ namespace BtcAddress {
 
         /// <summary>
         /// Takes a KeyCollectionItem from elsewhere in the program for display.
+        /// This gets called if someone doubleclicks an address in the Key Collection View, or chooses Details.
+        /// Item may represent an AddressBase, PublicKey, KeyPair, MiniKey, or an EncryptedKeyPair
         /// </summary>
         public void DisplayKeyCollectionItem(KeyCollectionItem item) {
             try {
                 ChangeFlag++;
                 if (item.EncryptedKeyPair != null) {
-                    SetText(txtPrivWIF, item.EncryptedKeyPair.EncryptedPrivateKey);
+                    SetText(txtPrivWIF, item.EncryptedKeyPair.EncryptedPrivateKey);                    
+                    // blank out any validation info of the minikey
+                    UpdateMinikeyDescription();
                     SetText(txtPassphrase, "");
                     if (item.EncryptedKeyPair.IsUnencryptedPrivateKeyAvailable()) {
                         SetText(txtPrivHex, item.EncryptedKeyPair.GetUnencryptedPrivateKey().PublicKeyHex);
@@ -47,7 +51,7 @@ namespace BtcAddress {
                         SetText(txtPubHex, "");
                     }
                     if (item.EncryptedKeyPair.IsAddressAvailable()) {
-                        Address addr = item.EncryptedKeyPair.GetAddress();
+                        AddressBase addr = item.EncryptedKeyPair.GetAddress();
                         SetText(txtPubHash, addr.Hash160Hex);
                         SetText(txtBtcAddr, addr.AddressBase58);
                     } else {
@@ -57,28 +61,40 @@ namespace BtcAddress {
                     return;
                 }
 
-
+                // Handle whether the item is/isn't a minikey
 
                 if (item.Address != null && item.Address is MiniKeyPair) {
                     SetText(txtMinikey, ((MiniKeyPair)item.Address).MiniKey);
                 } else {
                     SetText(txtMinikey, "");
                 }
+                
+                // update the label to indicate whether this is a valid minikey (or blank it out if n/a)
+                UpdateMinikeyDescription();
 
-                if (item.Address != null && item.Address is KeyPair) {
-                    KeyPair kp = (KeyPair)item.Address;
-                    SetText(txtPrivWIF, kp.PrivateKeyBase58);
-                    SetText(txtPrivHex, kp.PrivateKeyHex);
-                } else if (item.Address != null) {
-                    SetText(txtPrivWIF, "");
-                    SetText(txtPrivHex, "");
-                }
+                if (item.Address != null) {
 
-                if (item.Address != null && item.Address is PublicKey) {
-                    PublicKey pub = ((PublicKey)item.Address);
-                    SetText(txtPubHex, pub.PublicKeyHex);
-                    SetText(txtPubHash, pub.Hash160Hex);
-                    SetText(txtBtcAddr, pub.AddressBase58);
+                    // Handle whether item is/isn't a keypair (known private key)
+                    if (item.Address is KeyPair) {
+                        KeyPair kp = (KeyPair)item.Address;
+                        SetText(txtPrivWIF, kp.PrivateKeyBase58);
+                        SetText(txtPrivHex, kp.PrivateKeyHex);
+                    } else {
+                        SetText(txtPrivWIF, "");
+                        SetText(txtPrivHex, "");
+                    }
+
+                    // Handle whether item has/doesn't have known public key
+                    if (item.Address is PublicKey) {
+                        PublicKey pub = ((PublicKey)item.Address);
+                        SetText(txtPubHex, pub.PublicKeyHex);
+                    } else {
+                        SetText(txtPubHex, "");
+                    }
+
+                    // Handle address
+                    SetText(txtPubHash, item.Address.Hash160Hex);
+                    SetText(txtBtcAddr, item.Address.AddressBase58);                    
                 }
 
             } finally {
@@ -87,33 +103,36 @@ namespace BtcAddress {
 
         }
 
-        private void btnPassphrase_Click(object sender, EventArgs e) {
+        private void UpdateMinikeyDescription() {
+            int isminikey = MiniKeyPair.IsValidMiniKey(txtMinikey.Text);
+            if (isminikey == 1) {
+                lblWhyNot.Visible = false;
+                lblNotSafe.Visible = true;
+                lblNotSafe.Text = "Valid mini key";
+                lblNotSafe.ForeColor = Color.DarkGreen;
+            } else if (isminikey == -1) {
+                lblWhyNot.Visible = false;
+                lblNotSafe.Visible = true;
+                lblNotSafe.Text = "Invalid mini key";
+                lblNotSafe.ForeColor = Color.Red;
+            } else if (txtMinikey.Text.Length < 20 || Bitcoin.PassphraseTooSimple(txtMinikey.Text)) {
+                lblWhyNot.Visible = true;
+                lblNotSafe.Visible = true;
+                lblNotSafe.Text = "Warning - Not Safe";
+                lblNotSafe.ForeColor = Color.Red;
+            } else {
+                lblWhyNot.Visible = false;
+                lblNotSafe.Visible = false;
+                lblNotSafe.Text = "Warning - Not Safe";
+                lblNotSafe.ForeColor = Color.Red;
+            }
+        }
 
+        private void btnSha256ToPrivate_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {
                 SetText(txtPrivHex, RemoveSpacesIf(Bitcoin.PassphraseToPrivHex(txtMinikey.Text)));
-                int isminikey = MiniKeyPair.IsValidMiniKey(txtMinikey.Text);
-                if (isminikey==1) {
-                    lblWhyNot.Visible = false;
-                    lblNotSafe.Visible = true;
-                    lblNotSafe.Text = "Valid mini key";
-                    lblNotSafe.ForeColor = Color.DarkGreen;
-                } else if (isminikey==-1) {
-                    lblWhyNot.Visible = false;
-                    lblNotSafe.Visible = true;
-                    lblNotSafe.Text = "Invalid mini key";
-                    lblNotSafe.ForeColor = Color.Red;
-                } else if (txtMinikey.Text.Length < 20 || Bitcoin.PassphraseTooSimple(txtMinikey.Text)) {
-                    lblWhyNot.Visible = true;
-                    lblNotSafe.Visible = true;
-                    lblNotSafe.Text = "Warning - Not Safe";
-                    lblNotSafe.ForeColor = Color.Red;
-                } else {
-                    lblWhyNot.Visible = false;
-                    lblNotSafe.Visible = false;
-                    lblNotSafe.Text = "Warning - Not Safe";
-                    lblNotSafe.ForeColor = Color.Red;
-                }
+                UpdateMinikeyDescription();
 
                 btnPrivHexToWIF_Click(null, null);
                 btnPrivToPub_Click(null, null);
@@ -147,7 +166,7 @@ namespace BtcAddress {
                 SetText(txtPrivHex, ba.PrivateKeyHex);
                 SetText(txtPubHex, ba.PublicKeyHex);
                 SetText(txtPubHash, ba.Hash160Hex);
-                SetText(txtBtcAddr, new Address(ba, AddressTypeByte).AddressBase58);              
+                SetText(txtBtcAddr, new AddressBase(ba, AddressTypeByte).AddressBase58);              
             } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
@@ -186,7 +205,7 @@ namespace BtcAddress {
                 SetText(txtPrivHex, kp.PrivateKeyHex);
                 SetText(txtPubHex, kp.PublicKeyHex);
                 SetText(txtPubHash, kp.Hash160Hex);
-                SetText(txtBtcAddr, new Address(kp, AddressTypeByte).AddressBase58);
+                SetText(txtBtcAddr, new AddressBase(kp, AddressTypeByte).AddressBase58);
             } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
@@ -202,7 +221,7 @@ namespace BtcAddress {
                 KeyPair kp = new KeyPair(txtPrivHex.Text, compressed: compressToolStripMenuItem.Checked);
                 SetText(txtPubHex, kp.PublicKeyHex);
                 SetText(txtPubHash, kp.Hash160Hex);
-                SetText(txtBtcAddr, new Address(kp, AddressTypeByte).AddressBase58);
+                SetText(txtBtcAddr, new AddressBase(kp, AddressTypeByte).AddressBase58);
             } catch (ArgumentException ae) {
                 MessageBox.Show(ae.Message);
             } finally {
@@ -216,7 +235,7 @@ namespace BtcAddress {
             try {
                 PublicKey pub = new PublicKey(txtPubHex.Text);
                 SetText(txtPubHash, pub.Hash160Hex);
-                SetText(txtBtcAddr, new Address(pub, AddressTypeByte).AddressBase58);
+                SetText(txtBtcAddr, new AddressBase(pub, AddressTypeByte).AddressBase58);
             } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
@@ -275,7 +294,7 @@ namespace BtcAddress {
                 SetText(txtPrivHex, kp.PrivateKeyHex);
                 SetText(txtPubHex, kp.PublicKeyHex);
                 SetText(txtPubHash, kp.Hash160Hex);
-                SetText(txtBtcAddr, new Address(kp, AddressTypeByte).AddressBase58);              
+                SetText(txtBtcAddr, new AddressBase(kp, AddressTypeByte).AddressBase58);              
 
             } finally {
                 ChangeFlag--;
@@ -348,7 +367,7 @@ namespace BtcAddress {
                 SetText(txtPrivHex, mkp.PrivateKeyHex);
                 SetText(txtPubHex, mkp.PublicKeyHex);
                 SetText(txtPubHash, mkp.Hash160Hex);
-                SetText(txtBtcAddr, new Address(mkp, AddressTypeByte).AddressBase58);
+                SetText(txtBtcAddr, new AddressBase(mkp, AddressTypeByte).AddressBase58);
                 
             } finally {
                 ChangeFlag--;
@@ -434,7 +453,7 @@ namespace BtcAddress {
             // convert address when possible
             ChangeFlag++;
             try {
-                Address addr = new Address(new Address(txtBtcAddr.Text), AddressTypeByte);
+                AddressBase addr = new AddressBase(new AddressBase(txtBtcAddr.Text), AddressTypeByte);
                 txtBtcAddr.Text = addr.AddressBase58;
             } catch (Exception) {
                 // ignore
@@ -447,7 +466,7 @@ namespace BtcAddress {
             if (e.KeyChar == 13) {
                 e.Handled = true;
                 TextBox txtSender = (TextBox)sender;
-                if (txtSender == txtMinikey) btnPassphrase_Click(null, null);
+                if (txtSender == txtMinikey) btnSha256ToPrivate_Click(null, null);
                 if (txtSender == txtPrivWIF) btnPrivWIFToHex_Click(null, null);
             }
         }
@@ -639,7 +658,7 @@ namespace BtcAddress {
                 pub = new PublicKey(pub.GetCompressed());
                 SetText(txtPubHex, pub.PublicKeyHex);
                 SetText(txtPubHash, pub.Hash160Hex);
-                SetText(txtBtcAddr, new Address(pub, AddressTypeByte).AddressBase58);
+                SetText(txtBtcAddr, new AddressBase(pub, AddressTypeByte).AddressBase58);
             } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
@@ -655,7 +674,7 @@ namespace BtcAddress {
                 pub = new PublicKey(pub.GetUncompressed());
                 SetText(txtPubHex, pub.PublicKeyHex);
                 SetText(txtPubHash, pub.Hash160Hex);
-                SetText(txtBtcAddr, new Address(pub, AddressTypeByte).AddressBase58);
+                SetText(txtBtcAddr, new AddressBase(pub, AddressTypeByte).AddressBase58);
             } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
@@ -761,9 +780,10 @@ namespace BtcAddress {
         private void pPECKeygenToolStripMenuItem_Click(object sender, EventArgs e) {
             new PpecKeygen().Show();
         }
+
     }
-    public class KeyComparer : IComparer<Address> {
-        public int Compare(Address x, Address y) {
+    public class KeyComparer : IComparer<AddressBase> {
+        public int Compare(AddressBase x, AddressBase y) {
             return string.Compare(x.AddressBase58, y.AddressBase58, true);
         }
 

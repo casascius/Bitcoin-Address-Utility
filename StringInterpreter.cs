@@ -23,7 +23,7 @@ namespace BtcAddress {
                     switch (hex.Length) {
                         case 21:
                             // It's an address of some sort.
-                            return new Address(what);
+                            return new AddressBase(what);
                         case 31:
                         case 32:
                         case 33:
@@ -51,9 +51,9 @@ namespace BtcAddress {
                         case 65:
                             return new PublicKey(hex);
                         case 20:
-                            return new Address(hex, addressType);
+                            return new AddressBase(hex, addressType);
                         case 21: // hash160
-                            return new Address(hex);
+                            return new AddressBase(hex);
                         case 30:
                         case 31:
                         case 32:

@@ -47,14 +47,18 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveAddressListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.listView1 = new System.Windows.Forms.ListView();
             this.chAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPrivateKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBalance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.enterAnAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteSelectedItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -124,7 +128,8 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearAllToolStripMenuItem,
-            this.saveToolStripMenuItem});
+            this.saveToolStripMenuItem,
+            this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
@@ -132,14 +137,14 @@
             // clearAllToolStripMenuItem
             // 
             this.clearAllToolStripMenuItem.Name = "clearAllToolStripMenuItem";
-            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.clearAllToolStripMenuItem.Text = "Clear All";
             this.clearAllToolStripMenuItem.Click += new System.EventHandler(this.clearAllToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Visible = false;
             // 
@@ -147,7 +152,8 @@
             // 
             this.keyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newAddressToolStripMenuItem,
-            this.generateKeysToolStripMenuItem});
+            this.generateKeysToolStripMenuItem,
+            this.enterAnAddressToolStripMenuItem});
             this.keyToolStripMenuItem.Name = "keyToolStripMenuItem";
             this.keyToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.keyToolStripMenuItem.Text = "&Address";
@@ -155,15 +161,15 @@
             // newAddressToolStripMenuItem
             // 
             this.newAddressToolStripMenuItem.Name = "newAddressToolStripMenuItem";
-            this.newAddressToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
-            this.newAddressToolStripMenuItem.Text = "New Address";
+            this.newAddressToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.newAddressToolStripMenuItem.Text = "&New address";
             this.newAddressToolStripMenuItem.Click += new System.EventHandler(this.newAddressToolStripMenuItem_Click);
             // 
             // generateKeysToolStripMenuItem
             // 
             this.generateKeysToolStripMenuItem.Name = "generateKeysToolStripMenuItem";
-            this.generateKeysToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
-            this.generateKeysToolStripMenuItem.Text = "Generate Addresses";
+            this.generateKeysToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.generateKeysToolStripMenuItem.Text = "&Generate addresses";
             this.generateKeysToolStripMenuItem.Click += new System.EventHandler(this.generateKeysToolStripMenuItem_Click);
             // 
             // selectionToolStripMenuItem
@@ -175,7 +181,9 @@
             this.printBanknoteVouchersToolStripMenuItem,
             this.printPaperWalletsToolStripMenuItem,
             this.toolStripSeparator2,
-            this.saveAddressListToolStripMenuItem});
+            this.saveAddressListToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.deleteSelectedItemsToolStripMenuItem});
             this.selectionToolStripMenuItem.Name = "selectionToolStripMenuItem";
             this.selectionToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.selectionToolStripMenuItem.Text = "&Selection";
@@ -235,6 +243,12 @@
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
+            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            // 
             // listView1
             // 
             this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -283,11 +297,31 @@
             this.detailsToolStripMenuItem.Text = "&Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
             // 
-            // toolStripStatusLabel1
+            // enterAnAddressToolStripMenuItem
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            this.enterAnAddressToolStripMenuItem.Name = "enterAnAddressToolStripMenuItem";
+            this.enterAnAddressToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.enterAnAddressToolStripMenuItem.Text = "&Enter an address/key";
+            this.enterAnAddressToolStripMenuItem.Click += new System.EventHandler(this.enterAnAddressToolStripMenuItem_Click);
+            // 
+            // deleteSelectedItemsToolStripMenuItem
+            // 
+            this.deleteSelectedItemsToolStripMenuItem.Name = "deleteSelectedItemsToolStripMenuItem";
+            this.deleteSelectedItemsToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.deleteSelectedItemsToolStripMenuItem.Text = "Delete Selected Items";
+            this.deleteSelectedItemsToolStripMenuItem.Click += new System.EventHandler(this.deleteSelectedItemsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(201, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // KeyCollectionView
             // 
@@ -344,5 +378,9 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem detailsToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripMenuItem enterAnAddressToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteSelectedItemsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }

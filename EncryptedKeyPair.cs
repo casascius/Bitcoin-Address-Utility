@@ -139,14 +139,14 @@ namespace BtcAddress {
         /// Gets address if known or can be calculated.
         /// Throws an InvalidOperationException if not.
         /// </summary>
-        public Address GetAddress() {
+        public AddressBase GetAddress() {
             if (_hash160 == null) {
                 calculateHash160();
                 if (IsAddressAvailable() == false) {
                     throw new InvalidOperationException("Address is not available");
                 }
             }
-            return new Address(_hash160, _addressType);
+            return new AddressBase(_hash160, _addressType);
         }
     }
 }
