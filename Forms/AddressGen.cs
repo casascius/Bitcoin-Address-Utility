@@ -190,7 +190,6 @@ namespace BtcAddress.Forms {
                         break;
                     case GenChoices.Encrypted:
                         Bip38KeyPair ekp = new Bip38KeyPair(intermediate);
-                        Debug.WriteLine(ekp.GetConfirmationCode());
                         newitem = new KeyCollectionItem(ekp);
                         break;
                 }
