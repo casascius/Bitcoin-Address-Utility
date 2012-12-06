@@ -108,7 +108,7 @@ namespace BtcAddress.Forms {
             }
             if (itemsToPrint.Count == 0) {
                 MessageBox.Show("No items with printable private keys are selected.",
-                    "Can't print vouchers",
+                    "Can't print encrypted keys",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return null;
             }
@@ -117,7 +117,6 @@ namespace BtcAddress.Forms {
                     "printed because the private key is not known.  These items will be skipped.",
                     "Can't print some items",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return null;
             }
             return itemsToPrint;
         }

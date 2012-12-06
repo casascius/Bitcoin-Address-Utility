@@ -143,6 +143,9 @@ namespace BtcAddress {
 
 
             }
+            if (keys.Count != 0) {
+                e.HasMorePages = true;
+            }
         }
 
 
