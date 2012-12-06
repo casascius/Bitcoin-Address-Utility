@@ -21,6 +21,8 @@ namespace BtcAddress {
     /// </summary>
     public class Bip38KeyPair : PassphraseKeyPair {
 
+
+
         /// <summary>
         /// Load constructor (in preparation for decryption)
         /// </summary>
@@ -292,7 +294,7 @@ namespace BtcAddress {
             // get factorb as sha256(sha256(seedb))
             Sha256Digest sha256 = new Sha256Digest();
             sha256.BlockUpdate(seedb, 0, 24);
-            byte[] factorb = new byte[32];
+            factorb = new byte[32];
             sha256.DoFinal(factorb, 0);
             sha256.BlockUpdate(factorb, 0, 32);
             sha256.DoFinal(factorb, 0);
@@ -318,7 +320,7 @@ namespace BtcAddress {
             Array.Copy(intermediate.ownersalt, 0, addresshashplusownersalt, 4, 8);
 
             // derive encryption key material
-            byte[] derived = new byte[64];
+            derived = new byte[64];
             SCrypt.ComputeKey(intermediate.passpoint, addresshashplusownersalt, 1024, 1, 1, 1, derived);
 
             byte[] derivedhalf2 = new byte[32];
@@ -365,14 +367,88 @@ namespace BtcAddress {
             _pubKey = generatedaddress.PublicKeyBytes;
             _hash160 = generatedaddress.Hash160;
 
+            var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
+
             if (retainPrivateKeyWhenPossible && intermediate.passfactor != null) {
-                var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
                 BigInteger privatekey = new BigInteger(1, intermediate.passfactor).Multiply(new BigInteger(1, factorb)).Mod(ps.N);
                 _privKey = new KeyPair(privatekey).PrivateKeyBytes;
 
             }
 
+            // create the confirmation code
+            confirmationCodeInfo = new byte[51];
+            // constant provides for prefix "cfrm38"
+            confirmationCodeInfo[0] = 0x64;
+            confirmationCodeInfo[1] = 0x3B;
+            confirmationCodeInfo[2] = 0xF6;
+            confirmationCodeInfo[3] = 0xA8;
+            confirmationCodeInfo[4] = 0x9A;
+            // fields for flagbyte, addresshash, and ownersalt all copy verbatim
+            Array.Copy(result, 2, confirmationCodeInfo, 5, 1 + 4 + 8);
+            
+
         }
+
+        /// <summary>
+        /// Returns true if GetConfirmationCode will return a confirmation code, without calculating it.
+        /// </summary>
+        public bool IsConfirmationCodeAvailable() {
+            return (_confirmationCode != null || factorb != null);
+        }
+
+        /// <summary>
+        /// A string that allows someone to independently calculate the
+        /// bitcoin address given their key material, without divulging the encrypted private key.
+        /// This can be used to prove that the bitcoin address is encumbered by the passphrase.
+        /// This is null if unavailable or not applicable.  When available, calculates upon first
+        /// read, which involves an EC multiply and takes a little bit of CPU time.
+        /// </summary>
+        public string GetConfirmationCode() {
+            if (_confirmationCode != null) return _confirmationCode;
+            if (confirmationCodeInfo == null || factorb == null) return null;
+
+            // finish calculating the confirmation code
+            // use the KeyPair class to do the EC multiply for us
+            KeyPair kp = new KeyPair(new BigInteger(1, factorb), true);
+
+            // the public key is 33 bytes, or rather, 32 bytes plus one bit
+            // (the first byte is either 0x02 or 0x03).
+            // xor it with one bit of derived so it's not readable from the confirmation code.
+            byte[] kppubbytes = kp.PublicKeyBytes;
+            confirmationCodeInfo[18] = (byte)(kppubbytes[0] ^ (derived[63] & 0x01));
+
+            // xor the pub bytes with derived[0...31] to get similar benefit like having an IV
+            byte[] unencrypted = new byte[32];
+            for (int i = 0; i < 32; i++) unencrypted[i] = (byte)(kppubbytes[i + 1] ^ derived[i]);
+
+            // prepare for AES encryption
+            byte[] derivedhalf2 = new byte[32];
+            Array.Copy(derived, 32, derivedhalf2, 0, 32);
+            AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+            aes.KeySize = 256;
+            aes.Mode = CipherMode.ECB;
+            aes.Key = derivedhalf2;
+            ICryptoTransform encryptor = aes.CreateEncryptor();
+
+            // encrypt remaining two blocks of 16 bytes using same derived key
+
+            encryptor.TransformBlock(unencrypted, 0, 16, confirmationCodeInfo, 19);
+            encryptor.TransformBlock(unencrypted, 0, 16, confirmationCodeInfo, 19);
+            encryptor.TransformBlock(unencrypted, 16, 16, confirmationCodeInfo, 19+16);
+            encryptor.TransformBlock(unencrypted, 16, 16, confirmationCodeInfo, 19+16);
+
+            _confirmationCode = Bitcoin.ByteArrayToBase58Check(confirmationCodeInfo);            
+            return _confirmationCode;
+        }
+
+
+        /// <summary>
+        /// Contains information needed to calculate ConfirmationCode on demand if asked,
+        /// as such calculation is expensive and should only be done if the code is needed.
+        /// Null means no calculation possible.
+        /// </summary>
+        private byte[] confirmationCodeInfo = null, factorb = null, derived = null;
+        private string _confirmationCode; // cached confirmation code
 
     }
 }

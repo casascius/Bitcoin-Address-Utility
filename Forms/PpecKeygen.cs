@@ -39,22 +39,9 @@ namespace BtcAddress {
             }
         }
 
-        private void btnGenerateKey_Click(object sender, EventArgs e) {
-            try {
-                Bip38Intermediate intermediate = new Bip38Intermediate(txtPassphraseCode.Text, Bip38Intermediate.Interpretation.IntermediateCode);
-                Bip38KeyPair kp = new Bip38KeyPair(intermediate);
-                txtEncryptedKey.Text = kp.EncryptedPrivateKey;
-                txtBitcoinAddress.Text = kp.GetAddress().AddressBase58;
-            } catch (Exception ae) {
-                MessageBox.Show(ae.Message);
-                return;
-            }
-       }
-
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             Process.Start("https://en.bitcoin.it/wiki/BIP_0038");
         }
-
 
 
     }

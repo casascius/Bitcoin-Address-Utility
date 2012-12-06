@@ -83,6 +83,7 @@ namespace BtcAddress {
             return false;
         }
 
+
         /// <summary>
         /// Returns true if the public key is available.
         /// Calling this may cause a delay of up to a few seconds while the private key is decrypted if decryption

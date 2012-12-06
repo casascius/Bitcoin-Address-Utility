@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using System.Diagnostics;
 
 namespace BtcAddress.Forms {
     public partial class AddressGen : Form {
@@ -56,7 +57,7 @@ namespace BtcAddress.Forms {
                     e.Cancel = true;
                 } else {
                     StopRequested = true;
-                    if (GenerationThread.ThreadState == ThreadState.Running) {
+                    if (GenerationThread.ThreadState == System.Threading.ThreadState.Running) {
                         GenerationThread.Join();
                         GeneratedItems.Clear();
                     }
@@ -189,6 +190,7 @@ namespace BtcAddress.Forms {
                         break;
                     case GenChoices.Encrypted:
                         Bip38KeyPair ekp = new Bip38KeyPair(intermediate);
+                        Debug.WriteLine(ekp.GetConfirmationCode());
                         newitem = new KeyCollectionItem(ekp);
                         break;
                 }

@@ -444,9 +444,13 @@ namespace BtcAddress {
                     qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.Q;
                 }
             } else {
-                if (what.Length > 62) {
-                    // We don't intend to encode any alphanumeric strings longer than private keys
+                if (what.Length > 84) {
+                    // We don't intend to encode any alphanumeric strings longer than confirmation codes at 75 characters
                     return null;
+                } else if (what.Length > 62) {
+                    // 5M is good to 84 characters
+                    qr.QRCodeVersion = 5;
+                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
                 } else if (what.Length > 34) {
                     // 4M is good to 62 characters
                     qr.QRCodeVersion = 4;

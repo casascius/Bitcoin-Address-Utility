@@ -28,13 +28,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtPassphraseCode = new System.Windows.Forms.TextBox();
-            this.btnGenerateKey = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtEncryptedKey = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtBitcoinAddress = new System.Windows.Forms.TextBox();
             this.btnEncode = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
@@ -61,7 +55,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 177);
+            this.label2.Location = new System.Drawing.Point(6, 142);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(90, 26);
             this.label2.TabIndex = 3;
@@ -71,60 +65,14 @@
             // 
             this.txtPassphraseCode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPassphraseCode.Location = new System.Drawing.Point(110, 182);
+            this.txtPassphraseCode.Location = new System.Drawing.Point(244, 147);
             this.txtPassphraseCode.Name = "txtPassphraseCode";
-            this.txtPassphraseCode.Size = new System.Drawing.Size(710, 20);
+            this.txtPassphraseCode.Size = new System.Drawing.Size(576, 20);
             this.txtPassphraseCode.TabIndex = 2;
-            // 
-            // btnGenerateKey
-            // 
-            this.btnGenerateKey.Location = new System.Drawing.Point(112, 251);
-            this.btnGenerateKey.Name = "btnGenerateKey";
-            this.btnGenerateKey.Size = new System.Drawing.Size(128, 29);
-            this.btnGenerateKey.TabIndex = 4;
-            this.btnGenerateKey.Text = "Generate Key";
-            this.btnGenerateKey.UseVisualStyleBackColor = true;
-            this.btnGenerateKey.Click += new System.EventHandler(this.btnGenerateKey_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 316);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(76, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Encrypted Key";
-            // 
-            // txtEncryptedKey
-            // 
-            this.txtEncryptedKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtEncryptedKey.Location = new System.Drawing.Point(110, 312);
-            this.txtEncryptedKey.Name = "txtEncryptedKey";
-            this.txtEncryptedKey.Size = new System.Drawing.Size(710, 20);
-            this.txtEncryptedKey.TabIndex = 7;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 290);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(79, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Bitcoin address";
-            // 
-            // txtBitcoinAddress
-            // 
-            this.txtBitcoinAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtBitcoinAddress.Location = new System.Drawing.Point(110, 286);
-            this.txtBitcoinAddress.Name = "txtBitcoinAddress";
-            this.txtBitcoinAddress.Size = new System.Drawing.Size(710, 20);
-            this.txtBitcoinAddress.TabIndex = 5;
             // 
             // btnEncode
             // 
-            this.btnEncode.Location = new System.Drawing.Point(112, 147);
+            this.btnEncode.Location = new System.Drawing.Point(110, 142);
             this.btnEncode.Name = "btnEncode";
             this.btnEncode.Size = new System.Drawing.Size(128, 29);
             this.btnEncode.TabIndex = 9;
@@ -132,20 +80,10 @@
             this.btnEncode.UseVisualStyleBackColor = true;
             this.btnEncode.Click += new System.EventHandler(this.btnEncode_Click);
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(107, 335);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(387, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Use the main Bitcoin Address Utility screen to decrypt and obtain the private key" +
-    ".";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(265, 157);
+            this.label6.Location = new System.Drawing.Point(109, 174);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(524, 13);
             this.label6.TabIndex = 11;
@@ -177,17 +115,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 432);
+            this.ClientSize = new System.Drawing.Size(832, 204);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.btnEncode);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.txtEncryptedKey);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.txtBitcoinAddress);
-            this.Controls.Add(this.btnGenerateKey);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtPassphraseCode);
             this.Controls.Add(this.label1);
@@ -206,13 +138,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtPassphraseCode;
-        private System.Windows.Forms.Button btnGenerateKey;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtEncryptedKey;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtBitcoinAddress;
         private System.Windows.Forms.Button btnEncode;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.LinkLabel linkLabel1;

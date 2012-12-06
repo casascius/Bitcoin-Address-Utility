@@ -22,6 +22,13 @@ namespace BtcAddress {
 
         protected PublicKey() { }
 
+        public PublicKey(ECPoint point) {
+            this.IsCompressedPoint = point.IsCompressed;
+            this.point = point;
+            this.PublicKeyBytes = point.GetEncoded();
+            if (validatePoint() == false) throw new ArgumentException("Not a valid public key");
+        }
+
         public PublicKey(string hex) {
             byte[] pubKeyBytes = Bitcoin.HexStringToBytes(hex);
             string result = constructFromBytes(pubKeyBytes);
@@ -65,11 +72,7 @@ namespace BtcAddress {
             try {
                 var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
                 point = ps.Curve.DecodePoint(pubKeyBytes);
-                var y2 = point.Y.Multiply(point.Y);
-                var x3 = point.X.Multiply(point.X).Multiply(point.X);
-                var ax = point.X.Multiply(ps.Curve.A);
-                var x3axb = x3.Add(ax).Add(ps.Curve.B);
-                if (y2.Equals(x3axb) == false) return "Not a valid public key";
+                if (validatePoint()==false) return "Not a valid public key";
 
                 // todo: ensure X and Y are on the curve
                 PublicKeyBytes = pubKeyBytes;
@@ -78,6 +81,18 @@ namespace BtcAddress {
                 return "Not a valid public key: " + e.Message;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Returns true if the point coordinates satisfy the elliptic curve equation.
+        /// </summary>
+        private bool validatePoint() {
+            var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
+            var y2 = point.Y.Multiply(point.Y);
+            var x3 = point.X.Multiply(point.X).Multiply(point.X);
+            var ax = point.X.Multiply(ps.Curve.A);
+            var x3axb = x3.Add(ax).Add(ps.Curve.B);
+            return y2.Equals(x3axb);
         }
 
         protected ECPoint point = null;

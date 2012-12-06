@@ -32,20 +32,26 @@
             this.keyCombinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mofNCalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.intermediateGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.confirmationCodeValidatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateKeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enterAnAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.printBanknoteVouchersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printTwoFactorCoinInsertsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printPaperWalletsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveAddressListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.deleteSelectedItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.listView1 = new System.Windows.Forms.ListView();
@@ -55,10 +61,6 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.enterAnAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteSelectedItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -84,7 +86,8 @@
             this.base58CalculatorToolStripMenuItem,
             this.keyCombinerToolStripMenuItem,
             this.mofNCalculatorToolStripMenuItem,
-            this.intermediateGeneratorToolStripMenuItem});
+            this.intermediateGeneratorToolStripMenuItem,
+            this.confirmationCodeValidatorToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -92,37 +95,44 @@
             // addressUtilityToolStripMenuItem
             // 
             this.addressUtilityToolStripMenuItem.Name = "addressUtilityToolStripMenuItem";
-            this.addressUtilityToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.addressUtilityToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
             this.addressUtilityToolStripMenuItem.Text = "Address Utility";
             this.addressUtilityToolStripMenuItem.Click += new System.EventHandler(this.addressUtilityToolStripMenuItem_Click);
             // 
             // base58CalculatorToolStripMenuItem
             // 
             this.base58CalculatorToolStripMenuItem.Name = "base58CalculatorToolStripMenuItem";
-            this.base58CalculatorToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.base58CalculatorToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
             this.base58CalculatorToolStripMenuItem.Text = "Base58 Calculator";
             this.base58CalculatorToolStripMenuItem.Click += new System.EventHandler(this.base58CalculatorToolStripMenuItem_Click);
             // 
             // keyCombinerToolStripMenuItem
             // 
             this.keyCombinerToolStripMenuItem.Name = "keyCombinerToolStripMenuItem";
-            this.keyCombinerToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.keyCombinerToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
             this.keyCombinerToolStripMenuItem.Text = "Key Combiner";
             this.keyCombinerToolStripMenuItem.Click += new System.EventHandler(this.keyCombinerToolStripMenuItem_Click);
             // 
             // mofNCalculatorToolStripMenuItem
             // 
             this.mofNCalculatorToolStripMenuItem.Name = "mofNCalculatorToolStripMenuItem";
-            this.mofNCalculatorToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.mofNCalculatorToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
             this.mofNCalculatorToolStripMenuItem.Text = "M-of-N Calculator";
             this.mofNCalculatorToolStripMenuItem.Click += new System.EventHandler(this.mofNCalculatorToolStripMenuItem_Click);
             // 
             // intermediateGeneratorToolStripMenuItem
             // 
             this.intermediateGeneratorToolStripMenuItem.Name = "intermediateGeneratorToolStripMenuItem";
-            this.intermediateGeneratorToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.intermediateGeneratorToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
             this.intermediateGeneratorToolStripMenuItem.Text = "Intermediate Generator";
             this.intermediateGeneratorToolStripMenuItem.Click += new System.EventHandler(this.intermediateGeneratorToolStripMenuItem_Click);
+            // 
+            // confirmationCodeValidatorToolStripMenuItem
+            // 
+            this.confirmationCodeValidatorToolStripMenuItem.Name = "confirmationCodeValidatorToolStripMenuItem";
+            this.confirmationCodeValidatorToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.confirmationCodeValidatorToolStripMenuItem.Text = "Confirmation Code Validator";
+            this.confirmationCodeValidatorToolStripMenuItem.Click += new System.EventHandler(this.confirmationCodeValidatorToolStripMenuItem_Click);
             // 
             // fileToolStripMenuItem
             // 
@@ -137,16 +147,23 @@
             // clearAllToolStripMenuItem
             // 
             this.clearAllToolStripMenuItem.Name = "clearAllToolStripMenuItem";
-            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.clearAllToolStripMenuItem.Text = "Clear All";
             this.clearAllToolStripMenuItem.Click += new System.EventHandler(this.clearAllToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Visible = false;
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // keyToolStripMenuItem
             // 
@@ -172,6 +189,13 @@
             this.generateKeysToolStripMenuItem.Text = "&Generate addresses";
             this.generateKeysToolStripMenuItem.Click += new System.EventHandler(this.generateKeysToolStripMenuItem_Click);
             // 
+            // enterAnAddressToolStripMenuItem
+            // 
+            this.enterAnAddressToolStripMenuItem.Name = "enterAnAddressToolStripMenuItem";
+            this.enterAnAddressToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.enterAnAddressToolStripMenuItem.Text = "&Enter an address/key";
+            this.enterAnAddressToolStripMenuItem.Click += new System.EventHandler(this.enterAnAddressToolStripMenuItem_Click);
+            // 
             // selectionToolStripMenuItem
             // 
             this.selectionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -179,6 +203,7 @@
             this.deselectAllToolStripMenuItem,
             this.toolStripSeparator1,
             this.printBanknoteVouchersToolStripMenuItem,
+            this.printTwoFactorCoinInsertsToolStripMenuItem,
             this.printPaperWalletsToolStripMenuItem,
             this.toolStripSeparator2,
             this.saveAddressListToolStripMenuItem,
@@ -191,47 +216,67 @@
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.selectAllToolStripMenuItem.Text = "Select All";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // deselectAllToolStripMenuItem
             // 
             this.deselectAllToolStripMenuItem.Name = "deselectAllToolStripMenuItem";
-            this.deselectAllToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.deselectAllToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.deselectAllToolStripMenuItem.Text = "Deselect All";
             this.deselectAllToolStripMenuItem.Click += new System.EventHandler(this.deselectAllToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(201, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(219, 6);
             // 
             // printBanknoteVouchersToolStripMenuItem
             // 
             this.printBanknoteVouchersToolStripMenuItem.Name = "printBanknoteVouchersToolStripMenuItem";
-            this.printBanknoteVouchersToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.printBanknoteVouchersToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.printBanknoteVouchersToolStripMenuItem.Text = "Print Banknote Vouchers";
             this.printBanknoteVouchersToolStripMenuItem.Click += new System.EventHandler(this.printBanknoteVouchersToolStripMenuItem_Click);
+            // 
+            // printTwoFactorCoinInsertsToolStripMenuItem
+            // 
+            this.printTwoFactorCoinInsertsToolStripMenuItem.Name = "printTwoFactorCoinInsertsToolStripMenuItem";
+            this.printTwoFactorCoinInsertsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.printTwoFactorCoinInsertsToolStripMenuItem.Text = "Print Physical Bitcoin Inserts";
+            this.printTwoFactorCoinInsertsToolStripMenuItem.Click += new System.EventHandler(this.printTwoFactorCoinInsertsToolStripMenuItem_Click);
             // 
             // printPaperWalletsToolStripMenuItem
             // 
             this.printPaperWalletsToolStripMenuItem.Name = "printPaperWalletsToolStripMenuItem";
-            this.printPaperWalletsToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.printPaperWalletsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.printPaperWalletsToolStripMenuItem.Text = "Print Paper Wallets";
             this.printPaperWalletsToolStripMenuItem.Visible = false;
+            this.printPaperWalletsToolStripMenuItem.Click += new System.EventHandler(this.printPaperWalletsToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(201, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(219, 6);
             // 
             // saveAddressListToolStripMenuItem
             // 
             this.saveAddressListToolStripMenuItem.Name = "saveAddressListToolStripMenuItem";
-            this.saveAddressListToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.saveAddressListToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.saveAddressListToolStripMenuItem.Text = "Save Address List";
             this.saveAddressListToolStripMenuItem.Click += new System.EventHandler(this.saveAddressListToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(219, 6);
+            // 
+            // deleteSelectedItemsToolStripMenuItem
+            // 
+            this.deleteSelectedItemsToolStripMenuItem.Name = "deleteSelectedItemsToolStripMenuItem";
+            this.deleteSelectedItemsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.deleteSelectedItemsToolStripMenuItem.Text = "Delete Selected Items";
+            this.deleteSelectedItemsToolStripMenuItem.Click += new System.EventHandler(this.deleteSelectedItemsToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -297,32 +342,6 @@
             this.detailsToolStripMenuItem.Text = "&Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
             // 
-            // enterAnAddressToolStripMenuItem
-            // 
-            this.enterAnAddressToolStripMenuItem.Name = "enterAnAddressToolStripMenuItem";
-            this.enterAnAddressToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.enterAnAddressToolStripMenuItem.Text = "&Enter an address/key";
-            this.enterAnAddressToolStripMenuItem.Click += new System.EventHandler(this.enterAnAddressToolStripMenuItem_Click);
-            // 
-            // deleteSelectedItemsToolStripMenuItem
-            // 
-            this.deleteSelectedItemsToolStripMenuItem.Name = "deleteSelectedItemsToolStripMenuItem";
-            this.deleteSelectedItemsToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.deleteSelectedItemsToolStripMenuItem.Text = "Delete Selected Items";
-            this.deleteSelectedItemsToolStripMenuItem.Click += new System.EventHandler(this.deleteSelectedItemsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(201, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exitToolStripMenuItem.Text = "E&xit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
             // KeyCollectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -382,5 +401,7 @@
         private System.Windows.Forms.ToolStripMenuItem deleteSelectedItemsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem confirmationCodeValidatorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printTwoFactorCoinInsertsToolStripMenuItem;
     }
 }

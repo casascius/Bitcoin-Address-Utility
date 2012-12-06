@@ -9,6 +9,8 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Drawing.Printing;
+
 
 namespace BtcAddress.Forms {
     public partial class KeyCollectionView : Form {
@@ -90,8 +92,7 @@ namespace BtcAddress.Forms {
 
         }
 
-
-        private void printBanknoteVouchersToolStripMenuItem_Click(object sender, EventArgs e) {
+        private List<KeyCollectionItem> getEncryptedItemsToPrint() {
             List<KeyCollectionItem> itemsToPrint = new List<KeyCollectionItem>();
             int Unprintables = 0;
             //foreach (KeyCollectionItem i in KeyCollection.Items) {
@@ -109,15 +110,22 @@ namespace BtcAddress.Forms {
                 MessageBox.Show("No items with printable private keys are selected.",
                     "Can't print vouchers",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                return null;
             }
             if (Unprintables != 0) {
                 MessageBox.Show(Unprintables.ToString() + " of the selected items cannot be " +
                     "printed because the private key is not known.  These items will be skipped.",
                     "Can't print some items",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
+                return null;
             }
+            return itemsToPrint;
+        }
+
+
+        private void printBanknoteVouchersToolStripMenuItem_Click(object sender, EventArgs e) {
+            List<KeyCollectionItem> itemsToPrint = getEncryptedItemsToPrint();
+            if (itemsToPrint == null) return;
             var printform = new PrintVouchers();
             printform.Items = itemsToPrint;
             printform.ShowDialog();
@@ -256,6 +264,35 @@ namespace BtcAddress.Forms {
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
             this.Close();
+        }
+
+        private void confirmationCodeValidatorToolStripMenuItem_Click(object sender, EventArgs e) {
+            Program.ShowConfValidator();
+        }
+
+        private void printPaperWalletsToolStripMenuItem_Click(object sender, EventArgs e) {
+        }
+
+        private void printTwoFactorCoinInsertsToolStripMenuItem_Click(object sender, EventArgs e) {
+            List<KeyCollectionItem> itemsToPrint = getEncryptedItemsToPrint();
+            if (itemsToPrint == null) return;
+
+            PrintDialog pd = new PrintDialog();
+            PrinterSettings ps = new PrinterSettings();
+            pd.PrinterSettings = ps;
+            DialogResult dr = pd.ShowDialog();
+
+            if (dr == DialogResult.OK) {
+                var printer = new CoinInsert();
+                printer.keys = itemsToPrint;
+                printer.PrinterSettings = pd.PrinterSettings;
+                printer.Print();
+                foreach (ListViewItem lvi in listView1.Items) {
+                    if (lvi.Checked) lvi.Checked = false;
+                }
+            }
+
+
         }
 
 
