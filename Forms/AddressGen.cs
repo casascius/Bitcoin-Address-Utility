@@ -96,12 +96,15 @@ namespace BtcAddress.Forms {
             if (rdoDeterministicWallet.Checked) GenChoice = GenChoices.Deterministic;
             if (rdoEncrypted.Checked) {
                 GenChoice = GenChoices.Encrypted;
-                txtTextInput.UseSystemPasswordChar = true;
-                if (txtTextInput.Text.Length > 40 && txtTextInput.Text.StartsWith("passphrase")) {
+                // intermediate codes start with "passphrasek" thru "passphrases"
+                string ti = txtTextInput.Text.Trim();
+                if (txtTextInput.Text.Length > 40 && ti.CompareTo("passphrasek") > 0 && ti.CompareTo("passphraset") < 0) {
                     Bip38Intermediate inter = null;
                     // try using it as an intermediate
                     try {
-                        inter = new Bip38Intermediate(txtTextInput.Text, Bip38Intermediate.Interpretation.IntermediateCode);
+                        inter = new Bip38Intermediate(txtTextInput.Text.Trim(), Bip38Intermediate.Interpretation.IntermediateCode);
+                        // if this is an actual intermediate code, ensure surrounding whitespace isn't preserved.
+                        txtTextInput.Text = txtTextInput.Text.Trim();
                     } catch {
                         var r = MessageBox.Show("The passphrase resembles an Intermediate Code, but isn't one. " +
                         "If this is supposed to be an intermediate code, it is invalid, malformed, or has an error. " +
@@ -109,7 +112,10 @@ namespace BtcAddress.Forms {
                             "Do you want to continue?",
                             "Invalid intermediate code", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
 
-                        if (r == System.Windows.Forms.DialogResult.Cancel) return;
+                        if (r == System.Windows.Forms.DialogResult.Cancel) {
+                            return;
+
+                        }
                     }
                     if (inter != null) {
                         MessageBox.Show("Intermediate Code accepted.  " +
@@ -118,8 +124,7 @@ namespace BtcAddress.Forms {
                             "the original passphrase that was used to create the Intermediate Code.", "Intermediate Code accepted", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
-
-
+                txtTextInput.UseSystemPasswordChar = true;
             }
             if (rdoMiniKeys.Checked) GenChoice = GenChoices.Minikey;
             if (rdoRandomWallet.Checked) GenChoice = GenChoices.WIF;
@@ -173,12 +178,12 @@ namespace BtcAddress.Forms {
                 KeyCollectionItem newitem = null;
                 switch (GenChoice) {
                     case GenChoices.Minikey:
-                        MiniKeyPair mkp = MiniKeyPair.CreateRandom("replace_with_entropy_adder_object_later");
+                        MiniKeyPair mkp = MiniKeyPair.CreateRandom(ExtraEntropy.GetEntropy());
                         string s = mkp.AddressBase58; // read the property to entice it to compute everything
                         newitem = new KeyCollectionItem(mkp);
                         break;
                     case GenChoices.WIF:
-                        KeyPair kp = KeyPair.Create("replace_with_entropy_adder_object_later");
+                        KeyPair kp = KeyPair.Create(ExtraEntropy.GetEntropy());
                         s = kp.AddressBase58;
                         newitem = new KeyCollectionItem(kp);
                         break;

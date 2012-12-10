@@ -115,7 +115,7 @@ namespace BtcAddress {
                 lblNotSafe.Visible = true;
                 lblNotSafe.Text = "Invalid mini key";
                 lblNotSafe.ForeColor = Color.Red;
-            } else if (txtMinikey.Text.Length < 20 || Bitcoin.PassphraseTooSimple(txtMinikey.Text)) {
+            } else if (txtMinikey.Text != "" && txtMinikey.Text.Length < 20 || Bitcoin.PassphraseTooSimple(txtMinikey.Text)) {
                 lblWhyNot.Visible = true;
                 lblNotSafe.Visible = true;
                 lblNotSafe.Text = "Warning - Not Safe";
@@ -284,7 +284,7 @@ namespace BtcAddress {
                 lblWhyNot.Visible = false;
                 SetText(txtMinikey, "");
 
-                KeyPair kp = KeyPair.Create(ExtraEntropy, compressToolStripMenuItem.Checked);
+                KeyPair kp = KeyPair.Create(ExtraEntropy.GetEntropy(), compressToolStripMenuItem.Checked);
 
                 if (txtPassphrase.Text != "") {
                     SetText(txtPrivWIF, new Bip38KeyPair(kp, txtPassphrase.Text).EncryptedPrivateKey);
@@ -356,7 +356,7 @@ namespace BtcAddress {
         private void btnShacode_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {
-                MiniKeyPair mkp = MiniKeyPair.CreateRandom(ExtraEntropy);
+                MiniKeyPair mkp = MiniKeyPair.CreateRandom(ExtraEntropy.GetEntropy());
 
                 SetText(txtMinikey, mkp.MiniKey);
                 if (txtPassphrase.Text != "") {
@@ -754,27 +754,18 @@ namespace BtcAddress {
         }
 
 
-        private string ExtraEntropy = DateTime.Now.Ticks.ToString();
 
         private void Form1_KeyDown(object sender, KeyEventArgs e) {
-            AddExtraEntropy(e.KeyCode.ToString() + e.KeyData + DateTime.Now.Ticks.ToString());
+            ExtraEntropy.AddExtraEntropy(e.KeyCode.ToString() + e.KeyData + DateTime.Now.Ticks.ToString());
         }
 
-        private void AddExtraEntropy(string what) {
-            ExtraEntropy += what;
-            if (ExtraEntropy.Length > 300) {
-                SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-                UTF8Encoding utf8 = new UTF8Encoding(false);
-                ExtraEntropy = BitConverter.ToString(sha256.ComputeHash(utf8.GetBytes(ExtraEntropy)));
-            }
-        }
 
         private void timer1_Tick(object sender, EventArgs e) {
-            AddExtraEntropy(DateTime.Now.Ticks.ToString());
+            ExtraEntropy.AddExtraEntropy(DateTime.Now.Ticks.ToString());
         }
 
         private void Form1_MouseMove(object sender, MouseEventArgs e) {
-            AddExtraEntropy(DateTime.Now.Ticks.ToString() + e.X + "," + e.Y);
+            ExtraEntropy.AddExtraEntropy(DateTime.Now.Ticks.ToString() + e.X + "," + e.Y);
         }
 
         private void pPECKeygenToolStripMenuItem_Click(object sender, EventArgs e) {

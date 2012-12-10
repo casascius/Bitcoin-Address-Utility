@@ -69,7 +69,7 @@ namespace BtcAddress {
 
                 keys.RemoveAt(0);
 
-                int thiscodeX = 50;
+                int thiscodeX = 0; //  50;
                 int thiscodeY = 50 + eachheight * i;
 
                 // ----------------------------------------------------------------
@@ -97,6 +97,8 @@ namespace BtcAddress {
 
                 int[] charsPerLine = new int[] { 4, 7, 8, 7, 4, 0, 4, 7, 8, 7, 4 };
                 string privkeyleft = privkey;
+                // if it's going to take two circles, add hyphens
+                if (privkeyleft.Length > 30) privkeyleft = privkeyleft.Substring(0, 29) + "--" + privkeyleft.Substring(29);
                 string privkeytoprint = "";
                 for (int c = 0; c < 11; c++) {
                     if (charsPerLine[c] == 0) {

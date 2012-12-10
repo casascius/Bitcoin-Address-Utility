@@ -22,7 +22,7 @@ namespace BtcAddress.Forms {
         }
 
         private void newAddressToolStripMenuItem_Click(object sender, EventArgs e) {
-            KeyPair kp = KeyPair.Create("asdfgasdfasdf");
+            KeyPair kp = KeyPair.Create(ExtraEntropy.GetEntropy());
             KeyCollectionItem item = new KeyCollectionItem(kp);
             KeyCollection.AddItem(item);
         }
@@ -293,6 +293,18 @@ namespace BtcAddress.Forms {
 
 
         }
+
+        private void menuStrip1_MouseMove(object sender, MouseEventArgs e) {
+            ExtraEntropy.AddExtraEntropy(DateTime.Now.Ticks.ToString() + e.X + "," + e.Y);
+        }
+
+        private void keyDecrypterToolStripMenuItem_Click(object sender, EventArgs e) {
+            Program.ShowKeyDecrypter();
+        }
+
+
+
+
 
 
 

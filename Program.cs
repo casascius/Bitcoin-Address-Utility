@@ -16,6 +16,8 @@ namespace BtcAddress {
 
         public static KeyCombiner KeyCombiner = null;
 
+        public static BtcAddress.Forms.DecryptKey DecryptKey = null;
+
         public static BtcAddress.Forms.Bip38ConfValidator ConfValidator = null;
 
         public static void ShowAddressUtility() {
@@ -41,6 +43,11 @@ namespace BtcAddress {
         public static void ShowConfValidator() {
             ConfValidator = showForm<BtcAddress.Forms.Bip38ConfValidator>(ConfValidator);
         }
+
+        public static void ShowKeyDecrypter() {
+            DecryptKey = showForm<BtcAddress.Forms.DecryptKey>(DecryptKey);
+        }
+
         private static T showForm<T>(T currentform) where T : Form, new() {
             if (currentform == null || currentform.Visible == false) {
                 T rv = new T();

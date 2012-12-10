@@ -13,10 +13,10 @@ namespace BtcAddress {
         /// compressed and addresstype are only considered when the object doesn't define these itself.
         /// </summary>
         public static object Interpret(string what, bool compressed=false, byte addressType=0) {
-            if (what == null || what == "") return null;
+            if (what == null || what.Trim() == "") return null;
 
             // Is the string interpretable as base58?
-            byte[] hex = Bitcoin.Base58CheckToByteArray(what);
+            byte[] hex = Bitcoin.Base58CheckToByteArray(what.Trim());
 
             if (hex != null) {
                 try {

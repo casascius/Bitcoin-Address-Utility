@@ -29,10 +29,12 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addressUtilityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.base58CalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.keyCombinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keyDecrypterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mofNCalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twoFactorBitcoinToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.intermediateGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.confirmationCodeValidatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keyCombinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +63,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.keyDecrypterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -78,16 +81,16 @@
             this.menuStrip1.Size = new System.Drawing.Size(629, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.menuStrip1_MouseMove);
             // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addressUtilityToolStripMenuItem,
             this.base58CalculatorToolStripMenuItem,
-            this.keyCombinerToolStripMenuItem,
+            this.keyDecrypterToolStripMenuItem,
             this.mofNCalculatorToolStripMenuItem,
-            this.intermediateGeneratorToolStripMenuItem,
-            this.confirmationCodeValidatorToolStripMenuItem});
+            this.twoFactorBitcoinToolsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -95,44 +98,62 @@
             // addressUtilityToolStripMenuItem
             // 
             this.addressUtilityToolStripMenuItem.Name = "addressUtilityToolStripMenuItem";
-            this.addressUtilityToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.addressUtilityToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.addressUtilityToolStripMenuItem.Text = "Address Utility";
             this.addressUtilityToolStripMenuItem.Click += new System.EventHandler(this.addressUtilityToolStripMenuItem_Click);
             // 
             // base58CalculatorToolStripMenuItem
             // 
             this.base58CalculatorToolStripMenuItem.Name = "base58CalculatorToolStripMenuItem";
-            this.base58CalculatorToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.base58CalculatorToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.base58CalculatorToolStripMenuItem.Text = "Base58 Calculator";
             this.base58CalculatorToolStripMenuItem.Click += new System.EventHandler(this.base58CalculatorToolStripMenuItem_Click);
             // 
-            // keyCombinerToolStripMenuItem
+            // keyDecrypterToolStripMenuItem
             // 
-            this.keyCombinerToolStripMenuItem.Name = "keyCombinerToolStripMenuItem";
-            this.keyCombinerToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.keyCombinerToolStripMenuItem.Text = "Key Combiner";
-            this.keyCombinerToolStripMenuItem.Click += new System.EventHandler(this.keyCombinerToolStripMenuItem_Click);
+            this.keyDecrypterToolStripMenuItem.Name = "keyDecrypterToolStripMenuItem";
+            this.keyDecrypterToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.keyDecrypterToolStripMenuItem.Text = "Key Decrypter";
+            this.keyDecrypterToolStripMenuItem.Click += new System.EventHandler(this.keyDecrypterToolStripMenuItem_Click);
             // 
             // mofNCalculatorToolStripMenuItem
             // 
             this.mofNCalculatorToolStripMenuItem.Name = "mofNCalculatorToolStripMenuItem";
-            this.mofNCalculatorToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.mofNCalculatorToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.mofNCalculatorToolStripMenuItem.Text = "M-of-N Calculator";
             this.mofNCalculatorToolStripMenuItem.Click += new System.EventHandler(this.mofNCalculatorToolStripMenuItem_Click);
+            // 
+            // twoFactorBitcoinToolsToolStripMenuItem
+            // 
+            this.twoFactorBitcoinToolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.intermediateGeneratorToolStripMenuItem,
+            this.confirmationCodeValidatorToolStripMenuItem,
+            this.keyCombinerToolStripMenuItem,
+            this.keyDecrypterToolStripMenuItem1});
+            this.twoFactorBitcoinToolsToolStripMenuItem.Name = "twoFactorBitcoinToolsToolStripMenuItem";
+            this.twoFactorBitcoinToolsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.twoFactorBitcoinToolsToolStripMenuItem.Text = "Two-Factor Bitcoin Tools";
             // 
             // intermediateGeneratorToolStripMenuItem
             // 
             this.intermediateGeneratorToolStripMenuItem.Name = "intermediateGeneratorToolStripMenuItem";
-            this.intermediateGeneratorToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.intermediateGeneratorToolStripMenuItem.Text = "Intermediate Generator";
+            this.intermediateGeneratorToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.intermediateGeneratorToolStripMenuItem.Text = "Intermediate Code Generator";
             this.intermediateGeneratorToolStripMenuItem.Click += new System.EventHandler(this.intermediateGeneratorToolStripMenuItem_Click);
             // 
             // confirmationCodeValidatorToolStripMenuItem
             // 
             this.confirmationCodeValidatorToolStripMenuItem.Name = "confirmationCodeValidatorToolStripMenuItem";
-            this.confirmationCodeValidatorToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.confirmationCodeValidatorToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.confirmationCodeValidatorToolStripMenuItem.Text = "Confirmation Code Validator";
             this.confirmationCodeValidatorToolStripMenuItem.Click += new System.EventHandler(this.confirmationCodeValidatorToolStripMenuItem_Click);
+            // 
+            // keyCombinerToolStripMenuItem
+            // 
+            this.keyCombinerToolStripMenuItem.Name = "keyCombinerToolStripMenuItem";
+            this.keyCombinerToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.keyCombinerToolStripMenuItem.Text = "Key Combiner";
+            this.keyCombinerToolStripMenuItem.Click += new System.EventHandler(this.keyCombinerToolStripMenuItem_Click);
             // 
             // fileToolStripMenuItem
             // 
@@ -342,13 +363,20 @@
             this.detailsToolStripMenuItem.Text = "&Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
             // 
+            // keyDecrypterToolStripMenuItem1
+            // 
+            this.keyDecrypterToolStripMenuItem1.Name = "keyDecrypterToolStripMenuItem1";
+            this.keyDecrypterToolStripMenuItem1.Size = new System.Drawing.Size(227, 22);
+            this.keyDecrypterToolStripMenuItem1.Text = "Key Decrypter";
+            this.keyDecrypterToolStripMenuItem1.Click += new System.EventHandler(this.keyDecrypterToolStripMenuItem_Click);
+            // 
             // KeyCollectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(629, 434);
-            this.Controls.Add(this.listView1);
             this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.listView1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -388,9 +416,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addressUtilityToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem base58CalculatorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem keyCombinerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mofNCalculatorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem intermediateGeneratorToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem saveAddressListToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
@@ -401,7 +427,12 @@
         private System.Windows.Forms.ToolStripMenuItem deleteSelectedItemsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem confirmationCodeValidatorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printTwoFactorCoinInsertsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem keyDecrypterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem twoFactorBitcoinToolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem intermediateGeneratorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem confirmationCodeValidatorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem keyCombinerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem keyDecrypterToolStripMenuItem1;
     }
 }
