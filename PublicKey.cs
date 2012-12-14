@@ -150,6 +150,17 @@ namespace BtcAddress {
             return point2.GetEncoded();
         }
 
+        public static ECPoint GetUncompressed(ECPoint point) {
+            var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
+            return ps.Curve.CreatePoint(point.X.ToBigInteger(), point.Y.ToBigInteger(), false);
+        }
+
+        public static ECPoint GetCompressed(ECPoint point) {
+            var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
+            return ps.Curve.CreatePoint(point.X.ToBigInteger(), point.Y.ToBigInteger(), true);
+        }
+
+
         /// <summary>
         /// Computes the Hash160 of the public key upon demand.
         /// </summary>

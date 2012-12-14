@@ -59,6 +59,7 @@
     <Compile Include="CryptSharp\Helper.cs" />
     <Compile Include="CryptSharp\Pbkdf2.cs" />
     <Compile Include="EncryptedKeyPair.cs" />
+    <Compile Include="EscrowCode.cs" />
     <Compile Include="ExtraEntropy.cs" />
     <Compile Include="Forms\AddressGen.cs">
       <SubType>Form</SubType>
@@ -83,6 +84,12 @@
     </Compile>
     <Compile Include="Forms\DecryptKey.Designer.cs">
       <DependentUpon>DecryptKey.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EscrowTools.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EscrowTools.Designer.cs">
+      <DependentUpon>EscrowTools.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\KeyCollectionView.cs">
       <SubType>Form</SubType>
@@ -176,6 +183,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DecryptKey.resx">
       <DependentUpon>DecryptKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EscrowTools.resx">
+      <DependentUpon>EscrowTools.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

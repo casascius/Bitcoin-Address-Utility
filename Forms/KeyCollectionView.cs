@@ -302,6 +302,10 @@ namespace BtcAddress.Forms {
             Program.ShowKeyDecrypter();
         }
 
+        private void escrowToolsToolStripMenuItem_Click(object sender, EventArgs e) {
+            Program.ShowEscrowTools();
+        }
+
 
 
 

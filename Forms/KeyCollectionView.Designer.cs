@@ -35,6 +35,7 @@
             this.intermediateGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.confirmationCodeValidatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyCombinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keyDecrypterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +64,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.keyDecrypterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.escrowToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -90,7 +91,8 @@
             this.base58CalculatorToolStripMenuItem,
             this.keyDecrypterToolStripMenuItem,
             this.mofNCalculatorToolStripMenuItem,
-            this.twoFactorBitcoinToolsToolStripMenuItem});
+            this.twoFactorBitcoinToolsToolStripMenuItem,
+            this.escrowToolsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -154,6 +156,13 @@
             this.keyCombinerToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.keyCombinerToolStripMenuItem.Text = "Key Combiner";
             this.keyCombinerToolStripMenuItem.Click += new System.EventHandler(this.keyCombinerToolStripMenuItem_Click);
+            // 
+            // keyDecrypterToolStripMenuItem1
+            // 
+            this.keyDecrypterToolStripMenuItem1.Name = "keyDecrypterToolStripMenuItem1";
+            this.keyDecrypterToolStripMenuItem1.Size = new System.Drawing.Size(227, 22);
+            this.keyDecrypterToolStripMenuItem1.Text = "Key Decrypter";
+            this.keyDecrypterToolStripMenuItem1.Click += new System.EventHandler(this.keyDecrypterToolStripMenuItem_Click);
             // 
             // fileToolStripMenuItem
             // 
@@ -363,12 +372,12 @@
             this.detailsToolStripMenuItem.Text = "&Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
             // 
-            // keyDecrypterToolStripMenuItem1
+            // escrowToolsToolStripMenuItem
             // 
-            this.keyDecrypterToolStripMenuItem1.Name = "keyDecrypterToolStripMenuItem1";
-            this.keyDecrypterToolStripMenuItem1.Size = new System.Drawing.Size(227, 22);
-            this.keyDecrypterToolStripMenuItem1.Text = "Key Decrypter";
-            this.keyDecrypterToolStripMenuItem1.Click += new System.EventHandler(this.keyDecrypterToolStripMenuItem_Click);
+            this.escrowToolsToolStripMenuItem.Name = "escrowToolsToolStripMenuItem";
+            this.escrowToolsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.escrowToolsToolStripMenuItem.Text = "Escrow Tools";
+            this.escrowToolsToolStripMenuItem.Click += new System.EventHandler(this.escrowToolsToolStripMenuItem_Click);
             // 
             // KeyCollectionView
             // 
@@ -434,5 +443,6 @@
         private System.Windows.Forms.ToolStripMenuItem confirmationCodeValidatorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem keyCombinerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem keyDecrypterToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem escrowToolsToolStripMenuItem;
     }
 }

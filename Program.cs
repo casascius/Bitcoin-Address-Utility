@@ -20,6 +20,8 @@ namespace BtcAddress {
 
         public static BtcAddress.Forms.Bip38ConfValidator ConfValidator = null;
 
+        public static BtcAddress.Forms.EscrowTools EscrowTools = null;
+
         public static void ShowAddressUtility() {
             AddressUtility = showForm<Form1>(AddressUtility);
         }
@@ -46,6 +48,11 @@ namespace BtcAddress {
 
         public static void ShowKeyDecrypter() {
             DecryptKey = showForm<BtcAddress.Forms.DecryptKey>(DecryptKey);
+        }
+
+        public static void ShowEscrowTools() {
+            EscrowTools = showForm<BtcAddress.Forms.EscrowTools>(EscrowTools);
+
         }
 
         private static T showForm<T>(T currentform) where T : Form, new() {

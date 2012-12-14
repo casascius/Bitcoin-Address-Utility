@@ -23,6 +23,9 @@ namespace BtcAddress.Forms {
         }
 
         private void btnDecrypt_Click(object sender, EventArgs e) {
+            // Remove any spaces or dashes from the encrypted key (in case they were typed)
+            txtEncrypted.Text = txtEncrypted.Text.Replace("-", "").Replace(" ", "");
+
             if (txtEncrypted.Text == "" || txtPassphrase.Text == "") {
                 MessageBox.Show("Enter an encrypted key and its passphrase.", "Entries Required", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -84,10 +87,16 @@ namespace BtcAddress.Forms {
                     }
                     return;
                 }
+
+
                 BigInteger n1 = new BigInteger(1, (encrypted as KeyPair).PrivateKeyBytes);
                 BigInteger n2 = new BigInteger(1, (encrypted2 as KeyPair).PrivateKeyBytes);
                 var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
                 BigInteger privatekey = n1.Multiply(n2).Mod(ps.N);
+                MessageBox.Show("Keys successfully combined using EC multiplication.", "EC multiplication successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (n1.Equals(n2)) {
+                    MessageBox.Show("The two key entries have the same public hash.  The results you see might be wrong.", "Duplicate key hash", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
 
                 // use private key
                 KeyPair kp = new KeyPair(privatekey);
