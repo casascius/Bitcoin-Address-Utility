@@ -282,9 +282,16 @@ namespace BtcAddress.Forms {
             DialogResult dr = pd.ShowDialog();
 
             if (dr == DialogResult.OK) {
-                var printer = new CoinInsert();
+                CoinInsert printer;
+                if (sender.Equals(printPhysicalBitcoinInsertsDenseToolStripMenuItem)) {
+                    printer = new CoinInsertDense();
+                } else {
+                    printer = new CoinInsert();
+                }                
+                
                 printer.keys = itemsToPrint;
                 printer.PrinterSettings = pd.PrinterSettings;
+                printer.DenseMode = true;
                 printer.Print();
                 foreach (ListViewItem lvi in listView1.Items) {
                     if (lvi.Checked) lvi.Checked = false;
@@ -305,6 +312,7 @@ namespace BtcAddress.Forms {
         private void escrowToolsToolStripMenuItem_Click(object sender, EventArgs e) {
             Program.ShowEscrowTools();
         }
+
 
 
 

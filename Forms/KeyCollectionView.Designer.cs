@@ -36,6 +36,7 @@
             this.confirmationCodeValidatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyCombinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyDecrypterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.escrowToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,6 +51,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.printBanknoteVouchersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printTwoFactorCoinInsertsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printPhysicalBitcoinInsertsDenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printPaperWalletsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveAddressListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,7 +66,6 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.escrowToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -164,6 +165,13 @@
             this.keyDecrypterToolStripMenuItem1.Text = "Key Decrypter";
             this.keyDecrypterToolStripMenuItem1.Click += new System.EventHandler(this.keyDecrypterToolStripMenuItem_Click);
             // 
+            // escrowToolsToolStripMenuItem
+            // 
+            this.escrowToolsToolStripMenuItem.Name = "escrowToolsToolStripMenuItem";
+            this.escrowToolsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.escrowToolsToolStripMenuItem.Text = "Escrow Tools";
+            this.escrowToolsToolStripMenuItem.Click += new System.EventHandler(this.escrowToolsToolStripMenuItem_Click);
+            // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -234,6 +242,7 @@
             this.toolStripSeparator1,
             this.printBanknoteVouchersToolStripMenuItem,
             this.printTwoFactorCoinInsertsToolStripMenuItem,
+            this.printPhysicalBitcoinInsertsDenseToolStripMenuItem,
             this.printPaperWalletsToolStripMenuItem,
             this.toolStripSeparator2,
             this.saveAddressListToolStripMenuItem,
@@ -246,40 +255,47 @@
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.selectAllToolStripMenuItem.Text = "Select All";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // deselectAllToolStripMenuItem
             // 
             this.deselectAllToolStripMenuItem.Name = "deselectAllToolStripMenuItem";
-            this.deselectAllToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.deselectAllToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.deselectAllToolStripMenuItem.Text = "Deselect All";
             this.deselectAllToolStripMenuItem.Click += new System.EventHandler(this.deselectAllToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(219, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(262, 6);
             // 
             // printBanknoteVouchersToolStripMenuItem
             // 
             this.printBanknoteVouchersToolStripMenuItem.Name = "printBanknoteVouchersToolStripMenuItem";
-            this.printBanknoteVouchersToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.printBanknoteVouchersToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.printBanknoteVouchersToolStripMenuItem.Text = "Print Banknote Vouchers";
             this.printBanknoteVouchersToolStripMenuItem.Click += new System.EventHandler(this.printBanknoteVouchersToolStripMenuItem_Click);
             // 
             // printTwoFactorCoinInsertsToolStripMenuItem
             // 
             this.printTwoFactorCoinInsertsToolStripMenuItem.Name = "printTwoFactorCoinInsertsToolStripMenuItem";
-            this.printTwoFactorCoinInsertsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.printTwoFactorCoinInsertsToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.printTwoFactorCoinInsertsToolStripMenuItem.Text = "Print Physical Bitcoin Inserts";
             this.printTwoFactorCoinInsertsToolStripMenuItem.Click += new System.EventHandler(this.printTwoFactorCoinInsertsToolStripMenuItem_Click);
+            // 
+            // printPhysicalBitcoinInsertsDenseToolStripMenuItem
+            // 
+            this.printPhysicalBitcoinInsertsDenseToolStripMenuItem.Name = "printPhysicalBitcoinInsertsDenseToolStripMenuItem";
+            this.printPhysicalBitcoinInsertsDenseToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+            this.printPhysicalBitcoinInsertsDenseToolStripMenuItem.Text = "Print Physical Bitcoin Inserts - Dense";
+            this.printPhysicalBitcoinInsertsDenseToolStripMenuItem.Click += new System.EventHandler(this.printTwoFactorCoinInsertsToolStripMenuItem_Click);
             // 
             // printPaperWalletsToolStripMenuItem
             // 
             this.printPaperWalletsToolStripMenuItem.Name = "printPaperWalletsToolStripMenuItem";
-            this.printPaperWalletsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.printPaperWalletsToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.printPaperWalletsToolStripMenuItem.Text = "Print Paper Wallets";
             this.printPaperWalletsToolStripMenuItem.Visible = false;
             this.printPaperWalletsToolStripMenuItem.Click += new System.EventHandler(this.printPaperWalletsToolStripMenuItem_Click);
@@ -287,24 +303,24 @@
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(219, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(262, 6);
             // 
             // saveAddressListToolStripMenuItem
             // 
             this.saveAddressListToolStripMenuItem.Name = "saveAddressListToolStripMenuItem";
-            this.saveAddressListToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.saveAddressListToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.saveAddressListToolStripMenuItem.Text = "Save Address List";
             this.saveAddressListToolStripMenuItem.Click += new System.EventHandler(this.saveAddressListToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(219, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(262, 6);
             // 
             // deleteSelectedItemsToolStripMenuItem
             // 
             this.deleteSelectedItemsToolStripMenuItem.Name = "deleteSelectedItemsToolStripMenuItem";
-            this.deleteSelectedItemsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.deleteSelectedItemsToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.deleteSelectedItemsToolStripMenuItem.Text = "Delete Selected Items";
             this.deleteSelectedItemsToolStripMenuItem.Click += new System.EventHandler(this.deleteSelectedItemsToolStripMenuItem_Click);
             // 
@@ -372,13 +388,6 @@
             this.detailsToolStripMenuItem.Text = "&Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
             // 
-            // escrowToolsToolStripMenuItem
-            // 
-            this.escrowToolsToolStripMenuItem.Name = "escrowToolsToolStripMenuItem";
-            this.escrowToolsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.escrowToolsToolStripMenuItem.Text = "Escrow Tools";
-            this.escrowToolsToolStripMenuItem.Click += new System.EventHandler(this.escrowToolsToolStripMenuItem_Click);
-            // 
             // KeyCollectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -444,5 +453,6 @@
         private System.Windows.Forms.ToolStripMenuItem keyCombinerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem keyDecrypterToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem escrowToolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printPhysicalBitcoinInsertsDenseToolStripMenuItem;
     }
 }

@@ -13,34 +13,30 @@ namespace BtcAddress {
     /// <summary>
     /// Represents a printable report producing the materials to go in a two-factor physical Bitcoin piece.
     /// </summary>
-    class CoinInsert : System.Drawing.Printing.PrintDocument {
+    class CoinInsertDense : CoinInsert {
 
-        protected static bool UbuntuFontLoaded = false;
+        /*
+         *
+        private static bool UbuntuFontLoaded = false;
 
-        protected Font fontbig = new Font("Courier New", 13);
-        protected Font font = new Font("Courier New", 10);
-        protected Font fontsmall = new Font("Courier New", 4.5F);
+        private Font fontbig = new Font("Courier New", 13);
+        private Font font = new Font("Courier New", 10);
+        private Font fontsmall = new Font("Courier New", 4.5F);
 
-        protected Font ubuntufont = null;
-        protected Font ubuntumid = null;
-        protected Font ubuntubig = null;
+        private Font ubuntufont = null;
+        private Font ubuntumid = null;
+        private Font ubuntubig = null;
 
         public List<KeyCollectionItem> keys;
-
-        public bool DenseMode = false;
-
+        */
 
         protected override void OnBeginPrint(System.Drawing.Printing.PrintEventArgs e) {
             base.OnBeginPrint(e);
         }
 
-        protected void baseOnPrintPage(System.Drawing.Printing.PrintPageEventArgs e) {
-            base.OnPrintPage(e);
-        }
-
 
         protected override void OnPrintPage(System.Drawing.Printing.PrintPageEventArgs e) {
-            base.OnPrintPage(e);
+            baseOnPrintPage(e);
             int printHeight;
             int printWidth;
             int leftMargin;
@@ -58,25 +54,22 @@ namespace BtcAddress {
                 //Y
             }
 
+            int startwidth = 0;
+            int startheight = 50;
 
-            for (int i = 0; i < 8; i++) {
-                int eachheight = 120;
+            for (int i = 0; i < 96; i++) {
+                int eachheight = 60, eachwidth = 130;
                 if (keys.Count == 0) break;
 
                 KeyCollectionItem kci = keys[0];
                 string address = kci.GetAddressBase58();
 
                 string privkey = kci.PrivateKey;
-                string confcode = "";
-                if (kci.EncryptedKeyPair != null && kci.EncryptedKeyPair is Bip38KeyPair) {
-                    confcode = ((Bip38KeyPair)kci.EncryptedKeyPair).GetConfirmationCode() ?? "";
-                    //if (confcode != "") confcode = "Confirmation code:\r\n" + confcode;
-                }
 
                 keys.RemoveAt(0);
 
-                int thiscodeX = 0; //  50;
-                int thiscodeY = 50 + eachheight * i;
+                int thiscodeX = startwidth + eachwidth * (i / 16);
+                int thiscodeY = startheight + eachheight * (i % 16);
 
                 // ----------------------------------------------------------------
                 // Coin insert with public and private QR codes.  Fits 8 to a page.
@@ -87,6 +80,15 @@ namespace BtcAddress {
 
                 // draw the private key circle
                 using (Pen blackpen = new Pen(Color.Black)) {
+
+                    // print some alignment marks for use in laser cutting
+                    if (i == 0) {
+                        e.Graphics.FillRectangle(Brushes.Black, startwidth + eachwidth * 3F, startheight, 0.01F, 0.01F);
+                        e.Graphics.FillRectangle(Brushes.Black, startwidth + eachwidth * 3F, (float)startheight + (float)eachheight * 8.5F, 0.01F, 0.01F);
+                        e.Graphics.FillRectangle(Brushes.Black, startwidth + eachwidth * 3F, (float)startheight + (float)eachheight * 17F, 0.01F, 0.01F);
+                    }
+
+
                     blackpen.Width = (1F / 72F);
 
                     e.Graphics.DrawEllipse(blackpen, thiscodeX + 30F, thiscodeY + 10F, CircleDiameterInches * 100F, CircleDiameterInches * 100F);
@@ -123,31 +125,33 @@ namespace BtcAddress {
                     sfcenter.Alignment = StringAlignment.Center;
                     e.Graphics.DrawString(privkeytoprint, fontsmall, Brushes.Black, thiscodeX + 30F + (CircleDiameterInches * 100F / 2F), thiscodeY + 14F, sfcenter);
                 }
-                
-
-
-
 
                 // draw the address QR code
                 using (Bitmap b2 = Bitcoin.EncodeQRCode(address)) {
-                    e.Graphics.DrawImage(b2, thiscodeX + 100, thiscodeY, 100, 100);
+                    e.Graphics.DrawImage(b2, thiscodeX + 80, thiscodeY + 10, 50, 50);
                 }
-            
-                e.Graphics.DrawString("Bitcoin address:\r\n" + address, font, Brushes.Black, thiscodeX + 210, thiscodeY);
 
-                StringFormat sf = new StringFormat();
-                sf.Alignment = StringAlignment.Far; // right justify
+                e.Graphics.RotateTransform(-90F);
+                // transform 90 degrees changes our coordinate space so we can do sideways text.
+                // must swap xy and value supplied as x parameter must be negative
+                // instead of             it's now
+                //        -Y                  +X
+                //        |                   |
+                //  -X-------+X        -Y----------+Y
+                //        | PRINT             | PRINT
+                //        +Y                  -X
 
-                if (confcode != "") {
-                    // Print the confirmation QR code
-                    using (Bitmap b = Bitcoin.EncodeQRCode(confcode)) {
-                        e.Graphics.DrawImage(b, thiscodeX + 600, thiscodeY, 100, 100);
 
-                        string whattoprint = "Confirmation code:\r\n" + confcode.Substring(0, 38) + "\r\n" + confcode.Substring(38);
+                using (StringFormat sfright = new StringFormat()) {
+                    sfright.Alignment = StringAlignment.Far;
+                    e.Graphics.DrawString(address.Substring(0, 12) + "\r\n" + address.Substring(12, 12) + "\r\n" + address.Substring(24), fontsmall, Brushes.Black,
+                        -(float)(thiscodeY + 10),
+                        (float)(thiscodeX + 130), sfright);
 
-                        e.Graphics.DrawString(whattoprint, font, Brushes.Black, thiscodeX + 597, thiscodeY + 55, sf);
-                    }
                 }
+                // get out of sideways mode
+                e.Graphics.RotateTransform(90F);
+
 
 
             }

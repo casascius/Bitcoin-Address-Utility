@@ -56,6 +56,9 @@
     <Compile Include="Barcode128b.cs" />
     <Compile Include="Bip38Intermediate.cs" />
     <Compile Include="Bip38KeyPair.cs" />
+    <Compile Include="CoinInsertDense.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CryptSharp\Helper.cs" />
     <Compile Include="CryptSharp\Pbkdf2.cs" />
     <Compile Include="EncryptedKeyPair.cs" />
