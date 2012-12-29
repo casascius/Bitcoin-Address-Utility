@@ -1,4 +1,21 @@
-﻿using System;
+﻿// Copyright 2012 Mike Caldwell (Casascius)
+// This file is part of Bitcoin Address Utility.
+
+// Bitcoin Address Utility is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// Bitcoin Address Utility is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with Bitcoin Address Utility.  If not, see http://www.gnu.org/licenses/.
+
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -488,7 +505,6 @@ namespace BtcAddress {
 
             string b58 = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
             int b58len = b58.Length;
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
             Sha256Digest bcsha256a = new Sha256Digest();
             Sha256Digest bcsha256b = new Sha256Digest();
 
@@ -502,7 +518,7 @@ namespace BtcAddress {
             Dictionary<string, string> myprivkeys = new Dictionary<string, string>();
 
             for (int ji = 0; ji < 100000000; ji++) {
-                byte[] poop = sha256.ComputeHash(Encoding.ASCII.GetBytes(salt + ji.ToString()));
+                byte[] poop = Bitcoin.ComputeSha256(salt + ji.ToString());
 
                 byte[] ahash = null;
                 do {
@@ -516,7 +532,7 @@ namespace BtcAddress {
                         shacode += b58.Substring((int)x58, 1);
                     }
                     string shacodeq = shacode + "?";
-                    ahash = sha256.ComputeHash(Encoding.ASCII.GetBytes(shacodeq));
+                    ahash = Bitcoin.ComputeSha256(Encoding.ASCII.GetBytes(shacodeq));
 
                     if (ahash[0] == 0) break;
 
@@ -524,7 +540,7 @@ namespace BtcAddress {
                 } while (true);
 
 
-                string pubhex = Bitcoin.PrivHexToPubHex(Bitcoin.ByteArrayToString(sha256.ComputeHash(Encoding.ASCII.GetBytes(shacode))));
+                string pubhex = Bitcoin.PrivHexToPubHex(Bitcoin.ByteArrayToString(Bitcoin.ComputeSha256(shacode)));
                 string pubhash = Bitcoin.PubHexToPubHash(pubhex);
                 string address = Bitcoin.PubHashToAddress(pubhash, "Bitcoin");
 
@@ -571,8 +587,7 @@ namespace BtcAddress {
                     line = line.Replace("\"", "");
                     string[] fields = line.Split(',');
                     if (fields.Length == 3) {
-                        SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-                        byte[] privkey = sha256.ComputeHash(Encoding.ASCII.GetBytes(fields[1]));
+                        byte[] privkey = Bitcoin.ComputeSha256(fields[1]);
 
                         string pubhex = Bitcoin.PrivHexToPubHex(Bitcoin.ByteArrayToString(privkey)).Replace(" ", "");
                         string pubhash = Bitcoin.PubHexToPubHash(pubhex);

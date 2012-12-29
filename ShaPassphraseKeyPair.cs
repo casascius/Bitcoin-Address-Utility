@@ -1,4 +1,21 @@
-﻿using System;
+﻿// Copyright 2012 Mike Caldwell (Casascius)
+// This file is part of Bitcoin Address Utility.
+
+// Bitcoin Address Utility is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// Bitcoin Address Utility is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with Bitcoin Address Utility.  If not, see http://www.gnu.org/licenses/.
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -62,13 +79,11 @@ namespace BtcAddress {
             this._hash160 = key.Hash160;
             this._pubKey = key.PublicKeyBytes;
 
-            AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+            var aes = Aes.Create();
             aes.KeySize = 256;
             aes.Mode = CipherMode.ECB;
 
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-            UTF8Encoding utf8 = new UTF8Encoding(false);
-            byte[] encryptionKey = sha256.ComputeHash(utf8.GetBytes(passphrase));
+            byte[] encryptionKey = Bitcoin.ComputeSha256(passphrase);
             aes.Key = encryptionKey;
             ICryptoTransform encryptor = aes.CreateEncryptor();
 
@@ -86,7 +101,7 @@ namespace BtcAddress {
             rv[0] = 0x02;
             rv[1] = 0x05;
 
-            byte[] checksum = sha256.ComputeHash(utf8.GetBytes(passphrase + "?"));
+            byte[] checksum = Bitcoin.ComputeSha256(passphrase + "?");
 
             rv[2] = (byte)(checksum[0] & 0x7F);
             rv[3] = (byte)(checksum[1] & 0xFE);
@@ -102,9 +117,7 @@ namespace BtcAddress {
                 return false;
             }
 
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-            UTF8Encoding utf8 = new UTF8Encoding(false);
-            byte[] checksum = sha256.ComputeHash(utf8.GetBytes(passphrase + "?"));
+            byte[] checksum = Bitcoin.ComputeSha256(passphrase + "?");
 
             if (hex[2] != 0x80) {
                 if ((checksum[0] & 0x7f) != hex[2] || (checksum[1] & 0x7e) != (hex[3] & 0x7e)) {
@@ -112,11 +125,11 @@ namespace BtcAddress {
                 }
             }
 
-            AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+            var aes = Aes.Create();
             aes.KeySize = 256;
             aes.Mode = CipherMode.ECB;
 
-            byte[] encryptionKey = sha256.ComputeHash(utf8.GetBytes(passphrase));
+            byte[] encryptionKey = Bitcoin.ComputeSha256(passphrase);
             aes.Key = encryptionKey;
             ICryptoTransform decryptor = aes.CreateDecryptor();
 

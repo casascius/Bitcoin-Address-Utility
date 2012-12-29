@@ -1,4 +1,21 @@
-﻿using System;
+﻿// Copyright 2012 Mike Caldwell (Casascius)
+// This file is part of Bitcoin Address Utility.
+
+// Bitcoin Address Utility is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// Bitcoin Address Utility is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with Bitcoin Address Utility.  If not, see http://www.gnu.org/licenses/.
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,9 +44,8 @@ namespace BtcAddress {
             // 4. take 29 characters starting with position 4
             //    (this is to skip those first characters of a base58check-encoded private key with low entropy)
             // 5. test to see if it matches the typo check.  while it does not, increment and try again.
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
             UTF8Encoding utf8 = new UTF8Encoding(false);
-            byte[] sha256ofseed = sha256.ComputeHash(utf8.GetBytes(seed));
+            byte[] sha256ofseed = Bitcoin.ComputeSha256(seed);
 
             string asbase58 = new KeyPair(sha256ofseed).PrivateKeyBase58.Replace("1","");
 
@@ -37,7 +53,7 @@ namespace BtcAddress {
             char[] chars = keytotry.ToCharArray();
             char[] charstest = (keytotry + "?").ToCharArray();
             
-            while (sha256.ComputeHash(utf8.GetBytes(charstest))[0] != 0) {
+            while (Bitcoin.ComputeSha256(utf8.GetBytes(charstest))[0] != 0) {
                 // As long as key doesn't pass typo check, increment it.
                 for (int i = chars.Length - 1; i >= 0; i--) {
                     char c = chars[i];
@@ -111,13 +127,9 @@ namespace BtcAddress {
                         throw new ApplicationException("Not a valid minikey");
                     }
                     _minikey = value;
-                    SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-                    UTF8Encoding utf8 = new UTF8Encoding(false);
-                    byte[] forsha = utf8.GetBytes(value);
-
                     // Setting PrivateKeyBytes sets up delegates so the public key, hash160, and
                     // bitcoin address can be computed upon demand.
-                    PrivateKeyBytes = sha256.ComputeHash(forsha);
+                    PrivateKeyBytes = Bitcoin.ComputeSha256(value);
                 }
             }
         }
@@ -135,9 +147,7 @@ namespace BtcAddress {
             if (candidate.StartsWith("S") == false) return 0;
             System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("^S[1-9A-HJ-NP-Za-km-z]{21,29}$");
             if (reg.IsMatch(candidate) == false) return 0;
-            ASCIIEncoding ae = new ASCIIEncoding();
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-            byte[] ahash = sha256.ComputeHash(ae.GetBytes(candidate + "?")); // first round
+            byte[] ahash = Bitcoin.ComputeSha256(candidate + "?"); // first round
             if (ahash[0] == 0) return 1;
             // for (int ct = 0; ct < 716; ct++) ahash = sha256.ComputeHash(ahash); // second thru 717th
             // if (ahash[0] == 0) return 1;

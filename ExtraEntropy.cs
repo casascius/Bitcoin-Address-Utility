@@ -1,4 +1,21 @@
-﻿using System;
+﻿// Copyright 2012 Mike Caldwell (Casascius)
+// This file is part of Bitcoin Address Utility.
+
+// Bitcoin Address Utility is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// Bitcoin Address Utility is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with Bitcoin Address Utility.  If not, see http://www.gnu.org/licenses/.
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,9 +45,7 @@ namespace BtcAddress {
             lock (LockObject) {
                 entropystring += what;
                 if (entropystring.Length > 300) {
-                    SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-                    UTF8Encoding utf8 = new UTF8Encoding(false);
-                    entropystring = BitConverter.ToString(sha256.ComputeHash(utf8.GetBytes(entropystring)));
+                    entropystring = BitConverter.ToString(Bitcoin.ComputeSha256(entropystring));
                 }
             }
         }

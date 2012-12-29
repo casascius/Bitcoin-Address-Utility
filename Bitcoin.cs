@@ -1,4 +1,21 @@
-﻿using System;
+﻿// Copyright 2012 Mike Caldwell (Casascius)
+// This file is part of Bitcoin Address Utility.
+
+// Bitcoin Address Utility is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// Bitcoin Address Utility is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with Bitcoin Address Utility.  If not, see http://www.gnu.org/licenses/.
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,12 +38,7 @@ namespace BtcAddress {
 
 
         public static string PassphraseToPrivHex(string passphrase) {
-
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();            
-            UTF8Encoding utf8 = new UTF8Encoding(false);
-            byte[] forsha = utf8.GetBytes(passphrase);
-            byte[] shahash = sha256.ComputeHash(forsha);
-            return ByteArrayToString(shahash);
+            return ByteArrayToString(Bitcoin.ComputeSha256(passphrase));
         }
 
 
@@ -347,8 +359,7 @@ namespace BtcAddress {
 
         public static string PubHexToPubHash(byte[] PubHex) {
 
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-            byte[] shaofpubkey = sha256.ComputeHash(PubHex);
+            byte[] shaofpubkey = Bitcoin.ComputeSha256(PubHex);
 
             RIPEMD160 rip = System.Security.Cryptography.RIPEMD160.Create();
             byte[] ripofpubkey = rip.ComputeHash(shaofpubkey);
@@ -404,6 +415,34 @@ namespace BtcAddress {
 
         }
 
+        public static byte[] ComputeSha256(string ofwhat) {
+            UTF8Encoding utf8 = new UTF8Encoding(false);
+            return ComputeSha256(utf8.GetBytes(ofwhat));
+        }
+
+
+        public static byte[] ComputeSha256(byte[] ofwhat) {
+            Sha256Digest sha256 = new Sha256Digest();
+            sha256.BlockUpdate(ofwhat, 0, ofwhat.Length);
+            byte[] rv = new byte[32];
+            sha256.DoFinal(rv, 0);
+            return rv;
+        }
+
+        public static byte[] ComputeDoubleSha256(string ofwhat) {
+            UTF8Encoding utf8 = new UTF8Encoding(false);
+            return ComputeDoubleSha256(utf8.GetBytes(ofwhat));
+        }
+
+        public static byte[] ComputeDoubleSha256(byte[] ofwhat) {
+            Sha256Digest sha256 = new Sha256Digest();
+            sha256.BlockUpdate(ofwhat, 0, ofwhat.Length);
+            byte[] rv = new byte[32];
+            sha256.DoFinal(rv, 0);
+            sha256.BlockUpdate(rv, 0, rv.Length);           
+            sha256.DoFinal(rv, 0);
+            return rv;
+        }
 
         public static Int64 nonce = 0;
 

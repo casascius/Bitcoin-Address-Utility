@@ -1,4 +1,21 @@
-﻿using System;
+﻿// Copyright 2012 Mike Caldwell (Casascius)
+// This file is part of Bitcoin Address Utility.
+
+// Bitcoin Address Utility is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// Bitcoin Address Utility is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with Bitcoin Address Utility.  If not, see http://www.gnu.org/licenses/.
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -67,7 +84,7 @@ namespace BtcAddress {
                 byte[] derivedBytes = new byte[64];
                 SCrypt.ComputeKey(utf8.GetBytes(passphrase), addresshash, 16384, 8, 8, 8, derivedBytes);
 
-                AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+                var aes = Aes.Create();
                 aes.KeySize = 256;
                 aes.Mode = CipherMode.ECB;
                 byte[] aeskey = new byte[32];
@@ -181,7 +198,7 @@ namespace BtcAddress {
             Array.Copy(derived, 32, derivedhalf2, 0, 32);
 
             // decrypt encrypted payload
-            AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+            var aes = Aes.Create();
             aes.KeySize = 256;
             aes.Mode = CipherMode.ECB;
             aes.Key = derivedhalf2;
@@ -239,14 +256,13 @@ namespace BtcAddress {
             this._addressType = key.AddressType;
 
             UTF8Encoding utf8 = new UTF8Encoding(false);
-            SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
-            byte[] addrhashfull = sha256.ComputeHash(sha256.ComputeHash(utf8.GetBytes(key.AddressBase58)));
+            byte[] addrhashfull = Bitcoin.ComputeDoubleSha256(key.AddressBase58);
             byte[] addresshash = new byte[] { addrhashfull[0], addrhashfull[1], addrhashfull[2], addrhashfull[3] };
 
             byte[] derivedBytes = new byte[64];
             SCrypt.ComputeKey(utf8.GetBytes(passphrase), addresshash, 16384, 8, 8, 8, derivedBytes);
 
-            AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+            var aes = Aes.Create();
             aes.KeySize = 256;
             aes.Mode = CipherMode.ECB;
             byte[] aeskey = new byte[32];
@@ -269,7 +285,7 @@ namespace BtcAddress {
             rv[1] = 0x42;
             rv[2] = IsCompressedPoint ? (byte)0xe0 : (byte)0xc0;
 
-            byte[] checksum = sha256.ComputeHash(sha256.ComputeHash(utf8.GetBytes(key.AddressBase58)));
+            byte[] checksum = Bitcoin.ComputeDoubleSha256(utf8.GetBytes(key.AddressBase58));
             rv[3] = checksum[0];
             rv[4] = checksum[1];
             rv[5] = checksum[2];
@@ -333,7 +349,7 @@ namespace BtcAddress {
             byte[] encryptedpart1 = new byte[16];
 
             // encrypt it
-            AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+            var aes = Aes.Create();
             aes.KeySize = 256;
             aes.Mode = CipherMode.ECB;
             aes.Key = derivedhalf2;
@@ -424,7 +440,7 @@ namespace BtcAddress {
             // prepare for AES encryption
             byte[] derivedhalf2 = new byte[32];
             Array.Copy(derived, 32, derivedhalf2, 0, 32);
-            AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+            var aes = Aes.Create();
             aes.KeySize = 256;
             aes.Mode = CipherMode.ECB;
             aes.Key = derivedhalf2;
