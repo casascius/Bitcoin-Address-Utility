@@ -34,6 +34,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
 using CryptSharp.Utility;
 using Org.BouncyCastle.Math;
+using Casascius.Bitcoin;
 
 
 namespace BtcAddress {

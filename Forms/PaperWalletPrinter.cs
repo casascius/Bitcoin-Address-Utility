@@ -27,6 +27,7 @@ using Org.BouncyCastle.Security;
 using System.Security.Cryptography;
 using System.Drawing.Printing;
 using System.IO;
+using Casascius.Bitcoin;
 
 namespace BtcAddress {
     public partial class PaperWalletPrinter : Form {
@@ -156,7 +157,7 @@ namespace BtcAddress {
             if (chkMiniKeys.Checked) {
                 k = MiniKeyPair.CreateDeterministic(myhash);
             } else {
-                byte[] mykey = Bitcoin.ComputeSha256(myhash);
+                byte[] mykey = Util.ComputeSha256(myhash);
             }
             lblGenCount.Text = Addresses.Count.ToString() + " addresses have been generated.";
             CurrentSequence++;

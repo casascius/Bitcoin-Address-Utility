@@ -32,13 +32,11 @@ using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Math;
 using CryptSharp.Utility;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
     /// <summary>
     /// Represents an encrypted keypair using the methodology described in BIP 38.
     /// </summary>
     public class Bip38KeyPair : PassphraseKeyPair {
-
-
 
         /// <summary>
         /// Load constructor (in preparation for decryption)
@@ -47,26 +45,35 @@ namespace BtcAddress {
             : base() {
             this._encryptedKey = encryptedkey;
 
-            byte[] hex = Bitcoin.Base58CheckToByteArray(encryptedkey);
+            byte[] hex = Util.Base58CheckToByteArray(encryptedkey);
 
-            if (hex == null) {
-                throw new ArgumentException("Not a valid key");
-            } else if (hex.Length == 39 && hex[0] == 1 && hex[1] == 0x42) {
+            Exception failureReason = ValidateBase58(hex);
+            if (failureReason != null) throw failureReason;
+
+            if ((hex[2] & 0x20) == 0x20) IsCompressedPoint = true;
+
+        }
+
+        /// <summary>
+        /// Validates the binary payload of a Base58-encoded string.
+        /// Returns an unthrown exception if validation failed, otherwise null if success.
+        /// </summary>
+        public static Exception ValidateBase58(byte[] bytes) {
+            if (bytes == null) {                
+                return new ArgumentException("Not a valid key");
+            } else if (bytes.Length == 39 && bytes[0] == 1 && bytes[1] == 0x42) {
                 // Casascius BIP passphrase-encrypted key using scrypt
-                if (hex[2] == 0xe0) {
-                    this.IsCompressedPoint = true;
-                } else if (hex[2] != 0xc0) {
-                    throw new ArgumentException("Private key is not valid or is a newer format unsupported by this version of the software.");
+                if (bytes[2] != 0xc0 && bytes[2] != 0xe0) {
+                    return new ArgumentException("Private key is not valid or is a newer format unsupported by this version of the software.");
                 }
-            } else if (hex.Length == 39 && hex[0] == 1 && hex[1] == 0x43) {
-                if (hex[2] == 0x20) {
-                    IsCompressedPoint = true;
-                } else if (hex[2] != 0x00) {
-                    throw new ArgumentException("Private key is not valid or is a newer format unsupported by this version of the software.");
+            } else if (bytes.Length == 39 && bytes[0] == 1 && bytes[1] == 0x43) {
+                if ((bytes[2] & 0x24) != bytes[2]) {
+                    return new ArgumentException("Private key is not valid or is a newer format unsupported by this version of the software.");
                 }
             } else {
-                throw new ArgumentException("Not a BIP38-encoded key");
+                return new ArgumentException("Not a BIP38-encoded key");
             }
+            return null;
         }
 
         public override bool DecryptWithPassphrase(string passphrase) {
@@ -74,7 +81,7 @@ namespace BtcAddress {
                 return false;
             }
 
-            byte[] hex = Bitcoin.Base58CheckToByteArray(_encryptedKey);
+            byte[] hex = Util.Base58CheckToByteArray(_encryptedKey);
             KeyPair tempkey = null;
 
             if (hex.Length == 39 && hex[0] == 1 && hex[1] == 0x42) {
@@ -123,8 +130,10 @@ namespace BtcAddress {
                 // get ownersalt and encryptedpart2 since they are in the record
                 byte[] ownersalt = new byte[8];
                 Array.Copy(hex, 7, ownersalt, 0, 8);
-                Bip38Intermediate intermediate = new Bip38Intermediate(passphrase, ownersalt);
-
+                bool includeHashStep = (hex[2] & 4) == 4;
+                Bip38Intermediate intermediate = new Bip38Intermediate(passphrase, ownersalt, includeHashStep);
+				this.LotNumber = intermediate.LotNumber;
+				this.SequenceNumber = intermediate.SequenceNumber;
 
                 tempkey = decryptUsingIntermediate(intermediate, hex);
                 if (verifyAddressHash(tempkey.AddressBase58, hex) == false) return false;
@@ -157,9 +166,9 @@ namespace BtcAddress {
         /// generated from the same intermediate.
         /// </summary>
         public bool DecryptWithIntermediate(Bip38Intermediate intermediate) {
-            byte[] hex = Bitcoin.Base58CheckToByteArray(_encryptedKey);
+            byte[] hex = Util.Base58CheckToByteArray(_encryptedKey);
             // verify that the intermediate has the same ownersalt
-            byte[] ownersalt = intermediate.ownersalt;
+            byte[] ownersalt = intermediate.ownerentropy;
             for (int i = 0; i < 8; i++) {
                 if (hex[i + 7] != ownersalt[i]) {
                     throw new ArgumentException("Intermediate does not have same salt");
@@ -178,7 +187,7 @@ namespace BtcAddress {
 
         private KeyPair decryptUsingIntermediate(Bip38Intermediate intermediate, byte[] hex) {
             if (intermediate.passfactor == null) {
-                throw new ArgumentException("Intermediate must have been created from passphrase to be used for decryption");
+                throw new ArgumentException("This is an encryption-only intermediate code because it was not created from a passphrase.  An intermediate must have been created from passphrase to be used for decryption");
             }
 
             byte[] encryptedpart2 = new byte[16];
@@ -189,11 +198,11 @@ namespace BtcAddress {
             Array.Copy(hex, 15, encryptedpart1, 0, 8);
 
             // derive decryption key
-            byte[] addresshashplusownersalt = new byte[12];
-            Array.Copy(hex, 3, addresshashplusownersalt, 0, 4);
-            Array.Copy(intermediate.ownersalt, 0, addresshashplusownersalt, 4, 8);
+            byte[] addresshashplusownerentropy = new byte[12];
+            Array.Copy(hex, 3, addresshashplusownerentropy, 0, 4);
+            Array.Copy(intermediate.ownerentropy, 0, addresshashplusownerentropy, 4, 8);
             byte[] derived = new byte[64];
-            SCrypt.ComputeKey(intermediate.passpoint, addresshashplusownersalt, 1024, 1, 1, 1, derived);
+            SCrypt.ComputeKey(intermediate.passpoint, addresshashplusownerentropy, 1024, 1, 1, 1, derived);
             byte[] derivedhalf2 = new byte[32];
             Array.Copy(derived, 32, derivedhalf2, 0, 32);
 
@@ -256,7 +265,7 @@ namespace BtcAddress {
             this._addressType = key.AddressType;
 
             UTF8Encoding utf8 = new UTF8Encoding(false);
-            byte[] addrhashfull = Bitcoin.ComputeDoubleSha256(key.AddressBase58);
+            byte[] addrhashfull = Util.ComputeDoubleSha256(key.AddressBase58);
             byte[] addresshash = new byte[] { addrhashfull[0], addrhashfull[1], addrhashfull[2], addrhashfull[3] };
 
             byte[] derivedBytes = new byte[64];
@@ -285,13 +294,13 @@ namespace BtcAddress {
             rv[1] = 0x42;
             rv[2] = IsCompressedPoint ? (byte)0xe0 : (byte)0xc0;
 
-            byte[] checksum = Bitcoin.ComputeDoubleSha256(utf8.GetBytes(key.AddressBase58));
+            byte[] checksum = Util.ComputeDoubleSha256(utf8.GetBytes(key.AddressBase58));
             rv[3] = checksum[0];
             rv[4] = checksum[1];
             rv[5] = checksum[2];
             rv[6] = checksum[3];
 
-            _encryptedKey = Bitcoin.ByteArrayToBase58Check(rv);
+            _encryptedKey = Util.ByteArrayToBase58Check(rv);
             _pubKey = key.PublicKeyBytes;
             _hash160 = key.Hash160;
 
@@ -331,13 +340,13 @@ namespace BtcAddress {
             sha256.BlockUpdate(addresshashfull, 0, 32);
             sha256.DoFinal(addresshashfull, 0);
 
-            byte[] addresshashplusownersalt = new byte[12];
-            Array.Copy(addresshashfull, 0, addresshashplusownersalt, 0, 4);
-            Array.Copy(intermediate.ownersalt, 0, addresshashplusownersalt, 4, 8);
+            byte[] addresshashplusownerentropy = new byte[12];
+            Array.Copy(addresshashfull, 0, addresshashplusownerentropy, 0, 4);
+            Array.Copy(intermediate.ownerentropy, 0, addresshashplusownerentropy, 4, 8);
 
             // derive encryption key material
             derived = new byte[64];
-            SCrypt.ComputeKey(intermediate.passpoint, addresshashplusownersalt, 1024, 1, 1, 1, derived);
+            SCrypt.ComputeKey(intermediate.passpoint, addresshashplusownerentropy, 1024, 1, 1, 1, derived);
 
             byte[] derivedhalf2 = new byte[32];
             Array.Copy(derived, 32, derivedhalf2, 0, 32);
@@ -374,12 +383,14 @@ namespace BtcAddress {
             result[0] = 0x01;
             result[1] = 0x43;
             result[2] = generatedaddress.IsCompressedPoint ? (byte)0x20 : (byte)0x00;
+            if (intermediate.LotSequencePresent) result[2] |= 0x04;
+
             Array.Copy(addresshashfull, 0, result, 3, 4);
-            Array.Copy(intermediate.ownersalt, 0, result, 7, 8);
+            Array.Copy(intermediate.ownerentropy, 0, result, 7, 8);
             Array.Copy(encryptedpart1, 0, result, 15, 8);
             Array.Copy(encryptedpart2, 0, result, 23, 16);
 
-            _encryptedKey = Bitcoin.ByteArrayToBase58Check(result);
+            _encryptedKey = Util.ByteArrayToBase58Check(result);
             _pubKey = generatedaddress.PublicKeyBytes;
             _hash160 = generatedaddress.Hash160;
 
@@ -399,7 +410,7 @@ namespace BtcAddress {
             confirmationCodeInfo[2] = 0xF6;
             confirmationCodeInfo[3] = 0xA8;
             confirmationCodeInfo[4] = 0x9A;
-            // fields for flagbyte, addresshash, and ownersalt all copy verbatim
+            // fields for flagbyte, addresshash, and ownerentropy all copy verbatim
             Array.Copy(result, 2, confirmationCodeInfo, 5, 1 + 4 + 8);
             
 
@@ -453,7 +464,7 @@ namespace BtcAddress {
             encryptor.TransformBlock(unencrypted, 16, 16, confirmationCodeInfo, 19+16);
             encryptor.TransformBlock(unencrypted, 16, 16, confirmationCodeInfo, 19+16);
 
-            _confirmationCode = Bitcoin.ByteArrayToBase58Check(confirmationCodeInfo);            
+            _confirmationCode = Util.ByteArrayToBase58Check(confirmationCodeInfo);            
             return _confirmationCode;
         }
 
@@ -465,6 +476,9 @@ namespace BtcAddress {
         /// </summary>
         private byte[] confirmationCodeInfo = null, factorb = null, derived = null;
         private string _confirmationCode; // cached confirmation code
+
+		public int LotNumber { get; private set; }
+		public int SequenceNumber { get; private set; }
 
     }
 }

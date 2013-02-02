@@ -29,12 +29,10 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
 
     public class MiniKeyPair : KeyPair {
-
-        private static Int64 nonce;
-
+		
         public static MiniKeyPair CreateDeterministic(string seed) {
 
             // flow:
@@ -45,7 +43,7 @@ namespace BtcAddress {
             //    (this is to skip those first characters of a base58check-encoded private key with low entropy)
             // 5. test to see if it matches the typo check.  while it does not, increment and try again.
             UTF8Encoding utf8 = new UTF8Encoding(false);
-            byte[] sha256ofseed = Bitcoin.ComputeSha256(seed);
+            byte[] sha256ofseed = Util.ComputeSha256(seed);
 
             string asbase58 = new KeyPair(sha256ofseed).PrivateKeyBase58.Replace("1","");
 
@@ -53,7 +51,7 @@ namespace BtcAddress {
             char[] chars = keytotry.ToCharArray();
             char[] charstest = (keytotry + "?").ToCharArray();
             
-            while (Bitcoin.ComputeSha256(utf8.GetBytes(charstest))[0] != 0) {
+            while (Util.ComputeSha256(utf8.GetBytes(charstest))[0] != 0) {
                 // As long as key doesn't pass typo check, increment it.
                 for (int i = chars.Length - 1; i >= 0; i--) {
                     char c = chars[i];
@@ -129,7 +127,7 @@ namespace BtcAddress {
                     _minikey = value;
                     // Setting PrivateKeyBytes sets up delegates so the public key, hash160, and
                     // bitcoin address can be computed upon demand.
-                    PrivateKeyBytes = Bitcoin.ComputeSha256(value);
+                    PrivateKeyBytes = Util.ComputeSha256(value);
                 }
             }
         }
@@ -147,7 +145,7 @@ namespace BtcAddress {
             if (candidate.StartsWith("S") == false) return 0;
             System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("^S[1-9A-HJ-NP-Za-km-z]{21,29}$");
             if (reg.IsMatch(candidate) == false) return 0;
-            byte[] ahash = Bitcoin.ComputeSha256(candidate + "?"); // first round
+            byte[] ahash = Util.ComputeSha256(candidate + "?"); // first round
             if (ahash[0] == 0) return 1;
             // for (int ct = 0; ct < 716; ct++) ahash = sha256.ComputeHash(ahash); // second thru 717th
             // if (ahash[0] == 0) return 1;

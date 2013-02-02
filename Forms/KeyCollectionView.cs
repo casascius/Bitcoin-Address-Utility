@@ -27,6 +27,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Drawing.Printing;
+using Casascius.Bitcoin;
 
 
 namespace BtcAddress.Forms {

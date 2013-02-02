@@ -33,6 +33,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Math;
 using CryptSharp.Utility;
+using Casascius.Bitcoin;
 
 namespace BtcAddress.Forms {
     public partial class Bip38ConfValidator : Form {
@@ -58,7 +59,7 @@ namespace BtcAddress.Forms {
             }
 
             // Parse confirmation code.
-            byte[] confbytes = Bitcoin.Base58CheckToByteArray(txtConfCode.Text.Trim());
+            byte[] confbytes = Util.Base58CheckToByteArray(txtConfCode.Text.Trim());
             if (confbytes == null) {
                 // is it even close?
                 if (txtConfCode.Text.StartsWith("cfrm38")) {
@@ -118,7 +119,8 @@ namespace BtcAddress.Forms {
             byte[] ownersalt = new byte[8];
             Array.Copy(confbytes, 10, ownersalt, 0, 8);
 
-            Bip38Intermediate intermediate = new Bip38Intermediate(txtPassphrase.Text, ownersalt);
+            bool includeHashStep = (confbytes[5] & 0x04) == 0x04;
+            Bip38Intermediate intermediate = new Bip38Intermediate(txtPassphrase.Text, ownersalt, includeHashStep);
 
             // derive the 64 bytes we need
             // get ECPoint from passpoint            
@@ -126,7 +128,7 @@ namespace BtcAddress.Forms {
 
             byte[] addresshashplusownersalt = new byte[12];
             Array.Copy(confbytes, 6, addresshashplusownersalt, 0, 4);
-            Array.Copy(intermediate.ownersalt, 0, addresshashplusownersalt, 4, 8);
+            Array.Copy(intermediate.ownerentropy, 0, addresshashplusownersalt, 4, 8);
 
             // derive encryption key material
             byte[] derived = new byte[64];

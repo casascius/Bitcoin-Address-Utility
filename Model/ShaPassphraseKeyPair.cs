@@ -32,7 +32,7 @@ using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Math;
 using CryptSharp.Utility;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
     /// <summary>
     /// Represents a private key encrypted with AES using the SHA256 of a passphrase as key material.
     /// Such a private key is a xx character string starting with "6p" (lowercase p).
@@ -48,7 +48,7 @@ namespace BtcAddress {
         public ShaPassphraseKeyPair(string encryptedkey) : base() {
             this._encryptedKey = encryptedkey;
 
-            byte[] hex = Bitcoin.Base58CheckToByteArray(encryptedkey);
+            byte[] hex = Util.Base58CheckToByteArray(encryptedkey);
 
             if (hex == null) {
                 throw new ArgumentException("Not a valid key");
@@ -83,7 +83,7 @@ namespace BtcAddress {
             aes.KeySize = 256;
             aes.Mode = CipherMode.ECB;
 
-            byte[] encryptionKey = Bitcoin.ComputeSha256(passphrase);
+            byte[] encryptionKey = Util.ComputeSha256(passphrase);
             aes.Key = encryptionKey;
             ICryptoTransform encryptor = aes.CreateEncryptor();
 
@@ -101,23 +101,23 @@ namespace BtcAddress {
             rv[0] = 0x02;
             rv[1] = 0x05;
 
-            byte[] checksum = Bitcoin.ComputeSha256(passphrase + "?");
+            byte[] checksum = Util.ComputeSha256(passphrase + "?");
 
             rv[2] = (byte)(checksum[0] & 0x7F);
             rv[3] = (byte)(checksum[1] & 0xFE);
             if (key.IsCompressedPoint) rv[3]++;
-            this._encryptedKey = Bitcoin.ByteArrayToBase58Check(rv);
+            this._encryptedKey = Util.ByteArrayToBase58Check(rv);
         }
 
         public override bool DecryptWithPassphrase(string passphrase) {
 
-            byte[] hex = Bitcoin.Base58CheckToByteArray(_encryptedKey);
+            byte[] hex = Util.Base58CheckToByteArray(_encryptedKey);
 
             if (passphrase == null || passphrase == "") {
                 return false;
             }
 
-            byte[] checksum = Bitcoin.ComputeSha256(passphrase + "?");
+            byte[] checksum = Util.ComputeSha256(passphrase + "?");
 
             if (hex[2] != 0x80) {
                 if ((checksum[0] & 0x7f) != hex[2] || (checksum[1] & 0x7e) != (hex[3] & 0x7e)) {
@@ -129,7 +129,7 @@ namespace BtcAddress {
             aes.KeySize = 256;
             aes.Mode = CipherMode.ECB;
 
-            byte[] encryptionKey = Bitcoin.ComputeSha256(passphrase);
+            byte[] encryptionKey = Util.ComputeSha256(passphrase);
             aes.Key = encryptionKey;
             ICryptoTransform decryptor = aes.CreateDecryptor();
 

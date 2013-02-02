@@ -14,6 +14,10 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>BtcAddress</SccProjectName>
+    <SccLocalPath>1~0db43c04-a879-4ee0-8a97-98cf1f14cbde</SccLocalPath>
+    <SccAuxPath>http://source.payrollservers.us:2008/VaultService</SccAuxPath>
+    <SccProvider>SourceGear Vault Visual Studio 2005 Client:{7BE9CE03-56BF-4682-9C06-78C68B134B30}</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -53,17 +57,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Barcode128b.cs" />
-    <Compile Include="Bip38Intermediate.cs" />
-    <Compile Include="Bip38KeyPair.cs" />
-    <Compile Include="CoinInsertDense.cs">
+    <Compile Include="Barcode\Barcode128b.cs" />
+    <Compile Include="Barcode\QR.cs" />
+    <Compile Include="Model\Base58.cs" />
+    <Compile Include="Model\Base58CheckString.cs" />
+    <Compile Include="Model\Bip38Base.cs" />
+    <Compile Include="Model\Bip38Confirmation.cs" />
+    <Compile Include="Model\Bip38Intermediate.cs" />
+    <Compile Include="Model\Bip38KeyPair.cs" />
+    <Compile Include="Reports\CoinInsertDense.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CryptSharp\Helper.cs" />
     <Compile Include="CryptSharp\Pbkdf2.cs" />
-    <Compile Include="EncryptedKeyPair.cs" />
-    <Compile Include="EscrowCode.cs" />
-    <Compile Include="ExtraEntropy.cs" />
+    <Compile Include="Model\EncryptedKeyPair.cs" />
+    <Compile Include="Model\EscrowCode.cs" />
+    <Compile Include="Model\ExtraEntropy.cs" />
     <Compile Include="Forms\AddressGen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,25 +121,25 @@
     <Compile Include="Forms\PrintVouchers.Designer.cs">
       <DependentUpon>PrintVouchers.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeyCollection.cs" />
-    <Compile Include="KeyCollectionItem.cs" />
-    <Compile Include="KeyPair.cs" />
+    <Compile Include="Model\KeyCollection.cs" />
+    <Compile Include="Model\KeyCollectionItem.cs" />
+    <Compile Include="Model\KeyPair.cs" />
     <Compile Include="Forms\Base58Calc.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Base58Calc.Designer.cs">
       <DependentUpon>Base58Calc.cs</DependentUpon>
     </Compile>
-    <Compile Include="Bitcoin.cs" />
-    <Compile Include="Address.cs" />
+    <Compile Include="Model\Bitcoin.cs" />
+    <Compile Include="Model\Address.cs" />
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="MiniKeyPair.cs" />
-    <Compile Include="MofN.cs" />
+    <Compile Include="Model\MiniKeyPair.cs" />
+    <Compile Include="Model\MofN.cs" />
     <Compile Include="Forms\MofNcalc.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -143,8 +152,8 @@
     <Compile Include="Forms\PaperWalletPrinter.Designer.cs">
       <DependentUpon>PaperWalletPrinter.cs</DependentUpon>
     </Compile>
-    <Compile Include="PassphraseKeyPair.cs" />
-    <Compile Include="PCPrint.cs">
+    <Compile Include="Model\PassphraseKeyPair.cs" />
+    <Compile Include="Reports\PCPrint.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Forms\PpecKeygen.cs">
@@ -155,21 +164,21 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PublicKey.cs" />
-    <Compile Include="QRPrint.cs">
+    <Compile Include="Model\PublicKey.cs" />
+    <Compile Include="Reports\QRPrint.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CryptSharp\Salsa20Core.cs" />
     <Compile Include="CryptSharp\SCrypt.cs" />
-    <Compile Include="ShaPassphraseKeyPair.cs" />
-    <Compile Include="StringInterpreter.cs" />
+    <Compile Include="Model\ShaPassphraseKeyPair.cs" />
+    <Compile Include="Model\StringInterpreter.cs" />
     <Compile Include="Forms\Walletgen.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Walletgen.Designer.cs">
       <DependentUpon>Walletgen.cs</DependentUpon>
     </Compile>
-    <Compile Include="CoinInsert.cs">
+    <Compile Include="Reports\CoinInsert.cs">
       <SubType>Component</SubType>
     </Compile>
     <EmbeddedResource Include="Forms\AddressGen.resx">
@@ -238,6 +247,7 @@
   <ItemGroup>
     <Content Include="bitcoinlogo.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

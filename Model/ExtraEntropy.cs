@@ -29,7 +29,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
 
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
 
     /// <summary>
     /// Manages getting entropy from timer, keyboard, and other unpredictable events.
@@ -45,7 +45,7 @@ namespace BtcAddress {
             lock (LockObject) {
                 entropystring += what;
                 if (entropystring.Length > 300) {
-                    entropystring = BitConverter.ToString(Bitcoin.ComputeSha256(entropystring));
+                    entropystring = BitConverter.ToString(Util.ComputeSha256(entropystring));
                 }
             }
         }

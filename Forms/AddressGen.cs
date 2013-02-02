@@ -25,6 +25,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using System.Diagnostics;
+using Casascius.Bitcoin;
 
 namespace BtcAddress.Forms {
     public partial class AddressGen : Form {
@@ -33,7 +34,7 @@ namespace BtcAddress.Forms {
         }
 
         private enum GenChoices {
-            Minikey, WIF, Encrypted, Deterministic
+            Minikey, WIF, Encrypted, Deterministic, TwoFactor
         }
 
         private GenChoices GenChoice;
@@ -55,15 +56,26 @@ namespace BtcAddress.Forms {
 
         public List<KeyCollectionItem> GeneratedItems = new List<KeyCollectionItem>();
 
+        private Bip38Intermediate[] intermediatesForGeneration;
+
+        private int intermediateIdx;
+
         private void rdoWalletType_CheckedChanged(object sender, EventArgs e) {
             txtTextInput.Text = "";
             txtTextInput.Visible = (rdoDeterministicWallet.Checked || rdoEncrypted.Checked);
+            lblTextInput.Visible = (rdoDeterministicWallet.Checked || rdoEncrypted.Checked || rdoTwoFactor.Checked);
             if (rdoDeterministicWallet.Checked) {
                 lblTextInput.Text = "Seed for deterministic generation";
             } else if (rdoEncrypted.Checked) {
-                lblTextInput.Text = "Encryption passphrase or Intermediate Code";                
+                lblTextInput.Text = "Encryption passphrase or Intermediate Code";
+            } else if (rdoTwoFactor.Checked) {
+                int icodect = ScanClipboardForIntermediateCodes().Count;
+                if (icodect == 0) {
+                    lblTextInput.Text = "Copy one or more intermediate codes to the clipboard.";
+                } else {
+                    lblTextInput.Text = icodect + " intermediate codes found on clipboard.";
+                }
             }
-            lblTextInput.Visible = txtTextInput.Visible;
             chkRetainPrivKey.Visible = (rdoEncrypted.Checked);
         }
 
@@ -103,6 +115,23 @@ namespace BtcAddress.Forms {
                 return;
             }
 
+            if (rdoTwoFactor.Checked) {
+                // Read the clipboard for intermediate codes
+                List<Bip38Intermediate> intermediates = ScanClipboardForIntermediateCodes();
+                if (intermediates.Count == 0) {
+                    MessageBox.Show("No valid intermediate codes were found on the clipboard.  Intermediate codes are typically " +
+                        "sent to you from someone else desiring paper wallets, or from your mobile phone.  Copy the received intermediate " +
+                        "codes to the clipboard, and try again.  Address Generator automatically detects valid intermediate codes and ignores " +
+                        "everything else on the clipboard", "No intermediate codes found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                intermediatesForGeneration = intermediates.ToArray();
+                intermediateIdx = 0;
+
+            } else {
+                intermediatesForGeneration = null;
+            }
 
 
             GenerationThread = new Thread(new ThreadStart(GenerationThreadProcess));
@@ -115,36 +144,13 @@ namespace BtcAddress.Forms {
                 GenChoice = GenChoices.Encrypted;
                 // intermediate codes start with "passphrasek" thru "passphrases"
                 string ti = txtTextInput.Text.Trim();
-                if (txtTextInput.Text.Length > 40 && ti.CompareTo("passphrasek") > 0 && ti.CompareTo("passphraset") < 0) {
-                    Bip38Intermediate inter = null;
-                    // try using it as an intermediate
-                    try {
-                        inter = new Bip38Intermediate(txtTextInput.Text.Trim(), Bip38Intermediate.Interpretation.IntermediateCode);
-                        // if this is an actual intermediate code, ensure surrounding whitespace isn't preserved.
-                        txtTextInput.Text = txtTextInput.Text.Trim();
-                    } catch {
-                        var r = MessageBox.Show("The passphrase resembles an Intermediate Code, but isn't one. " +
-                        "If this is supposed to be an intermediate code, it is invalid, malformed, or has an error. " +
-                            "If you're attempting to generate from an intermediate code, the resulting keys will not work as expected. " +
-                            "Do you want to continue?",
-                            "Invalid intermediate code", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-
-                        if (r == System.Windows.Forms.DialogResult.Cancel) {
-                            return;
-
-                        }
-                    }
-                    if (inter != null) {
-                        MessageBox.Show("Intermediate Code accepted.  " +
-                            "Intermediate Codes can be used for generating encrypted keys, but not for decrypting them. " +
-                            "You will only be able to decrypt generated keys with " +
-                            "the original passphrase that was used to create the Intermediate Code.", "Intermediate Code accepted", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
                 txtTextInput.UseSystemPasswordChar = true;
             }
             if (rdoMiniKeys.Checked) GenChoice = GenChoices.Minikey;
             if (rdoRandomWallet.Checked) GenChoice = GenChoices.WIF;
+            if (rdoTwoFactor.Checked) {
+                GenChoice = GenChoices.TwoFactor;
+            }
 
             timer1.Interval = 250;
             timer1.Enabled = true;
@@ -181,12 +187,7 @@ namespace BtcAddress.Forms {
 
             Bip38Intermediate intermediate = null;
             if (GenChoice == GenChoices.Encrypted) {
-                try {
-                    intermediate = new Bip38Intermediate(txtTextInput.Text, Bip38Intermediate.Interpretation.IntermediateCode);
-                } catch { } // sink exceptions - just means it's not an intermediate code
-                if (intermediate == null) {
-                    intermediate = new Bip38Intermediate(UserText, Bip38Intermediate.Interpretation.Passphrase);
-                }
+                intermediate = new Bip38Intermediate(UserText, Bip38Intermediate.Interpretation.Passphrase);                
             }
 
             int detcount = 1;
@@ -214,6 +215,11 @@ namespace BtcAddress.Forms {
                         Bip38KeyPair ekp = new Bip38KeyPair(intermediate);
                         newitem = new KeyCollectionItem(ekp);
                         break;
+                    case GenChoices.TwoFactor:
+                        ekp = new Bip38KeyPair(intermediatesForGeneration[intermediateIdx++]);
+                        if (intermediateIdx >= intermediatesForGeneration.Length) intermediateIdx = 0;
+                        newitem = new KeyCollectionItem(ekp);
+                        break;
                 }
 
                 lock (GeneratedItems) {
@@ -222,6 +228,13 @@ namespace BtcAddress.Forms {
                 }
             }
             GeneratingEnded = true;
+        }
+
+        private List<Bip38Intermediate> ScanClipboardForIntermediateCodes() {
+            string cliptext = Clipboard.GetText(TextDataFormat.UnicodeText);
+            List<object> objects = StringInterpreter.InterpretBatch(cliptext);
+            List<Bip38Intermediate> intermediates = new List<Bip38Intermediate>(from c in objects where c is Bip38Intermediate select c as Bip38Intermediate);
+            return intermediates;
         }
 
         private void timer1_Tick(object sender, EventArgs e) {

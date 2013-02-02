@@ -24,6 +24,7 @@ using ThoughtWorks.QRCode.Codec;
 using System.Security.Cryptography;
 using System.IO;
 using System.Diagnostics;
+using Casascius.Bitcoin;
 
 namespace BtcAddress {
     class QRPrint : System.Drawing.Printing.PrintDocument {
@@ -167,7 +168,7 @@ namespace BtcAddress {
                     }
                 }
 
-                Bitmap b = Bitcoin.EncodeQRCode(privkey);
+                Bitmap b = QR.EncodeQRCode(privkey);
 
                 if (PrintMode == PrintModes.PsyBanknote) {
 
@@ -195,7 +196,7 @@ namespace BtcAddress {
                         scalefactor * 147F);
                     
                     // draw the public QR
-                    Bitmap b2 = Bitcoin.EncodeQRCode(k.GetAddressBase58());
+                    Bitmap b2 = QR.EncodeQRCode(k.GetAddressBase58());
                     e.Graphics.DrawImage(b2,
                         leftOffset + scalefactor * (float)(thiscodeX + 39),
                         scalefactor * (float)(thiscodeY + 90), scalefactor * 128F, scalefactor * 128F);

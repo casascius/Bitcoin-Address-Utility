@@ -22,7 +22,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
     public class KeyCollection {
 
         public List<KeyCollectionItem> Items = new List<KeyCollectionItem>();

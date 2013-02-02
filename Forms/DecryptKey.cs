@@ -32,6 +32,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Math;
+using Casascius.Bitcoin;
 
 namespace BtcAddress.Forms {
     public partial class DecryptKey : Form {

@@ -32,7 +32,7 @@ using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Math;
 using CryptSharp.Utility;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
 
     /// <summary>
     /// A KeyPair represents a Bitcoin address and its known private key.
@@ -65,7 +65,7 @@ namespace BtcAddress {
 
             SecureRandom sr = new SecureRandom();
 
-            byte[] poop = Bitcoin.ComputeSha256(usersalt + nonce.ToString());
+            byte[] poop = Util.ComputeSha256(usersalt + nonce.ToString());
             nonce++;
 
             byte[] newkey = new byte[32];
@@ -90,7 +90,7 @@ namespace BtcAddress {
             if (bi.CompareTo(ps.N) >= 0 || bi.SignValue <= 0) {
                 throw new ArgumentException("BigInteger is out of range of valid private keys");
             }
-            byte[] bb = Bitcoin.Force32Bytes(bi.ToByteArrayUnsigned());
+            byte[] bb = Util.Force32Bytes(bi.ToByteArrayUnsigned());
             PrivateKeyBytes = bb;
         }
 
@@ -122,9 +122,9 @@ namespace BtcAddress {
         /// Constructs the object with string key, returning any intended exception as a string.
         /// </summary>
         private string constructWithKey(string key, bool compressed) {
-            byte[] hex = Bitcoin.Base58CheckToByteArray(key);
+            byte[] hex = Util.Base58CheckToByteArray(key);
             if (hex == null) {
-                hex = Bitcoin.HexStringToBytes(key, true);
+                hex = Util.HexStringToBytes(key, true);
                 if (hex == null) {
                     // tolerate a minikey
                     if (MiniKeyPair.IsValidMiniKey(key) > 0) {
@@ -230,10 +230,10 @@ namespace BtcAddress {
         /// </summary>
         public string PrivateKeyHex {
             get {
-                return Bitcoin.ByteArrayToString(PrivateKeyBytes);
+                return Util.ByteArrayToString(PrivateKeyBytes);
             }
             protected set {
-                byte[] hex =  Bitcoin.ValidateAndGetHexPrivateKey(0x80, value, 32);
+                byte[] hex = Util.ValidateAndGetHexPrivateKey(0x80, value, 32);
                 if (hex == null) throw new ApplicationException("Invalid private hex key");
                 _privKey = hex;
             }
@@ -264,17 +264,17 @@ namespace BtcAddress {
                     Array.Copy(_privKey, 0, rv, 1, 32);
                     rv[0] = 0x80;
                     rv[33] = 1;
-                    return Bitcoin.ByteArrayToBase58Check(rv);
+                    return Util.ByteArrayToBase58Check(rv);
                 } else {
                     byte[] rv = new byte[33];
                     Array.Copy(_privKey, 0, rv, 1, 32);
                     rv[0] = 0x80;
-                    return Bitcoin.ByteArrayToBase58Check(rv);
+                    return Util.ByteArrayToBase58Check(rv);
                 }
             }
             protected set {
 
-                byte[] hex = Bitcoin.Base58CheckToByteArray(value);
+                byte[] hex = Util.Base58CheckToByteArray(value);
 
                 if (hex == null) {
                     throw new ApplicationException("WIF private key is not valid.");

@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using System.Security.Cryptography;
 using PC;
 using System.Drawing.Printing;
+using Casascius.Bitcoin;
 
 
 namespace BtcAddress {
@@ -58,7 +59,7 @@ namespace BtcAddress {
 
 
 
-                if (Bitcoin.PassphraseTooSimple(txtPassphrase.Text))
+                if (Util.PassphraseTooSimple(txtPassphrase.Text))
                 {
 
                     if (MessageBox.Show("Your passphrase is too simple. If you generate this wallet it may be easily compromised. Are you sure you'd like to use this passphrase?", "Passphrase too simple", MessageBoxButtons.YesNo) == DialogResult.No)
@@ -102,7 +103,7 @@ namespace BtcAddress {
                             privatestring = i.ToString() + "/" + txtPassphrase.Text + "/" + i.ToString() + "/BITCOIN";
                             break;
                     }
-                    byte[] privatekey = Bitcoin.ComputeSha256(privatestring);
+                    byte[] privatekey = Util.ComputeSha256(privatestring);
 
                     KeyPair kp = new KeyPair(privatekey);
 

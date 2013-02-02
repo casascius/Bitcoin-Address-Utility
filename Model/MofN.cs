@@ -31,9 +31,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Math;
 
-
-
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
 
 
 
@@ -90,9 +88,6 @@ namespace BtcAddress {
                 return KeyPair.AddressBase58;
             }
         }
-
-        private string _address = null;
-        private string _addressForKey = null;
 
         KeyPair KeyPair = null;
 
@@ -179,9 +174,9 @@ namespace BtcAddress {
                 Array.Copy(keybytes, 0, array32, 32 - keybytes.Length, keybytes.Length);
                 keybytes = array32;
             }
-            KeyPair = new BtcAddress.KeyPair(keybytes);
+            KeyPair = new KeyPair(keybytes);
 
-            byte[] checksum = Bitcoin.ComputeSha256(BitcoinAddress);
+            byte[] checksum = Util.ComputeSha256(BitcoinAddress);
 
 
 
@@ -214,7 +209,7 @@ namespace BtcAddress {
                 parts[2] = (byte)((parts23 & 0xFF00) >> 8);
                 parts[3] = (byte)(parts23 & 0xFF);
 
-                KeyParts.Add(Bitcoin.ByteArrayToBase58Check(parts));
+                KeyParts.Add(Util.ByteArrayToBase58Check(parts));
                 decodedKeyParts.Add(parts);
             }
 
@@ -326,7 +321,7 @@ namespace BtcAddress {
             // Get the bitcoin address            
 
 
-            byte[] checksum = Bitcoin.ComputeSha256(BitcoinAddress);
+            byte[] checksum = Util.ComputeSha256(BitcoinAddress);
 
             int mychecksum = ((checksum[0] & 1) << 8) + checksum[1];
             if (mychecksum == expectedChecksum) ChecksumMatched=true;
@@ -343,7 +338,7 @@ namespace BtcAddress {
 
             KeyPart = KeyPart.Trim();
 
-            byte[] ins = Bitcoin.Base58CheckToByteArray(KeyPart);
+            byte[] ins = Util.Base58CheckToByteArray(KeyPart);
 
             if (ins == null) {
                 return "Not a valid M-of-N code, this is not a valid Base58Check string or its checksum is incorrect";

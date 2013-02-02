@@ -24,6 +24,7 @@ using ThoughtWorks.QRCode.Codec;
 using System.Security.Cryptography;
 using System.IO;
 using System.Diagnostics;
+using Casascius.Bitcoin;
 
 namespace BtcAddress {
 
@@ -144,7 +145,7 @@ namespace BtcAddress {
                 }
 
                 // draw the address QR code
-                using (Bitmap b2 = Bitcoin.EncodeQRCode(address)) {
+                using (Bitmap b2 = QR.EncodeQRCode(address)) {
                     e.Graphics.DrawImage(b2, thiscodeX + 80, thiscodeY + 10, 50, 50);
                 }
 

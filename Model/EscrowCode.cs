@@ -29,7 +29,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Math.EC;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
     public class EscrowCodeSet {
 
         private const long headbaseA = 0x140bebc0a12ca9c6L;
@@ -87,6 +87,11 @@ namespace BtcAddress {
             sr.NextBytes(x);
             sr.NextBytes(y);
 
+            // Force x to be even
+            // Force y to be odd
+            x[31] &= 0xFE;
+            y[31] |= 0x01;
+
             KeyPair kx = new KeyPair(x, true);
             KeyPair ky = new KeyPair(y, true);
 
@@ -128,8 +133,8 @@ namespace BtcAddress {
             Array.Copy(bytesGy, 0, invitationA, 8 + 1 + 32, 33);
             Array.Copy(bytesGx, 0, invitationB, 8 + 1 + 32, 33);
 
-            EscrowInvitationCodeA = Bitcoin.ByteArrayToBase58Check(invitationA);
-            EscrowInvitationCodeB = Bitcoin.ByteArrayToBase58Check(invitationB);
+            EscrowInvitationCodeA = Util.ByteArrayToBase58Check(invitationA);
+            EscrowInvitationCodeB = Util.ByteArrayToBase58Check(invitationB);
         }
 
         /// <summary>
@@ -140,6 +145,25 @@ namespace BtcAddress {
             int identifier30;
             string failreason = parseEscrowCode(escrowInvitationCode, out pubpart, out privpart, out identifier30);
             if (failreason != null) throw new ArgumentException(failreason);
+
+            // Look for mismatched parity.
+            // (we expect LSB of einva's private part to be 0 and LSB of einvb's private part to be 1)
+            // (this is to guarantee that einva's and einvb's private parts aren't equal)
+            if ((escrowInvitationCode.StartsWith("einva") && (privpart[31] & 0x01) == 1) ||
+                (escrowInvitationCode.StartsWith("einvb") && (privpart[31] & 0x01) == 0)) {
+                throw new ArgumentException("This escrow invitation has mismatched parity.  Ask your escrow agent to " +
+                    "generate a new pair using the latest version of the software.");
+            }
+
+            // Look for 48 0's or 48 1's
+            if (privpart[0] == privpart[1] && privpart[1] == privpart[2] && privpart[2] == privpart[3] &&
+               privpart[3] == privpart[4] && privpart[4] == privpart[5] && privpart[5] == privpart[6] &&
+               privpart[6] == privpart[7] && privpart[7] == privpart[8]) {
+                if (privpart[0] == 0x00 || privpart[0] == 0xFF) {
+                    throw new ArgumentException("This escrow invitation is invalid and cannot be used (bad private key).");
+                }
+            }
+
 
             // produce a new factor
             byte[] z = new byte[32];
@@ -177,7 +201,7 @@ namespace BtcAddress {
             // copy hash160
             Array.Copy(hash160, 0, invp, 8 + 1 + 1 + 32, 20);
 
-            PaymentInvitationCode = Bitcoin.ByteArrayToBase58Check(invp);
+            PaymentInvitationCode = Util.ByteArrayToBase58Check(invp);
             setAddressConfirmationCode(identifier30, networkByte, invp[8 + 1 + 1 + 32 + 20], z, hash160);
         }
 
@@ -207,6 +231,10 @@ namespace BtcAddress {
             int identifier30;
             string failreason = parseEscrowCode(escrowInvitationCode, out pubpart, out privpart, out identifier30);
             if (failreason != null) throw new ArgumentException(failreason);
+
+
+            // Look for first 40 bits being all 0's or all 1's
+
 
             string notvalid = "Not a valid Payment Invitation Code";
             string notvalid2 = "Code is not a valid Payment Invitation Code or may have a typo or other error.";
@@ -251,7 +279,7 @@ namespace BtcAddress {
             this.PaymentInvitationCode = paymentInvitationCode;
 
             byte expectedabflag = (byte)(escrowInvitationCode.StartsWith("einva") ? 2 : 0);
-            if ((invbytes[8+1+1+32+20] & 0x1) != expectedabflag) {
+            if ((invbytes[8+1+1+32+20] & 0x2) != expectedabflag) {
                 SamePartyWarningApplies = true;
             }
         }
@@ -354,7 +382,7 @@ namespace BtcAddress {
             Array.Copy(Gzbytes, 0, accbytes, 8+1, 33);
             Array.Copy(hash160, 0, accbytes, 8+1+33, 20);
             accbytes[8+1+33+20] = flagbyte;
-            this.AddressConfirmationCode = Bitcoin.ByteArrayToBase58Check(accbytes);
+            this.AddressConfirmationCode = Util.ByteArrayToBase58Check(accbytes);
 
         }
 
@@ -405,7 +433,7 @@ namespace BtcAddress {
             invbytes = null;
             head = 0L;
             if (thecode == null) return notvalid;
-            invbytes = Bitcoin.Base58CheckToByteArray(thecode);
+            invbytes = Util.Base58CheckToByteArray(thecode);
             if (invbytes == null) {
                 return notvalid2;
             }

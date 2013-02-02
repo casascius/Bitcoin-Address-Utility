@@ -33,6 +33,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Math.EC;
+using Casascius.Bitcoin;
 
 namespace BtcAddress.Forms {
     public partial class EscrowTools : Form {
@@ -84,6 +85,7 @@ namespace BtcAddress.Forms {
 
 
             try {
+                txtPayeeCode.Text = Util.Base58Trim(txtPayeeCode.Text);
                 EscrowCodeSet cs = new EscrowCodeSet(txtPayeeCode.Text);
                 txtPayeeGeneratedInvite.Text = cs.PaymentInvitationCode;
                 txtPayeeGeneratedAddress.Text = cs.BitcoinAddress;
@@ -114,6 +116,8 @@ namespace BtcAddress.Forms {
 
 
             try {
+                txtPayerCode1.Text = Util.Base58Trim(txtPayerCode1.Text);
+                txtPayerCode2.Text = Util.Base58Trim(txtPayerCode2.Text);
                 EscrowCodeSet cs = new EscrowCodeSet(txtPayerCode1.Text, txtPayerCode2.Text);
                 txtPayerAddress.Text = cs.BitcoinAddress;
                 setPayerElementsVisible(true);
@@ -137,6 +141,10 @@ namespace BtcAddress.Forms {
 
         private void btnRedeem_Click(object sender, EventArgs e) {
             try {
+                txtRedeemCode1.Text = Util.Base58Trim(txtRedeemCode1.Text);
+                txtRedeemCode2.Text = Util.Base58Trim(txtRedeemCode2.Text);
+                txtRedeemCode3.Text = Util.Base58Trim(txtRedeemCode3.Text);
+
                 EscrowCodeSet cs = new EscrowCodeSet(txtRedeemCode1.Text, txtRedeemCode2.Text, txtRedeemCode3.Text);
                 txtRedeemAddress.Text = cs.BitcoinAddress;
                 txtRedeemPrivKey.Text = cs.PrivateKey;

@@ -21,19 +21,76 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
 
     public class StringInterpreter {
+
+        /// <summary>
+        /// Scans a string for any valid Base58Check-encoded substrings, and returns them as objects.
+        /// </summary>
+        public static List<object> InterpretBatch(string what, bool compressed = false, byte addressType = 0) {
+            int biggest_anticipated_string = 100;
+            char[] curstring = new char[biggest_anticipated_string];
+            int curstringidx = 0;
+            char[] inchars = what.ToCharArray();
+            int incharcount = inchars.Length;
+
+            List<object> returnList = new List<object>();
+            HashSet<string> seenStrings = new HashSet<string>();
+
+            // 123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz
+            for (int i = 0; i < incharcount; i++) {
+                char c = inchars[i];
+                bool isbase58 = false;
+                if (c >= '1' && c <= '9') {
+                    isbase58 = true;
+                } else if (c >= 'A' && c <= 'H') {
+                    isbase58 = true;
+                } else if (c >= 'J' && c <= 'N') {
+                    isbase58 = true;
+                } else if (c >= 'P' && c <= 'Z') {
+                    isbase58 = true;
+                } else if (c >= 'a' && c <= 'k') {
+                    isbase58 = true;
+                } else if (c >= 'm' && c <= 'z') {
+                    isbase58 = true;
+                } else {
+                    // Not a base58 character
+                }
+
+                if (isbase58) {
+                    curstring[curstringidx++] = c;
+                    if (curstringidx >= biggest_anticipated_string) curstringidx--;
+                }
+
+                // Should we interpret curstring?
+                if (curstringidx > 0) {
+                    if (isbase58 == false || i == (incharcount - 1)) {
+                        string trystring = new string(curstring, 0, curstringidx);
+                        // Use the hashset to avoid interpreting the same string more than once.
+                        if (seenStrings.Add(trystring)) {
+                            // add returns true to indicate added to the HashSet, false indicates it was already there
+                            object interpretation = Interpret(trystring, compressed, addressType);
+                            if (interpretation != null) returnList.Add(interpretation);
+                        }
+                        curstringidx = 0;
+                    }
+                }
+            }
+            return returnList;
+        }
 
         /// <summary>
         /// Interprets a string to automatically detect a type of Bitcoin-related object.
         /// compressed and addresstype are only considered when the object doesn't define these itself.
         /// </summary>
-        public static object Interpret(string what, bool compressed=false, byte addressType=0) {
-            if (what == null || what.Trim() == "") return null;
+        public static object Interpret(string what, bool compressed = false, byte addressType = 0) {
+            if (what == null) return null;
+            
+            what = what.Trim();
 
             // Is the string interpretable as base58?
-            byte[] hex = Bitcoin.Base58CheckToByteArray(what.Trim());
+            byte[] hex = Util.Base58CheckToByteArray(what);
 
             if (hex != null) {
                 try {
@@ -54,13 +111,17 @@ namespace BtcAddress {
                             return new ShaPassphraseKeyPair(what);                        
                         case 39:
                             return new Bip38KeyPair(what);
+                        case 49:
+                            return new Bip38Intermediate(what, Bip38Intermediate.Interpretation.IntermediateCode);
+                        case 51:
+                            return new Bip38Confirmation(what);
                     }
                 } catch {}
                 // If a constructor didn't like something, then don't return anything.                
             }
 
 
-            hex = Bitcoin.HexStringToBytes(what, true);
+            hex = Util.HexStringToBytes(what, true);
             if (hex != null) {
                 try {
                     switch (hex.Length) {

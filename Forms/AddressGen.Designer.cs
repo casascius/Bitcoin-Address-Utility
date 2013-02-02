@@ -40,6 +40,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.chkRetainPrivKey = new System.Windows.Forms.CheckBox();
+            this.rdoTwoFactor = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.numGenCount)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -48,7 +49,7 @@
             // rdoDeterministicWallet
             // 
             this.rdoDeterministicWallet.AutoSize = true;
-            this.rdoDeterministicWallet.Location = new System.Drawing.Point(14, 70);
+            this.rdoDeterministicWallet.Location = new System.Drawing.Point(14, 84);
             this.rdoDeterministicWallet.Name = "rdoDeterministicWallet";
             this.rdoDeterministicWallet.Size = new System.Drawing.Size(114, 17);
             this.rdoDeterministicWallet.TabIndex = 5;
@@ -60,7 +61,7 @@
             // 
             this.txtTextInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtTextInput.Location = new System.Drawing.Point(8, 135);
+            this.txtTextInput.Location = new System.Drawing.Point(8, 148);
             this.txtTextInput.Name = "txtTextInput";
             this.txtTextInput.Size = new System.Drawing.Size(365, 20);
             this.txtTextInput.TabIndex = 0;
@@ -69,7 +70,7 @@
             // rdoRandomWallet
             // 
             this.rdoRandomWallet.AutoSize = true;
-            this.rdoRandomWallet.Location = new System.Drawing.Point(14, 34);
+            this.rdoRandomWallet.Location = new System.Drawing.Point(14, 33);
             this.rdoRandomWallet.Name = "rdoRandomWallet";
             this.rdoRandomWallet.Size = new System.Drawing.Size(102, 17);
             this.rdoRandomWallet.TabIndex = 4;
@@ -123,7 +124,7 @@
             // 
             // btnGenerateAddresses
             // 
-            this.btnGenerateAddresses.Location = new System.Drawing.Point(109, 161);
+            this.btnGenerateAddresses.Location = new System.Drawing.Point(109, 182);
             this.btnGenerateAddresses.Name = "btnGenerateAddresses";
             this.btnGenerateAddresses.Size = new System.Drawing.Size(173, 36);
             this.btnGenerateAddresses.TabIndex = 6;
@@ -134,7 +135,7 @@
             // lblTextInput
             // 
             this.lblTextInput.AutoSize = true;
-            this.lblTextInput.Location = new System.Drawing.Point(6, 119);
+            this.lblTextInput.Location = new System.Drawing.Point(6, 132);
             this.lblTextInput.Name = "lblTextInput";
             this.lblTextInput.Size = new System.Drawing.Size(161, 13);
             this.lblTextInput.TabIndex = 10;
@@ -143,13 +144,14 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.rdoTwoFactor);
             this.groupBox1.Controls.Add(this.rdoEncrypted);
             this.groupBox1.Controls.Add(this.rdoMiniKeys);
             this.groupBox1.Controls.Add(this.rdoRandomWallet);
             this.groupBox1.Controls.Add(this.rdoDeterministicWallet);
             this.groupBox1.Location = new System.Drawing.Point(194, 18);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(179, 98);
+            this.groupBox1.Size = new System.Drawing.Size(179, 111);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Private key type";
@@ -157,7 +159,7 @@
             // rdoEncrypted
             // 
             this.rdoEncrypted.AutoSize = true;
-            this.rdoEncrypted.Location = new System.Drawing.Point(14, 52);
+            this.rdoEncrypted.Location = new System.Drawing.Point(14, 50);
             this.rdoEncrypted.Name = "rdoEncrypted";
             this.rdoEncrypted.Size = new System.Drawing.Size(131, 17);
             this.rdoEncrypted.TabIndex = 6;
@@ -174,7 +176,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 201);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 232);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(384, 22);
             this.statusStrip1.TabIndex = 13;
@@ -195,7 +197,7 @@
             // chkRetainPrivKey
             // 
             this.chkRetainPrivKey.AutoSize = true;
-            this.chkRetainPrivKey.Location = new System.Drawing.Point(8, 88);
+            this.chkRetainPrivKey.Location = new System.Drawing.Point(8, 102);
             this.chkRetainPrivKey.Name = "chkRetainPrivKey";
             this.chkRetainPrivKey.Size = new System.Drawing.Size(174, 17);
             this.chkRetainPrivKey.TabIndex = 14;
@@ -203,11 +205,22 @@
             this.chkRetainPrivKey.UseVisualStyleBackColor = true;
             this.chkRetainPrivKey.Visible = false;
             // 
+            // rdoTwoFactor
+            // 
+            this.rdoTwoFactor.AutoSize = true;
+            this.rdoTwoFactor.Location = new System.Drawing.Point(14, 67);
+            this.rdoTwoFactor.Name = "rdoTwoFactor";
+            this.rdoTwoFactor.Size = new System.Drawing.Size(130, 17);
+            this.rdoTwoFactor.TabIndex = 7;
+            this.rdoTwoFactor.Text = "Two-Factor Encrypted";
+            this.rdoTwoFactor.UseVisualStyleBackColor = true;
+            this.rdoTwoFactor.CheckedChanged += new System.EventHandler(this.rdoWalletType_CheckedChanged);
+            // 
             // AddressGen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 223);
+            this.ClientSize = new System.Drawing.Size(384, 254);
             this.Controls.Add(this.chkRetainPrivKey);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox1);
@@ -247,5 +260,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
         private System.Windows.Forms.CheckBox chkRetainPrivKey;
+        private System.Windows.Forms.RadioButton rdoTwoFactor;
     }
 }

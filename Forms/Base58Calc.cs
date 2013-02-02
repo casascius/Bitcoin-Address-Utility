@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Casascius.Bitcoin;
 
 namespace BtcAddress {
     public partial class Base58Calc : Form {
@@ -34,11 +35,11 @@ namespace BtcAddress {
 
         private void txtHex_TextChanged(object sender, EventArgs e) {
             if (txtHex.ContainsFocus == false) return;
-            byte[] bytes = Bitcoin.HexStringToBytes(txtHex.Text);
+            byte[] bytes = Util.HexStringToBytes(txtHex.Text);
             if (useChecksumToolStripMenuItem.Checked) {
-                txtBase58.Text = Bitcoin.ByteArrayToBase58Check(bytes);
+                txtBase58.Text = Util.ByteArrayToBase58Check(bytes);
             } else {
-                txtBase58.Text = Bitcoin.ByteArrayToBase58(bytes);
+                txtBase58.Text = Base58.FromByteArray(bytes);
             }
 
             UpdateByteCounts();
@@ -48,20 +49,20 @@ namespace BtcAddress {
             if (txtBase58.ContainsFocus == false) return;
             byte[] bytes;
             if (useChecksumToolStripMenuItem.Checked) {
-                bytes = Bitcoin.Base58CheckToByteArray(txtBase58.Text);
+                bytes = Util.Base58CheckToByteArray(txtBase58.Text);
             } else {
-                bytes = Bitcoin.Base58ToByteArray(txtBase58.Text);
+                bytes = Base58.ToByteArray(txtBase58.Text);
             }
             string hex = "invalid";
             if (bytes != null) {
-                hex = Bitcoin.ByteArrayToString(bytes);
+                hex = Util.ByteArrayToString(bytes);
             }
             txtHex.Text = hex;
             UpdateByteCounts();
         }
 
         private void UpdateByteCounts() {
-            lblByteCounts.Text = "Bytes: " + Bitcoin.HexStringToBytes(txtHex.Text).Length + "  Base58 length: " + txtBase58.Text.Length;
+            lblByteCounts.Text = "Bytes: " + Util.HexStringToBytes(txtHex.Text).Length + "  Base58 length: " + txtBase58.Text.Length;
 
         }
 

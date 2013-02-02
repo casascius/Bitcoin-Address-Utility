@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
     /// <summary>
     /// Represents an encrypted KeyPair that can be decrypted with a passphrase.
     /// </summary>

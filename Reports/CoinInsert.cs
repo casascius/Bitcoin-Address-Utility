@@ -24,6 +24,7 @@ using ThoughtWorks.QRCode.Codec;
 using System.Security.Cryptography;
 using System.IO;
 using System.Diagnostics;
+using Casascius.Bitcoin;
 
 namespace BtcAddress {
 
@@ -146,7 +147,7 @@ namespace BtcAddress {
 
 
                 // draw the address QR code
-                using (Bitmap b2 = Bitcoin.EncodeQRCode(address)) {
+                using (Bitmap b2 = QR.EncodeQRCode(address)) {
                     e.Graphics.DrawImage(b2, thiscodeX + 100, thiscodeY, 100, 100);
                 }
             
@@ -157,7 +158,7 @@ namespace BtcAddress {
 
                 if (confcode != "") {
                     // Print the confirmation QR code
-                    using (Bitmap b = Bitcoin.EncodeQRCode(confcode)) {
+                    using (Bitmap b = QR.EncodeQRCode(confcode)) {
                         e.Graphics.DrawImage(b, thiscodeX + 600, thiscodeY, 100, 100);
 
                         string whattoprint = "Confirmation code:\r\n" + confcode.Substring(0, 38) + "\r\n" + confcode.Substring(38);

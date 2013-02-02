@@ -29,24 +29,12 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
-using ThoughtWorks.QRCode.Codec;
-using System.Text.RegularExpressions;
 
-namespace BtcAddress {
-    public class Bitcoin {
-
-
-
+namespace Casascius.Bitcoin {
+    public class Util {
         public static string PassphraseToPrivHex(string passphrase) {
-            return ByteArrayToString(Bitcoin.ComputeSha256(passphrase));
+            return ByteArrayToString(ComputeSha256(passphrase));
         }
-
-
-
-
-
-
-
 
         public static string ByteArrayToBase58Check(byte[] ba) {
 
@@ -59,7 +47,7 @@ namespace BtcAddress {
             bcsha256a.BlockUpdate(thehash, 0, 32);
             bcsha256a.DoFinal(thehash, 0);
             for (int i = 0; i < 4; i++) bb[ba.Length + i] = thehash[i];
-            return ByteArrayToBase58(bb);
+            return Base58.FromByteArray(bb);
         }
 
 
@@ -138,32 +126,20 @@ namespace BtcAddress {
         }
 
         /// <summary>
-        /// Converts a base-58 string to a byte array, returning null if it wasn't valid.
+        /// Trims whitespace from within and outside string.
+        /// Whitespace is anything non-alphanumeric that may have been inserted into a string.
         /// </summary>
-        public static byte[] Base58ToByteArray(string base58) {
-            Org.BouncyCastle.Math.BigInteger bi2 = new Org.BouncyCastle.Math.BigInteger("0");
-            string b58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
-            foreach (char c in base58) {
-                if (b58.IndexOf(c) != -1) {
-                    bi2 = bi2.Multiply(new Org.BouncyCastle.Math.BigInteger("58"));
-                    bi2 = bi2.Add(new Org.BouncyCastle.Math.BigInteger(b58.IndexOf(c).ToString()));
-                } else {
-                    return null;
+        public static string Base58Trim(string base58) {
+            char[] strin = base58.ToCharArray();
+            char[] cc = new char[base58.Length];
+            int pos = 0;
+            for (int i = 0; i < base58.Length; i++) {
+                char c = strin[i];
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+                    cc[pos++] = c;
                 }
             }
-
-            byte[] bb = bi2.ToByteArrayUnsigned();
-
-            // interpret leading '1's as leading zero bytes
-            foreach (char c in base58) {
-                if (c != '1') break;
-                byte[] bbb = new byte[bb.Length + 1];
-                Array.Copy(bb, 0, bbb, 1, bb.Length);
-                bb = bbb;
-            }
-
-            return bb;
+            return new String(cc, 0, pos);
         }
 
         /// <summary>
@@ -180,7 +156,7 @@ namespace BtcAddress {
                 base58 = base58.Substring(0, base58.Length - 1);
             }
 
-            byte[] bb = Base58ToByteArray(base58);
+            byte[] bb = Base58.ToByteArray(base58);
             if (bb == null || bb.Length < 4) return null;
 
             if (IgnoreChecksum == false) {
@@ -215,30 +191,6 @@ namespace BtcAddress {
             return rv;
         }
 
-        public static string ByteArrayToBase58(byte[] ba) {
-            Org.BouncyCastle.Math.BigInteger addrremain = new Org.BouncyCastle.Math.BigInteger(1, ba);
-
-            Org.BouncyCastle.Math.BigInteger big0 = new Org.BouncyCastle.Math.BigInteger("0");
-            Org.BouncyCastle.Math.BigInteger big58 = new Org.BouncyCastle.Math.BigInteger("58");
-
-            string b58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
-            string rv = "";
-
-            while (addrremain.CompareTo(big0) > 0) {
-                int d = Convert.ToInt32(addrremain.Mod(big58).ToString());
-                addrremain = addrremain.Divide(big58);
-                rv = b58.Substring(d, 1) + rv;
-            }
-
-            // handle leading zeroes
-            foreach (byte b in ba) {
-                if (b != 0) break;
-                rv = "1" + rv;
-
-            }
-            return rv;
-        }
 
 
 
@@ -314,19 +266,19 @@ namespace BtcAddress {
 
         public static string PrivHexToPubHex(string PrivHex, ECPoint point) {
 
-            byte[] hex = Bitcoin.ValidateAndGetHexPrivateKey(0x00, PrivHex, 33);
+            byte[] hex = ValidateAndGetHexPrivateKey(0x00, PrivHex, 33);
             if (hex == null) throw new ApplicationException("Invalid private hex key");
             Org.BouncyCastle.Math.BigInteger Db = new Org.BouncyCastle.Math.BigInteger(hex);
             ECPoint dd = point.Multiply(Db);
 
             byte[] pubaddr = PubKeyToByteArray(dd);
                 
-            return Bitcoin.ByteArrayToString(pubaddr);
+            return ByteArrayToString(pubaddr);
 
         }
 
         public static ECPoint PrivHexToPubKey(string PrivHex) {
-            byte[] hex = Bitcoin.ValidateAndGetHexPrivateKey(0x00, PrivHex, 33);
+            byte[] hex = ValidateAndGetHexPrivateKey(0x00, PrivHex, 33);
             if (hex == null) throw new ApplicationException("Invalid private hex key");
             Org.BouncyCastle.Math.BigInteger Db = new Org.BouncyCastle.Math.BigInteger(1, hex);
             var ps = Org.BouncyCastle.Asn1.Sec.SecNamedCurves.GetByName("secp256k1");
@@ -352,24 +304,24 @@ namespace BtcAddress {
         }
 
         public static string PubHexToPubHash(string PubHex) {
-            byte[] hex = Bitcoin.ValidateAndGetHexPublicKey(PubHex);
+            byte[] hex = ValidateAndGetHexPublicKey(PubHex);
             if (hex == null) throw new ApplicationException("Invalid public hex key");
             return PubHexToPubHash(hex);
         }
 
         public static string PubHexToPubHash(byte[] PubHex) {
 
-            byte[] shaofpubkey = Bitcoin.ComputeSha256(PubHex);
+            byte[] shaofpubkey = ComputeSha256(PubHex);
 
             RIPEMD160 rip = System.Security.Cryptography.RIPEMD160.Create();
             byte[] ripofpubkey = rip.ComputeHash(shaofpubkey);
 
-            return Bitcoin.ByteArrayToString(ripofpubkey);
+            return ByteArrayToString(ripofpubkey);
 
         }
 
         public static string PubHashToAddress(string PubHash, string AddressType) {
-            byte[] hex = Bitcoin.ValidateAndGetHexPublicHash(PubHash);
+            byte[] hex = ValidateAndGetHexPublicHash(PubHash);
             if (hex == null) throw new ApplicationException("Invalid public hex key");
 
             byte[] hex2 = new byte[21];
@@ -382,7 +334,7 @@ namespace BtcAddress {
             if (AddressType == "Namecoin") cointype = 52;
             if (AddressType == "Litecoin") cointype = 48;
             hex2[0] = (byte)(cointype & 0xff);
-            return Bitcoin.ByteArrayToBase58Check(hex2);
+            return ByteArrayToBase58Check(hex2);
 
 
         }
@@ -458,55 +410,37 @@ namespace BtcAddress {
         }
 
         /// <summary>
-        /// Encodes a QR code, making the best choice based on string length
-        /// (apparently not provided by QR lib?)
+        /// Extension for cloning a byte array
         /// </summary>
-        public static Bitmap EncodeQRCode(string what) {
-            if (what==null || what=="") return null;
-
-            // Determine if we can use alphanumeric encoding (e.g. public key hex)
-            Regex r = new Regex("^[0-9A-F]{63,154}$");
-            bool IsAlphanumeric  = r.IsMatch(what);
-
-            QRCodeEncoder qr = new QRCodeEncoder();
-            if (IsAlphanumeric) {
-                qr.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.ALPHA_NUMERIC;
-                if (what.Length > 154) {
-                    return null;
-                } else if (what.Length > 67) {
-                    // 5L is good to 154 alphanumeric characters
-                    qr.QRCodeVersion = 5;
-                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.L;
-                } else {
-                    // 4Q is good to 67 alphanumeric characters
-                    qr.QRCodeVersion = 4;
-                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.Q;
-                }
-            } else {
-                if (what.Length > 84) {
-                    // We don't intend to encode any alphanumeric strings longer than confirmation codes at 75 characters
-                    return null;
-                } else if (what.Length > 62) {
-                    // 5M is good to 84 characters
-                    qr.QRCodeVersion = 5;
-                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
-                } else if (what.Length > 34) {
-                    // 4M is good to 62 characters
-                    qr.QRCodeVersion = 4;
-                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
-                } else if (what.Length > 32) {
-                    // 4H is good to 34 characters
-                    qr.QRCodeVersion = 4;
-                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.H;
-                } else {
-                    // 3Q is good to 32 characters
-                    qr.QRCodeVersion = 3;
-                    qr.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.Q;
-                }
-            }
-
-            return qr.Encode(what);
+        public static byte[] CloneByteArray(byte[] ba) {
+            if (ba == null) return null;
+            byte[] copy = new byte[ba.Length];
+            Array.Copy(ba, copy, ba.Length);
+            return copy;
         }
+
+        /// <summary>
+        /// Extension for cloning a portion of a byte array
+        /// </summary>
+        public static byte[] CloneByteArray(byte[] ba, int offset, int length) {
+            if (ba == null) return null;
+            byte[] copy = new byte[length];
+            Array.Copy(ba, offset, copy, 0, length);
+            return copy;
+        }
+
+        public static byte[] ConcatenateByteArrays(params byte[][] bytearrays) {
+            int totalLength = 0;
+            for (int i = 0; i < bytearrays.Length; i++) totalLength += bytearrays[i].Length;
+            byte[] rv = new byte[totalLength];
+            int idx = 0;
+            for (int i = 0; i < bytearrays.Length; i++) {
+                Array.Copy(bytearrays[i], 0, rv, idx, bytearrays[i].Length);
+                idx += bytearrays[i].Length;
+            }
+            return rv;
+        }
+
 
     }
 

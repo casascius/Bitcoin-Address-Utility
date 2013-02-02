@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
     public class KeyCollectionItem {
         public KeyCollectionItem() { }
 

@@ -30,7 +30,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Math;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
 
     /// <summary>
     /// Bitcoin address extended to include knowledge of public key.
@@ -47,7 +47,7 @@ namespace BtcAddress {
         }
 
         public PublicKey(string hex) {
-            byte[] pubKeyBytes = Bitcoin.HexStringToBytes(hex);
+            byte[] pubKeyBytes = Util.HexStringToBytes(hex);
             string result = constructFromBytes(pubKeyBytes);
             if (result != null) throw new ArgumentException(result);
         }
@@ -62,7 +62,7 @@ namespace BtcAddress {
         }
 
         public static bool IsValidPublicKey(string hex) {
-            byte[] pubKeyBytes = Bitcoin.HexStringToBytes(hex);
+            byte[] pubKeyBytes = Util.HexStringToBytes(hex);
             PublicKey pk = new PublicKey();
             string result = pk.constructFromBytes(pubKeyBytes);
             return (result == null);
@@ -182,7 +182,7 @@ namespace BtcAddress {
         /// Computes the Hash160 of the public key upon demand.
         /// </summary>
         protected override byte[] ComputeHash160() {
-            byte[] shaofpubkey = Bitcoin.ComputeSha256(PublicKeyBytes);
+            byte[] shaofpubkey = Util.ComputeSha256(PublicKeyBytes);
             RIPEMD160 rip = System.Security.Cryptography.RIPEMD160.Create();
             return rip.ComputeHash(shaofpubkey);
         }
@@ -194,7 +194,7 @@ namespace BtcAddress {
         public string PublicKeyHex {
 
             get {
-                return Bitcoin.ByteArrayToString(PublicKeyBytes);
+                return Util.ByteArrayToString(PublicKeyBytes);
             }
         }
         

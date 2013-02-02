@@ -38,6 +38,8 @@ using ThoughtWorks.QRCode.Codec;
 using System.IO;
 using System.Drawing.Printing;
 
+using Casascius.Bitcoin;
+
 namespace BtcAddress {
     public partial class Form1 : Form {
         public Form1() {
@@ -132,7 +134,7 @@ namespace BtcAddress {
                 lblNotSafe.Visible = true;
                 lblNotSafe.Text = "Invalid mini key";
                 lblNotSafe.ForeColor = Color.Red;
-            } else if (txtMinikey.Text != "" && txtMinikey.Text.Length < 20 || Bitcoin.PassphraseTooSimple(txtMinikey.Text)) {
+            } else if (txtMinikey.Text != "" && txtMinikey.Text.Length < 20 || Util.PassphraseTooSimple(txtMinikey.Text)) {
                 lblWhyNot.Visible = true;
                 lblNotSafe.Visible = true;
                 lblNotSafe.Text = "Warning - Not Safe";
@@ -148,7 +150,7 @@ namespace BtcAddress {
         private void btnSha256ToPrivate_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {
-                SetText(txtPrivHex, RemoveSpacesIf(Bitcoin.PassphraseToPrivHex(txtMinikey.Text)));
+                SetText(txtPrivHex, RemoveSpacesIf(Util.PassphraseToPrivHex(txtMinikey.Text)));
                 UpdateMinikeyDescription();
 
                 btnPrivHexToWIF_Click(null, null);
@@ -169,8 +171,8 @@ namespace BtcAddress {
             try {
                 if (txtPrivHex.Text.StartsWith("\"") && txtPrivHex.Text.EndsWith("\"") && txtPrivHex.Text.Length > 2) {
                     UTF8Encoding utf8 = new UTF8Encoding(false);
-                    byte[] str = Bitcoin.Force32Bytes(utf8.GetBytes(txtPrivHex.Text.Substring(1, txtPrivHex.Text.Length - 2)));
-                    txtPrivHex.Text = RemoveSpacesIf(Bitcoin.ByteArrayToString(str));
+                    byte[] str = Util.Force32Bytes(utf8.GetBytes(txtPrivHex.Text.Substring(1, txtPrivHex.Text.Length - 2)));
+                    txtPrivHex.Text = RemoveSpacesIf(Util.ByteArrayToString(str));
                 }
                 KeyPair ba = new KeyPair(txtPrivHex.Text, compressed: compressToolStripMenuItem.Checked);
 
@@ -263,7 +265,7 @@ namespace BtcAddress {
         private void btnPubHashToAddress_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {                
-                SetText(txtBtcAddr, Bitcoin.PubHashToAddress(txtPubHash.Text, cboCoinType.Text));
+                SetText(txtBtcAddr, Util.PubHashToAddress(txtPubHash.Text, cboCoinType.Text));
             } catch (Exception ae) {
                 MessageBox.Show(ae.Message);
             } finally {
@@ -274,7 +276,7 @@ namespace BtcAddress {
         private void btnAddressToPubHash_Click(object sender, EventArgs e) {
             ChangeFlag++;
             try {
-                byte[] hex = Bitcoin.Base58CheckToByteArray(txtBtcAddr.Text);
+                byte[] hex = Util.Base58CheckToByteArray(txtBtcAddr.Text);
                 if (hex == null || hex.Length != 21) {
                     int L = txtBtcAddr.Text.Length;
                     if (L >= 33 && L <= 34) {
@@ -287,7 +289,7 @@ namespace BtcAddress {
                     }
                     return;
                 }
-                SetText(txtPubHash, RemoveSpacesIf(Bitcoin.ByteArrayToString(hex, 1, 20)));
+                SetText(txtPubHash, RemoveSpacesIf(Util.ByteArrayToString(hex, 1, 20)));
             } finally {
                 ChangeFlag--;
             }
@@ -351,7 +353,7 @@ namespace BtcAddress {
             for (int i = 0; i < btcaddrlen; i++) {
                 for (int j = 0; j < 58; j++) {
                     string attempt = btcaddr.Substring(0, i) + b58.Substring(j, 1) + btcaddr.Substring(i + 1);
-                    byte[] bytes = Bitcoin.Base58CheckToByteArray(attempt);
+                    byte[] bytes = Util.Base58CheckToByteArray(attempt);
                     if (bytes != null) {
                         MessageBox.Show("Correction was successful.  Try your request again.");
                         return attempt;
@@ -518,7 +520,7 @@ namespace BtcAddress {
             Dictionary<string, string> myprivkeys = new Dictionary<string, string>();
 
             for (int ji = 0; ji < 100000000; ji++) {
-                byte[] poop = Bitcoin.ComputeSha256(salt + ji.ToString());
+                byte[] poop = Util.ComputeSha256(salt + ji.ToString());
 
                 byte[] ahash = null;
                 do {
@@ -532,7 +534,7 @@ namespace BtcAddress {
                         shacode += b58.Substring((int)x58, 1);
                     }
                     string shacodeq = shacode + "?";
-                    ahash = Bitcoin.ComputeSha256(Encoding.ASCII.GetBytes(shacodeq));
+                    ahash = Util.ComputeSha256(Encoding.ASCII.GetBytes(shacodeq));
 
                     if (ahash[0] == 0) break;
 
@@ -540,9 +542,9 @@ namespace BtcAddress {
                 } while (true);
 
 
-                string pubhex = Bitcoin.PrivHexToPubHex(Bitcoin.ByteArrayToString(Bitcoin.ComputeSha256(shacode)));
-                string pubhash = Bitcoin.PubHexToPubHash(pubhex);
-                string address = Bitcoin.PubHashToAddress(pubhash, "Bitcoin");
+                string pubhex = Util.PrivHexToPubHex(Util.ByteArrayToString(Util.ComputeSha256(shacode)));
+                string pubhash = Util.PubHexToPubHash(pubhex);
+                string address = Util.PubHashToAddress(pubhash, "Bitcoin");
 
 
                 pubhex = pubhex.Replace(" ", "");
@@ -587,11 +589,11 @@ namespace BtcAddress {
                     line = line.Replace("\"", "");
                     string[] fields = line.Split(',');
                     if (fields.Length == 3) {
-                        byte[] privkey = Bitcoin.ComputeSha256(fields[1]);
+                        byte[] privkey = Util.ComputeSha256(fields[1]);
 
-                        string pubhex = Bitcoin.PrivHexToPubHex(Bitcoin.ByteArrayToString(privkey)).Replace(" ", "");
-                        string pubhash = Bitcoin.PubHexToPubHash(pubhex);
-                        string address = Bitcoin.PubHashToAddress(pubhash, "Bitcoin");
+                        string pubhex = Util.PrivHexToPubHex(Util.ByteArrayToString(privkey)).Replace(" ", "");
+                        string pubhash = Util.PubHexToPubHash(pubhex);
+                        string address = Util.PubHashToAddress(pubhash, "Bitcoin");
 
                         if (address != fields[0] || pubhex != fields[2]) {
                             MessageBox.Show("Validation failure on line " + LineNumber.ToString());
@@ -623,7 +625,7 @@ namespace BtcAddress {
                         for (int j = 0; j < 32; j++) {
                             privkey[j+1] = b[i + j + 2];
                         }
-                        Debug.WriteLine("./bitcoind importprivkey " + Bitcoin.ByteArrayToBase58Check(privkey));
+                        Debug.WriteLine("./bitcoind importprivkey " + Util.ByteArrayToBase58Check(privkey));
                     }
                 }
             }
@@ -651,9 +653,9 @@ namespace BtcAddress {
         private void spaceBetweenHexBytesToolStripMenuItem_Click(object sender, EventArgs e) {
             ChangeFlag++;
             spaceBetweenHexBytesToolStripMenuItem.Checked = !spaceBetweenHexBytesToolStripMenuItem.Checked;
-            txtPrivHex.Text = RemoveSpacesIf(Bitcoin.ByteArrayToString(Bitcoin.HexStringToBytes(txtPrivHex.Text)));
-            txtPubHex.Text = RemoveSpacesIf(Bitcoin.ByteArrayToString(Bitcoin.HexStringToBytes(txtPubHex.Text)));
-            txtPubHash.Text = RemoveSpacesIf(Bitcoin.ByteArrayToString(Bitcoin.HexStringToBytes(txtPubHash.Text)));
+            txtPrivHex.Text = RemoveSpacesIf(Util.ByteArrayToString(Util.HexStringToBytes(txtPrivHex.Text)));
+            txtPubHex.Text = RemoveSpacesIf(Util.ByteArrayToString(Util.HexStringToBytes(txtPubHex.Text)));
+            txtPubHash.Text = RemoveSpacesIf(Util.ByteArrayToString(Util.HexStringToBytes(txtPubHash.Text)));
             ChangeFlag--;
 
         }
@@ -723,7 +725,7 @@ namespace BtcAddress {
 
         private void copyPrivateKeyQRMenuItem_Click(object sender, EventArgs e) {
             string toencode = txtPrivWIF.Text;
-            Bitmap b = Bitcoin.EncodeQRCode(toencode);
+            Bitmap b = QR.EncodeQRCode(toencode);
             if (b == null) {
                 MessageBox.Show("Enter or create a valid private key first.");
                 return;
@@ -735,7 +737,7 @@ namespace BtcAddress {
 
         private void copyMinikeyQRMenuItem_Click(object sender, EventArgs e) {
             string toencode = txtMinikey.Text;
-            Bitmap b = Bitcoin.EncodeQRCode(toencode);
+            Bitmap b = QR.EncodeQRCode(toencode);
             if (b == null) {
                 MessageBox.Show("Enter or create a valid minikey first.");
                 return;
@@ -747,7 +749,7 @@ namespace BtcAddress {
 
         private void copyAddressQRMenuItem_Click(object sender, EventArgs e) {
             string toencode = txtBtcAddr.Text;
-            Bitmap b = Bitcoin.EncodeQRCode(toencode);
+            Bitmap b = QR.EncodeQRCode(toencode);
             if (b == null) {
                 MessageBox.Show("Enter or create a valid address first.");
                 return;
@@ -758,7 +760,7 @@ namespace BtcAddress {
 
         private void copyPublicHexQRMenuItem_Click(object sender, EventArgs e) {
             string toencode = txtPubHex.Text.Replace(" ","");
-            Bitmap b = Bitcoin.EncodeQRCode(toencode);
+            Bitmap b = QR.EncodeQRCode(toencode);
             if (b == null) {
                 MessageBox.Show("Enter or create a valid public key first.");
                 return;

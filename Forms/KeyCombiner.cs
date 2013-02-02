@@ -25,6 +25,7 @@ using System.Text;
 using System.Windows.Forms;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Math.EC;
+using Casascius.Bitcoin;
 
 namespace BtcAddress {
     public partial class KeyCombiner : Form {
@@ -92,7 +93,7 @@ namespace BtcAddress {
 
                 System.Diagnostics.Debug.WriteLine(kp1.PublicKeyHex);
                 System.Diagnostics.Debug.WriteLine(kp2.PublicKeyHex);
-                KeyPair kpcombined = new KeyPair(Bitcoin.Force32Bytes(ecombined.ToByteArrayUnsigned()), compressed: kp1.IsCompressedPoint);
+                KeyPair kpcombined = new KeyPair(Util.Force32Bytes(ecombined.ToByteArrayUnsigned()), compressed: kp1.IsCompressedPoint);
 
                 txtOutputAddress.Text = kpcombined.AddressBase58;
                 txtOutputPubkey.Text = kpcombined.PublicKeyHex.Replace(" ", "");

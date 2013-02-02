@@ -29,7 +29,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math.EC;
 
-namespace BtcAddress {
+namespace Casascius.Bitcoin {
 
 
 
@@ -72,7 +72,7 @@ namespace BtcAddress {
         /// Constructs an Address from an address string
         /// </summary>
         public AddressBase(string address) {
-            byte[] hex = Bitcoin.Base58CheckToByteArray(address);            
+            byte[] hex = Util.Base58CheckToByteArray(address);            
             if (hex.Length != 21) throw new ArgumentException("Not a valid or recognized address");
             // Hash160 setter validates length and throws exception if needed
             Hash160 = hex;
@@ -132,7 +132,7 @@ namespace BtcAddress {
 
         public string Hash160Hex {
             get {
-                return Bitcoin.ByteArrayToString(Hash160);
+                return Util.ByteArrayToString(Hash160);
             }
         }
                 
@@ -147,7 +147,7 @@ namespace BtcAddress {
                     byte[] hex2 = new byte[21];
                     Array.Copy(Hash160, 0, hex2, 1, 20);
                     hex2[0] = AddressType;
-                    _address = Bitcoin.ByteArrayToBase58Check(hex2);
+                    _address = Util.ByteArrayToBase58Check(hex2);
                     return _address;
                 }
                 return _address;
