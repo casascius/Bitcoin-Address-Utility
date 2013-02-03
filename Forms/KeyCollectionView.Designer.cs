@@ -66,6 +66,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.saveAddressListWithPrivKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -83,6 +84,7 @@
             this.menuStrip1.Size = new System.Drawing.Size(629, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             this.menuStrip1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.menuStrip1_MouseMove);
             // 
             // toolsToolStripMenuItem
@@ -246,6 +248,7 @@
             this.printPaperWalletsToolStripMenuItem,
             this.toolStripSeparator2,
             this.saveAddressListToolStripMenuItem,
+            this.saveAddressListWithPrivKeyToolStripMenuItem,
             this.toolStripSeparator3,
             this.deleteSelectedItemsToolStripMenuItem});
             this.selectionToolStripMenuItem.Name = "selectionToolStripMenuItem";
@@ -388,6 +391,13 @@
             this.detailsToolStripMenuItem.Text = "&Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
             // 
+            // saveAddressListWithPrivKeyToolStripMenuItem
+            // 
+            this.saveAddressListWithPrivKeyToolStripMenuItem.Name = "saveAddressListWithPrivKeyToolStripMenuItem";
+            this.saveAddressListWithPrivKeyToolStripMenuItem.Size = new System.Drawing.Size(315, 24);
+            this.saveAddressListWithPrivKeyToolStripMenuItem.Text = "Save Address List with PrivKey";
+            this.saveAddressListWithPrivKeyToolStripMenuItem.Click += new System.EventHandler(this.saveAddressListWithPrivKeyToolStripMenuItem_Click);
+            // 
             // KeyCollectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -454,5 +464,6 @@
         private System.Windows.Forms.ToolStripMenuItem keyDecrypterToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem escrowToolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printPhysicalBitcoinInsertsDenseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAddressListWithPrivKeyToolStripMenuItem;
     }
 }
