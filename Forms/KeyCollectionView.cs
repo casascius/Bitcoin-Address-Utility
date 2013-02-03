@@ -249,7 +249,17 @@ namespace BtcAddress.Forms {
             if (asa.Result != null) {
                 if (asa.Result is EncryptedKeyPair) {
                     this.KeyCollection.AddItem(new KeyCollectionItem(asa.Result as EncryptedKeyPair));
-                } else {
+                }
+                else if (asa.Result is List<Object>)
+                {
+                    List<Object>tmpList = (List<Object>)asa.Result;
+                    foreach (Object tmpObj in tmpList) {
+                        this.KeyCollection.AddItem(new KeyCollectionItem(tmpObj as AddressBase));
+                        Application.DoEvents();
+                    }
+                }
+                else
+                {
                     this.KeyCollection.AddItem(new KeyCollectionItem(asa.Result as AddressBase));
                 }
             }
@@ -333,7 +343,45 @@ namespace BtcAddress.Forms {
 
 
 
+        private void saveAddressListWithPrivKeyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<KeyCollectionItem> selected = new List<KeyCollectionItem>();
+            foreach (ListViewItem lvi in listView1.Items)
+            {
+                if (lvi.Checked) selected.Add(lvi.Tag as KeyCollectionItem);
+            }
+            if (selected.Count == 0)
+            {
+                MessageBox.Show("No items are selected", "Empty selection",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            try
+            {
+                saveFileDialog1.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                if (DialogResult.OK == saveFileDialog1.ShowDialog())
+                {
+                    // If the file name is not an empty string open it for saving.
+                    if (saveFileDialog1.FileName != "")
+                    {
+                        // Saves the Image via a FileStream created by the OpenFile method.
+                        using (StreamWriter w = File.CreateText(saveFileDialog1.FileName))
+                        {
+                            foreach (var k in selected)
+                            {
+                                w.WriteLine(k.PrivateKey + " " + k.GetAddressBase58());
+                            }
+                            w.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Failed to save file", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
 
 
 

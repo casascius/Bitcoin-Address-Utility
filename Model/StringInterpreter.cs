@@ -71,7 +71,8 @@ namespace Casascius.Bitcoin {
                         if (seenStrings.Add(trystring)) {
                             // add returns true to indicate added to the HashSet, false indicates it was already there
                             object interpretation = Interpret(trystring, compressed, addressType);
-                            if (interpretation != null) returnList.Add(interpretation);
+                            if (interpretation != null)
+                                returnList.Add(interpretation);
                         }
                         curstringidx = 0;
                     }

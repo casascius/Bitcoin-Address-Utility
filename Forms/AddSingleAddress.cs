@@ -39,14 +39,31 @@ namespace BtcAddress.Forms {
                 return;
             }
 
-            Result = StringInterpreter.Interpret(textBox1.Text);
-            if (Result == null) {
-                MessageBox.Show("Unrecognized or invalid string");
-            } else {
-                this.Close();
+            if (btnGoMulti.Visible)
+            {
+                Result = StringInterpreter.Interpret(textBox1.Text);
+                if (Result == null)
+                {
+                    MessageBox.Show("Unrecognized or invalid string");
+                }
+                else
+                {
+                    this.Close();
+                }
+            }
+            else
+            {
+                Result = StringInterpreter.InterpretBatch(textBox1.Text);
+                if (Result == null)
+                {
+                    MessageBox.Show("Unrecognized or invalid string");
+                }
+                else
+                {
+                    this.Close();
+                }
 
             }
-
         }
 
         private void btnGoMulti_Click(object sender, EventArgs e) {
