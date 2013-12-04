@@ -36,6 +36,7 @@
             this.confirmationCodeValidatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyCombinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keyDecrypterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.addEncryptedKeyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.escrowToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +46,7 @@
             this.newAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateKeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enterAnAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addEncryptedKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,6 +57,7 @@
             this.printPaperWalletsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveAddressListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAddressListWithPrivKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteSelectedItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -66,7 +69,6 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.saveAddressListWithPrivKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -84,7 +86,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(629, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             this.menuStrip1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.menuStrip1_MouseMove);
             // 
             // toolsToolStripMenuItem
@@ -134,7 +135,8 @@
             this.intermediateGeneratorToolStripMenuItem,
             this.confirmationCodeValidatorToolStripMenuItem,
             this.keyCombinerToolStripMenuItem,
-            this.keyDecrypterToolStripMenuItem1});
+            this.keyDecrypterToolStripMenuItem1,
+            this.addEncryptedKeyMenuItem});
             this.twoFactorBitcoinToolsToolStripMenuItem.Name = "twoFactorBitcoinToolsToolStripMenuItem";
             this.twoFactorBitcoinToolsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.twoFactorBitcoinToolsToolStripMenuItem.Text = "Two-Factor Bitcoin Tools";
@@ -166,6 +168,13 @@
             this.keyDecrypterToolStripMenuItem1.Size = new System.Drawing.Size(227, 22);
             this.keyDecrypterToolStripMenuItem1.Text = "Key Decrypter";
             this.keyDecrypterToolStripMenuItem1.Click += new System.EventHandler(this.keyDecrypterToolStripMenuItem_Click);
+            // 
+            // addEncryptedKeyMenuItem
+            // 
+            this.addEncryptedKeyMenuItem.Name = "addEncryptedKeyMenuItem";
+            this.addEncryptedKeyMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.addEncryptedKeyMenuItem.Text = "Add Encrypted Key...";
+            this.addEncryptedKeyMenuItem.Click += new System.EventHandler(this.addEncryptedKeyMenuItem_Click);
             // 
             // escrowToolsToolStripMenuItem
             // 
@@ -210,7 +219,8 @@
             this.keyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newAddressToolStripMenuItem,
             this.generateKeysToolStripMenuItem,
-            this.enterAnAddressToolStripMenuItem});
+            this.enterAnAddressToolStripMenuItem,
+            this.addEncryptedKeyToolStripMenuItem});
             this.keyToolStripMenuItem.Name = "keyToolStripMenuItem";
             this.keyToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.keyToolStripMenuItem.Text = "&Address";
@@ -235,6 +245,13 @@
             this.enterAnAddressToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
             this.enterAnAddressToolStripMenuItem.Text = "&Enter an address/key";
             this.enterAnAddressToolStripMenuItem.Click += new System.EventHandler(this.enterAnAddressToolStripMenuItem_Click);
+            // 
+            // addEncryptedKeyToolStripMenuItem
+            // 
+            this.addEncryptedKeyToolStripMenuItem.Name = "addEncryptedKeyToolStripMenuItem";
+            this.addEncryptedKeyToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.addEncryptedKeyToolStripMenuItem.Text = "&Add Encrypted Key...";
+            this.addEncryptedKeyToolStripMenuItem.Click += new System.EventHandler(this.addEncryptedKeyToolStripMenuItem_Click);
             // 
             // selectionToolStripMenuItem
             // 
@@ -315,6 +332,13 @@
             this.saveAddressListToolStripMenuItem.Text = "Save Address List";
             this.saveAddressListToolStripMenuItem.Click += new System.EventHandler(this.saveAddressListToolStripMenuItem_Click);
             // 
+            // saveAddressListWithPrivKeyToolStripMenuItem
+            // 
+            this.saveAddressListWithPrivKeyToolStripMenuItem.Name = "saveAddressListWithPrivKeyToolStripMenuItem";
+            this.saveAddressListWithPrivKeyToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+            this.saveAddressListWithPrivKeyToolStripMenuItem.Text = "Save Address List with PrivKey";
+            this.saveAddressListWithPrivKeyToolStripMenuItem.Click += new System.EventHandler(this.saveAddressListWithPrivKeyToolStripMenuItem_Click);
+            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -391,13 +415,6 @@
             this.detailsToolStripMenuItem.Text = "&Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
             // 
-            // saveAddressListWithPrivKeyToolStripMenuItem
-            // 
-            this.saveAddressListWithPrivKeyToolStripMenuItem.Name = "saveAddressListWithPrivKeyToolStripMenuItem";
-            this.saveAddressListWithPrivKeyToolStripMenuItem.Size = new System.Drawing.Size(315, 24);
-            this.saveAddressListWithPrivKeyToolStripMenuItem.Text = "Save Address List with PrivKey";
-            this.saveAddressListWithPrivKeyToolStripMenuItem.Click += new System.EventHandler(this.saveAddressListWithPrivKeyToolStripMenuItem_Click);
-            // 
             // KeyCollectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -465,5 +482,7 @@
         private System.Windows.Forms.ToolStripMenuItem escrowToolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printPhysicalBitcoinInsertsDenseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAddressListWithPrivKeyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addEncryptedKeyMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addEncryptedKeyToolStripMenuItem;
     }
 }

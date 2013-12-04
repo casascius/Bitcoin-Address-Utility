@@ -265,6 +265,20 @@ namespace BtcAddress.Forms {
             }
         }
 
+        private void addEncryptedKeyToolStripMenuItem_Click(object sender, EventArgs e) {
+            var aek = new BtcAddress.Forms.AddEncryptedKey();
+            aek.ShowDialog();
+            if (aek.Result != null) {
+                if (aek.Result is EncryptedKeyPair) {
+                    this.KeyCollection.AddItem(new KeyCollectionItem(aek.Result as EncryptedKeyPair));
+                }
+            }
+        }
+
+        private void addEncryptedKeyMenuItem_Click(object sender, EventArgs e) {
+            this.addEncryptedKeyToolStripMenuItem_Click(this,e);
+        }
+
         private void deleteSelectedItemsToolStripMenuItem_Click(object sender, EventArgs e) {
 
             DialogResult result = MessageBox.Show(
